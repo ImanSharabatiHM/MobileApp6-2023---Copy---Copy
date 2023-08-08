@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "865322665644",
+    "firebase_url": "https://hebronline-fa89f.firebaseio.com",
+    "project_id": "hebronline-fa89f",
+    "storage_bucket": "hebronline-fa89f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:865322665644:android:6e85807d2422e8ee",
+        "android_client_info": {
+          "package_name": "com.hebronline"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "865322665644-baeoknuf3okb826f27vh9rrgtjucqjgs.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDLSHmiymPZCo9sPDb-DAGv1ltavjfsTqA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "865322665644-baeoknuf3okb826f27vh9rrgtjucqjgs.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
