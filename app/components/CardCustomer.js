@@ -26,7 +26,9 @@ function CardCustomer({
   thumbnailUrl,
 }) {
   return (
-    <TouchableWithoutFeedback onPress={onPress}>
+    <TouchableWithoutFeedback onPress={() => {
+      Linking.openURL("tel://" + Mobile);
+    }}>
       <View style={[styles.card,{backgroundColor:colors.white}]}>
         {imageUrl && (
           <Image

@@ -4,7 +4,7 @@ import clientEs from "./clientEs";
 const endpoint = "/customer";
 const mobileendpoint="/api/MobileAPIController";
 const epaymentendpoint="/api/EPaymentsController";
-const epaymenttestendpoint="/EPaymentsTestController";
+const epaymenttestendpoint="api/EPaymentsTestController";
 
  const getComplaintDepts = () => client.get(endpoint + "/complaintdept");
 const getUnitsByCustId = (CustId) =>
@@ -33,6 +33,9 @@ const getUnitsByCustId = (CustId) =>
  
   const GetCustomerNameByID = (CustNo,Token) =>
   clientEs.get(mobileendpoint + "/GetCustomerNameByID", { CustNo,Token }); 
+
+  const GetEmpNameByID = (EmpNo,Token) =>
+  clientEs.get(mobileendpoint + "/GetEmpNameByID", { EmpNo,Token }); 
   
   const GetCustomerNameByID2 = (CustNo,Token) =>
   clientEs.get(mobileendpoint + "/GetCustomerNameByID2", { CustNo,Token }); 
@@ -65,8 +68,12 @@ const GetFeesByCustomerID3 = (CustomerID,Token) =>
 clientEs.get(epaymentendpoint+"/GetFeesByCustomerID2", { CustomerID,Token });
 
 
-const GetFeesByCustomerID = (CustomerID,Token,FeesType) =>
-clientEs.get(epaymentendpoint+"/GetFeesByCustomerID3", { CustomerID,Token,FeesType });
+const GetFeesByCustomerID = (CustomerID,Token,FeesType,TaxCode=null) =>
+clientEs.get(epaymentendpoint+"/GetFeesByCustomerID3", { CustomerID,Token,FeesType,TaxCode });
+
+
+const GetFeesByCustomerIDTest = (CustomerID,Token,FeesType,TaxCode=null) =>
+clientEs.get("/api"+epaymentendpoint+"/GetFeesByCustomerID3", { CustomerID,Token,FeesType,TaxCode });
 
 const GetPaymentVoucher = (VoucherNo,Token) =>
 clientEs.get(epaymentendpoint+"/GetPaymentVoucher", { VoucherNo,Token });
@@ -83,6 +90,9 @@ clientEs.get(epaymentendpoint+"/GenerateTransID", {Token });
 
 const GeneratePaymentToken=(Token)=>
 clientEs.get(mobileendpoint+"/GeneratePaymentToken", {Token });
+
+const GenerateEPaymentToken=(Token,Type)=>
+clientEs.get(epaymentendpoint+"/GenerateEPaymentToken", {Token,Type });
 
 const GenerateCollectionToken=(Token)=>
 clientEs.get(mobileendpoint+"/GenerateCollectionToken", {Token });
@@ -102,7 +112,19 @@ export const GeneratePaymentLink = (Token,data, onUploadProgress) => {
   });
 };
 
+export const GeneratePaymentLinkTest = (Token,data, onUploadProgress) => {
+  return clientEs.post("/api"+epaymenttestendpoint + "/GenerateCardLink?Token="+Token, data, {
+    onUploadProgress: (progress) =>
+      onUploadProgress(progress.loaded / progress.total),
+  });
+};
+
 export const PostPaymentByCustomerID2 = (Token,data, onUploadProgress) => {
+  return clientEs.post(epaymenttestendpoint + "/PostPaymentByCustomerID2?Token="+Token, data, {
+    onUploadProgress: (progress) =>
+      onUploadProgress(progress.loaded / progress.total),
+  });
+};export const PayLastInvoiceByServiceNO = (Token,data, onUploadProgress) => {
   return clientEs.post(epaymentendpoint + "/PostPaymentByCustomerID2?Token="+Token, data, {
     onUploadProgress: (progress) =>
       onUploadProgress(progress.loaded / progress.total),
@@ -119,9 +141,13 @@ clientEs.get(mobileendpoint+"/GetWaterConsumptionByServiceNo", { SerivceNo,Token
 
   const GetEmpAppDetails = (Token) =>
 clientEs.get(mobileendpoint+"/GetEmpAppDetails", { Token});
+
 const GetEmployeePermissions = (Token) =>
 clientEs.get(mobileendpoint+"/GetEmployeePermissions", { Token});
 
+
+const GetEmployeeTabletPermissions = (Token) =>
+clientEs.get(mobileendpoint+"/GetEmployeeTabletPermissions", { Token});
 
 const GetCustomerFinancialTotals = (CUST_NO) =>
 clientEs.get(mobileendpoint+"/GetCustomerFinancialTotals", { CUST_NO });
@@ -152,6 +178,11 @@ export const createCM = (complaint, onUploadProgress) => {
    const ResetCustPassword = (request,Token) => 
     clientEs.get(mobileendpoint + "/ResetCustPassword?Token="+Token+'&CustNo='+request.CustNo+'&MobileNo='+request.MobileNo)
    
+    const SendVerificationCode = (CustID,Token) => 
+    clientEs.get(mobileendpoint + "/SendVerificationCode?Token="+Token+'&CustID='+CustID)
+
+    const VerifyCode = (CustID,Code,Token) => 
+    clientEs.get(mobileendpoint + "/VerifyCode?Token="+Token+'&CustID='+CustID+'&Code='+Code)
 
 
 
@@ -166,6 +197,12 @@ export const createCM = (complaint, onUploadProgress) => {
     });
   };
 export default {
+  VerifyCode,
+  SendVerificationCode,
+  GetEmpNameByID,
+  GetEmployeeTabletPermissions,
+  GetFeesByCustomerIDTest,
+  GenerateEPaymentToken,
   GetEmployeePermissions,
   GetCustomerNameByID2,
   GenerateCollectionToken,
@@ -174,6 +211,7 @@ export default {
   PrintPaymentVoucher,
   GetPaymentVoucher,
   CheckVisaPayment,
+  GeneratePaymentLinkTest,
   GeneratePaymentLink,
   GeneratePaymentToken,
   GetWaterServicesByCustNo,

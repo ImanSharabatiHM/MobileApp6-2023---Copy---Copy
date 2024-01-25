@@ -6,7 +6,7 @@ import dayjs from "dayjs";
 import settings from "../config/settings";
 
 const apiClient = create({
-  baseURL: settings.apiUrl,
+  baseURL: settings.apiUrlEs,
   maxContentLength:250000  
 });
 

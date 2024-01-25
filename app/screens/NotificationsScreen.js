@@ -54,6 +54,7 @@ function NotificationsScreen({ navigation }) {
     }
     else{
     setNotifications(result.data);
+    console.log(result);
     //All notifications were read
     setNotificationCount(0);
     }
@@ -77,7 +78,7 @@ function NotificationsScreen({ navigation }) {
     if (!result.ok) {
     }
     else{
-      console.log(result+"mmmm");
+      console.log(result,"mmmm");
 
     }
 
@@ -103,8 +104,9 @@ function NotificationsScreen({ navigation }) {
             renderItem={({ item }) => (
               <ListItem
                 title={item.Notification.Title}
-                subTitle={item.Notification.Body}
+                subTitle={item.Notification.Body+"\n"+dayjs(item.NDate).locale("ar").format("dddd YYYY/MM/D   HH:mm")}
                 rightInfo={dayjs(item.NDate).locale("ar").fromNow()}
+                //rightInfo={dayjs(item.NDate).locale("ar").fromNow()}
                 listStyle={item.Notification.Status==0?styles.listItem:styles.listItemOld}
                 textStyle={styles.listTextStyle}
                 rightInfoStyle={{

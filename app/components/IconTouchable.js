@@ -1,6 +1,8 @@
 import React from "react";
 import { Image, StyleSheet, TouchableOpacity, View } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import AppText from "./Text";
+import colors from "../config/colors";
 
 function IconTouchable({
   name,
@@ -10,12 +12,14 @@ function IconTouchable({
   localIcon = false,
   iconStyle,
   onPress,
+  text,
 }) {
   return (
     <TouchableOpacity style={{ flex: 1 }} onPress={onPress}>
       <View
         style={[
           {
+            flexDirection:"row",
             width: size,
             height: size,
             borderRadius: size / 2,
@@ -26,11 +30,13 @@ function IconTouchable({
           iconStyle,
         ]}
       >
+        
         {!localIcon && (
           <MaterialCommunityIcons
             name={name}
             color={iconColor}
             size={size * 0.5}
+            style={{margin:0,padding:0}}
           />
         )}
         {localIcon && (
@@ -39,6 +45,9 @@ function IconTouchable({
             source={name}
           />
         )}
+        {text&&
+        <AppText  style={styles.text}>{text}</AppText>
+        }
       </View>
     </TouchableOpacity>
   );
@@ -46,6 +55,12 @@ function IconTouchable({
 
 const styles = StyleSheet.create({
   image: { resizeMode: "contain" },
+  text: { 
+    fontSize:12,
+    fontFamily:'Cairo_600SemiBold',
+    color:colors.primary,
+    backgroundColor:colors.danger
+  },
 });
 
 export default IconTouchable;

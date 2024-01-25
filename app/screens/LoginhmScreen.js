@@ -140,12 +140,8 @@ function LoginhmScreen({ navigation }) {
   
       if (result.data) { 
         setmsgTitle("تمت العملية بناجح...");
-          
-      
-        setLoading(false);
-       
+        setLoading(false);      
       //resetForm();
-
     }
 }
     }
@@ -216,8 +212,7 @@ function LoginhmScreen({ navigation }) {
       onPress={() => 
         {/*setNewUser(true);
          setLogin(false);
-         setforgetPass(false);
-      */
+         setforgetPass(false);*/     
          setNewUser(false);
          setLogin(false);
          setforgetPass(true);

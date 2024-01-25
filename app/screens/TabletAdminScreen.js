@@ -270,6 +270,7 @@ async function DownLoadِTiles()
                 { label: 'الصرف الصحي', value: 'SEWER' },
                 { label: 'المخالفات', value: 'INFRACTIONS' },
                 { label: 'القائمة السوداء', value: 'BLACKLIST' },
+                { label: 'المرور', value: 'BLACKLIST' },
                 { label: 'التصوير', value: 'CAMERA' },
 
               ]

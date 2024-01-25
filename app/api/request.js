@@ -5,8 +5,16 @@ const endpoint = "/Complaints";
 const requestsEndPoint="/api/MobileAPIController";
 const endpoint1="/api/MobileAPIController";
 const talabEndPoint="/api/MobileAPIController";
+
+
 export const PostNewTalab = (request, onUploadProgress) => {
     return client88.post( talabEndPoint+"/PostNewTalab", request, {
+      onUploadProgress: (progress) =>
+        onUploadProgress(progress.loaded / progress.total),
+    });
+  };
+  export const PostRequestNotesAndAttach = (request, onUploadProgress) => {
+    return client88.post( talabEndPoint+"/PostRequestNotesAndAttach", request, {
       onUploadProgress: (progress) =>
         onUploadProgress(progress.loaded / progress.total),
     });
@@ -73,15 +81,10 @@ export default {
   GetMainRequests,
   GetSubRequests,
   PostNewTalab,
-  GetNeededDocumentsByTalabCode
+  GetNeededDocumentsByTalabCode,
+  PostRequestNotesAndAttach
 
 
  
 };
-/*
-RequestsController/PostNewTalab
-  CustomersController/UpdateCustomerDataRequest
-  /EServicesAPIController/getPayeeTalabatByPayeeCode
-  Definitions/GetMainRequests
-  Definitions/GetSubRequests
-  */
+ 

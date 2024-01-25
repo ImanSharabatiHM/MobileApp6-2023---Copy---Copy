@@ -8,19 +8,31 @@ import AppWebView from "../components/WebView";
 import colors from "../config/colors";
 import routes from "../navigation/routes";
 import { AppModalize } from "../components/Modalize";
+import  BuildingsModalize  from "../components/BuildingsModalize";
+import  PointModalize  from "../components/PointModalize";
+import  SearchModalize  from "../components/SearchModalize";
+import  SearchXYModalize  from "../components/SearchXYModalize";
+import  LayersModalize  from "../components/LayersModalize";
+import  IconTouchable  from "../components/IconTouchable";
+
 import CardBuildDetails from "../components/CardBuildDetails";
 import Card from "../components/CardCategory";
+import useLocation from "../hooks/useLocation";
 
 import { StatusBar } from 'expo-status-bar';
 import { useAssets } from "expo-asset";
 import { StorageAccessFramework } from 'expo-file-system';
 import FormImagePicker from "../components/forms/FormImagePicker";
-import { Form, FormPicker as Picker, SubmitButton, FormField as Field } from "../components/forms";
 import * as ImagePicker from "expo-image-picker";
+import { Form, FormPicker as Picker, SubmitButton, FormField as Field } from "../components/forms";
+import authStorage from "./../auth/storage";
+import CustomerApi from "../api/customer";
 import ActivityIndicator from "../components/ActivityIndicator";
 import constants from "../config/constants";
 import { documentDirectory, readAsStringAsync } from "expo-file-system";
 import TabletsApi from "../api/tablet";
+import tabletApi from "./../api/tablet";
+import SearchPlaceModalize from "../components/SearchPlaceModalize";
 
 function TabletScreen(props) {
   console.log( "Document Directory Path :"+FileSystem.documentDirectory);
@@ -39,13 +51,35 @@ function TabletScreen(props) {
 
      );
    */
+     const location = useLocation();
+
      const [loading, setLoading] = useState(true);
      const [msg, setMsg] = useState("");
      const modalizeRef = useRef(null);
+     const modalizeRefPoint=useRef(null);
+     const modalizeRefSearchBuild=useRef(null);
+     const modalizeRefSearchPlace=useRef(null);
+     const modalizeRefLayers=useRef(null);
+     const modalizeRefCoords=useRef(null);
+
+
      const [viewerHeight, setViewerHeight] = useState(height);
+     const [menueVisible, setMenueVisible] = useState(false);//!route.params.FromUnits
      const [mainCategoriesVisible, setmainCategoriesVisible] = useState(true);//!route.params.FromUnits
+     const [pointCategoriesVisible, setPointsCategoriesVisible] = useState(true);//!route.params.FromUnits
+     const [searchBuildingVisible, setSearchBuildingVisible] = useState(true);//!route.params.FromUnits
+     const [searchXYVisible, setSearchXYVisible] = useState(true);//!route.params.FromUnits
+
+     const [searchPlaceVisible, setSearchPlaceVisible] = useState(true);//!route.params.FromUnits
+     const [layersVisible, setLayersVisible] = useState(true);//!route.params.FromUnits
+
+     
      const [fromUnits, setFromUnits] = useState(false);
-     const [B_ID, setB_ID] = useState(false);
+     const [B_ID, setB_ID] = useState(12);
+     const [employeeTabletPermissions, setEmployeeTabletPermissions] = useState({ loading: true, data: null });
+     const [building, setBuilding] = useState({ loading: false, data: null });
+     const [visibleLayers, setVisibleLayers] = useState({ loading: false, data: [] });
+     const [coords, setCoords] = useState(null);
 
      const [html, setHtml] = useState("");
      const  mainPath= FileSystem.documentDirectory+'TabletFiles/';
@@ -58,30 +92,59 @@ function TabletScreen(props) {
      const webViewRef = useRef(null);
 
      const [offline, setOffline] = useState(true);
-     const [mainCategories, setMainCategories] = useState({
-      loading: false, data:
-        [
-          { TalabCode: '1', TextAr: 'يافطات', ImageName: "bannersIcon" },
-          { TalabCode: '10', TextAr: 'طلبات', ImageName: "certificateIcon" },
-          { TalabCode: '2', TextAr: 'مياه', ImageName: "waterIcon" },
-          { TalabCode: '3', TextAr: 'وحدات', ImageName: "buildingsIcon" },
-          { TalabCode: '4', TextAr: 'صرف', ImageName: "sewageIcon" },
-          { TalabCode: '5', TextAr: 'حرف', ImageName: "industryIcon" },
-          { TalabCode: '6', TextAr: 'الرسوم', ImageName: "taxIcon" },
-          { TalabCode: '7', TextAr: 'إخطارات', ImageName: "streetsIcon" },
-          { TalabCode: '8', TextAr: 'كهرباء', ImageName: "electricityIcon" },
-          { TalabCode: '9', TextAr: 'مخالفات', ImageName: "certificateIcon" },
-          
-        ]
-    });
+     const getEmployeeTabletPermissions = async () => {
+      setEmployeeTabletPermissions({loading:true,data:null});
+    
+      var token = await authStorage.getToken();
+      const result = await CustomerApi.GetEmployeeTabletPermissions(token);
+  
+      if (!result.ok) { 
+        setEmployeeTabletPermissions({loading:false,data:null});
+       
+        return;
+      }
+      //authStorage.storeTabletApp(result.data.APP_ID);
+      setEmployeeTabletPermissions({loading:false,data:result.data.ResponseObject});
+    };
      // if (index) {  readAsStringAsync(index[0].localUri).then((data) => {  setHtml(data); });  }
   useEffect(() => { 
+    getEmployeeTabletPermissions();
     //getPermissions();
-    loadHTMLFile();
+     loadHTMLFile();
   
   },
    []);
+   async function onSelect(data) {
+     if(data.Location)
+    {
+      console.log("will view location",data.Location,"   ",data.Proj);
+      if(data.Proj=="P")
+      webViewRef.current.injectJavaScript("ViewLocation1('"+data.Location+"',true)");
+      else  webViewRef.current.injectJavaScript("ViewLocation1('"+data.Location+"')");
+     }
+  }
+  async function GetLayersStatus()
+  {
+    setVisibleLayers({data:null,loading:true})
+    webViewRef.current.injectJavaScript("GetVisibleLayers()");
 
+
+  }
+   
+  async function onSelectLayer(data) {
+    console.log(data);
+    webViewRef.current.injectJavaScript("ChangeLayerVisible('"+data+"')")
+   /* if(data.Location)getEmployeeTabletPermissions
+   {
+     console.log("will view location",data.Location,"   ",data.Proj);
+     if(data.Proj=="P")
+     webViewRef.current.injectJavaScript("ViewLocation1('"+data.Location+"',true)");
+     else  webViewRef.current.injectJavaScript("ViewLocation1('"+data.Location+"')");
+    }*/
+ }
+
+
+  
    async function writeFile(path,data){
     let result = null;
     try {
@@ -214,11 +277,39 @@ function TabletScreen(props) {
     }
   };
 }
+const getBuilding = async (B_ID) => {
+  setBuilding({ loading: true, data: null });
+  const result = await tabletApi.GetBuildingDescByBID(B_ID);
+  if (!result.ok) {
+   // setError(true);
+    setBuilding({ loading: false, data:null });
+    return;
+  }
+   let data = result.data ;//.sort(function (a, b) { return b.hitCount - a.hitCount; }) .slice(0, 5);    
+  setBuilding({ loading: false, data:data });
+  setmainCategoriesVisible(true);
+  modalizeRef.current.open();
+};
+const addPoint = async (coords) => {
+ /* setBuilding({ loading: true, data: null });
+  const result = await tabletApi.GetBuildingDescByBID(B_ID);
+  if (!result.ok) {
+   // setError(true);
+    setBuilding({ loading: false, data:null });
+    return;
+  }
+   let data = result.data ;//.sort(function (a, b) { return b.hitCount - a.hitCount; }) .slice(0, 5);    
+  setBuilding({ loading: false, data:data });*/
 
+  setCoords(coords);
+  setPointsCategoriesVisible(true);
+  modalizeRefPoint.current.open();
+};
    return (
     <>
     <Screen style={styles.screen}>
-  {true && <AppWebView  
+   
+    {true && <AppWebView  
       ref={webViewRef}     
       source={{ html: html,baseUrl:  mainPath }}
       style={{ flex: 1, height: height , width: width, }}     
@@ -226,30 +317,76 @@ function TabletScreen(props) {
       onMessage={
         event => {
         var contents = event.nativeEvent.data;
-       // webViewRef.current.injectJavaScript("alert('ffffffffffffff')");
-       // window.postMessage("HELLOOOOOOO"+contents);
-        console.log(contents);
+        console.log(contents+"dd");
         setMsg(contents);
-        console.log(contents);
         if (contents.startsWith("loading")) {
           console.log(contents);
-        }   
+        } 
+        else if(contents.includes("Location"))
+        {
+         var loc=(location?.longitude ? location?.longitude : "")+","+( location?.latitude ? location?.latitude : "");
+         webViewRef.current.injectJavaScript("ViewLocation('"+loc+"')");
+        }  
         else if(contents.startsWith("View-B-")) 
         {
           var contents=contents.replace("View-B-","");
           var arr=contents.split("-");
           console.log(arr[0]);
-
           setB_ID(arr[0]);
-          //modalizeRef.current.open();
-        props.navigation.navigate(routes.BUILDINGSPROC,{B_ID:arr[0],BNO:arr[1],STNO:arr[2],BLOCK:arr[3],PARCEL:arr[4]});
+          getBuilding(arr[0]);         
+          //props.navigation.navigate(routes.BUILDINGSPROC,{B_ID:arr[0],BNO:arr[1],STNO:arr[2],BLOCK:arr[3],PARCEL:arr[4]});
+        }
+        else if(contents.includes("TALABAT"))
+        {
+          props.navigation.navigate(routes.ALLTALABTS,{B_ID:B_ID,FromMap:true,onSelect:onSelect}); 
+
+        } 
+        else if(contents.includes("VISIBLE:"))
+        {
+          console.log(contents);
+          contents=contents.replace("VISIBLE:","")
+          layers=contents.split(",");
+          setVisibleLayers({loading:false,data:layers});
+          setLayersVisible(true); 
+          modalizeRefLayers.current.open();
+
 
         }
-       else if (contents.includes("LoadFile")) {
+        else if (contents.includes("READY"))
+        {
+            setMenueVisible(true);
+        }
+        else if(contents.includes("SEARCHB"))
+        {
+         setSearchBuildingVisible(true); 
+         modalizeRefSearchBuild.current.open();
+        }
+        else if(contents.includes("SEARCHP"))
+        {
+         setSearchPlaceVisible(true); 
+         modalizeRefSearchPlace.current.open();
+        }
+        else if(contents.includes("LAYERS"))
+        {
+         GetLayersStatus();
+        }
+        else if(contents.includes("SEARCH"))
+        {
+          props.navigation.navigate(routes.SEARCHCUST); 
+        }
+       
+        else if(contents.includes("AddPoint"))
+        {
+
+          var coords=contents.replace("AddPoint-","");
+          addPoint(coords);
+          //console.log(contents);
+
+        }
+       else if (contents.includes("LoadFile")){
         var table=contents.split(':')[1];
         console.log("In loading File ...........");
-        read("file:///data/user/0/com.hebronline/files/TabletFiles/jsondata/"+table+".txt",table);
-         
+        read("file:///data/user/0/com.hebronline/files/TabletFiles/jsondata/"+table+".txt",table);        
         }
         else if(contents.includes("PROC-"))
         {
@@ -274,11 +411,7 @@ function TabletScreen(props) {
           appendFiles(backupPath,contents+"\n");
         }
         else
-        {
-          sendRequest(contents);
-
-
-        }
+        {sendRequest(contents);}
        
       }
       else if(contents.includes("Camera"))
@@ -311,7 +444,87 @@ function TabletScreen(props) {
        
     }
     }
-  />}       
+  />} 
+ { menueVisible&&<View style={styles.menue}>
+  
+  <IconTouchable
+    iconStyle={styles.icon}
+    localIcon={false}
+    size={60}
+    onPress={()=>{ 
+       modalizeRefCoords.current.open();
+    }}
+    iconColor={colors.primary}
+    name={'longitude'} 
+     />
+    <IconTouchable
+    iconStyle={styles.icon}
+    localIcon={false}
+    size={60}
+    onPress={()=>{ 
+      setSearchBuildingVisible(true); 
+      modalizeRefSearchBuild.current.open();
+    }}
+    iconColor={colors.primary}
+    name={'office-building'} 
+     />
+    <IconTouchable
+    iconStyle={styles.icon}
+    localIcon={false}
+    size={60}
+    onPress={()=>{
+      setSearchPlaceVisible(true); 
+      modalizeRefSearchPlace.current.open();
+    }}
+    iconColor={colors.primary}
+    name={'map-marker'} 
+     />
+
+<IconTouchable
+    iconStyle={styles.icon}
+    localIcon={false}
+    size={60}
+    onPress={()=>{ 
+      GetLayersStatus();
+      //modalizeRefLayers.current.open();
+    }}
+    iconColor={colors.primary}
+    name={'layers-triple'} 
+    />
+     <IconTouchable
+    iconStyle={styles.icon}
+    localIcon={false}
+    size={60}
+    onPress={()=>{ 
+      props.navigation.navigate(routes.ALLTALABTS,{B_ID:-1,FromMap:true,onSelect:onSelect}); 
+    }}
+    iconColor={colors.primary}
+    name={'file-find'} 
+     />
+    <IconTouchable
+    iconStyle={styles.icon}
+    localIcon={false}
+    size={60}
+    onPress={()=>{ 
+      props.navigation.navigate(routes.SEARCHCUST); 
+
+    }}
+    iconColor={colors.primary}
+    name={'account-search'} 
+     />
+        <IconTouchable
+    iconStyle={styles.icon}
+    localIcon={false}
+    size={60}
+    onPress={()=>{   
+      modalizeRefPoint.current.open();
+    }}
+    iconColor={colors.primary}
+    name={'map-marker-plus'} 
+     />
+
+
+    </View>  }   
    {false&&<AppWebView source={{ uri: constants.CADASTRAL}} />}
      {false&&<WebView
       style={{ flex: 1, height: height , width: width, }}
@@ -338,62 +551,95 @@ function TabletScreen(props) {
       geolocationEnabled={true}                   
 />}
     </Screen>
-          <AppModalize
-          ref={modalizeRef}
-          title={"معلومات البناء"}
-          adjustToContentHeight={true}
-          onLayout={(layout) => { setViewerHeight(layout.layout.height*.9); }}
-          onPress = { 
-            async () => {modalizeRef.current.close();         
-         }}
-        >
-            <View style={{ height: viewerHeight*.9 }}>
-            <ActivityIndicator visible={false} />
-            <CardBuildDetails
-            BNO={10+''}
-            STNO={100+''}
-            BLOCK={34440+''}
-            PARCEL={15+''}
-            /*  ADDRESS={taxItem?.ADDRESS==""?"غير معرّف":taxItem.ADDRESS}
-            UNIT={taxItem?.UNIT==""?"غير معرّف":taxItem.UNIT}
-              TAX_NAME={taxItem.TAX_NAME+""}
-              TAX_DATE={dayjs(taxItem.TAX_DATE).locale("ar").format('D/MM/YYYY' )}
-              AMOUNT={taxItem.AMOUNT+''}
-              CURN={taxItem.CURN+""}
-              DISCOUNT={taxItem.DISCOUNT+''}
-              LOCAL_AMOUNT={taxItem.LOCAL_AMOUNT+''}
-              LOCAL_AMOUNT_AFTER_DISCOUNT={taxItem.LOCAL_AMOUNT_AFTER_DISCOUNT+ '₪'} 
-              */
-              />
-    <View style={{ height: mainCategoriesVisible ? '100%' : 0 }}>
-          {mainCategories.data && mainCategoriesVisible && !fromUnits && (
-            <FlatList
-              numColumns={5}
-              data={mainCategories.data}
-              keyExtractor={(item) => "mainc" + item.TalabCode
-              }
-              renderItem={({ item }) => (
-                <Card
-                  // s={modalizeRef}
-                  unit={item}
-                  navigation={props.navigation}
-                  title={item.TextAr}
-                  imageHeight={50}
-                  onPress={() => {
-                    //setmainCategoriesVisible(false);
-                    console.log("ddd");
-                   // modalizeRef.current.close();
-                    props.navigation.navigate(routes.SIGNBOARD,{B_ID:B_ID}); 
-                    // modalizeRef.current.open();
-                  }} 
-                  imageUrl={item.ImageName}//{item.img}
-                />
-              )}
-            />
-          )}
-          </View>
-          </View>
-        </AppModalize>
+    <ActivityIndicator visible={building.loading} /> 
+        {!employeeTabletPermissions.loading&&mainCategoriesVisible&&<BuildingsModalize
+         PERMISSIONS={employeeTabletPermissions?.data}
+          modalizeRef={modalizeRef}
+          B_ID={B_ID}
+          B_NO={building.data?.B_NO}
+          B_NAME={building.data?.B_NAME}
+          B_BLOCK={building.data?.B_BLOCK}
+          B_PARCEL={building.data?.B_PARCEL}
+          B_STREET_NO={building.data?.B_STREET_NO}
+          B_IMAGE={building.data?.B_IMAGE}         
+          navigation={props.navigation}
+          onSelect={onSelect}
+          //adjustToContentHeight={true}
+          //onLayout={(layout) => { setViewerHeight(layout.layout.height*.9); }}
+          //onPress = { // async () => {modalizeRef.current.close();  } }
+        />}
+         {searchBuildingVisible&&<SearchModalize
+          modalizeRef={modalizeRefSearchBuild}
+          B_ID={B_ID}
+          B_NO={building.data?.B_NO}
+          B_NAME={building.data?.B_NAME}
+          B_BLOCK={building.data?.B_BLOCK}
+          B_PARCEL={building.data?.B_PARCEL}
+          B_STREET_NO={building.data?.B_STREET_NO}
+          B_IMAGE={building.data?.B_IMAGE}         
+          navigation={props.navigation}
+          onSelect={onSelect}
+          //adjustToContentHeight={true}
+          //onLayout={(layout) => { setViewerHeight(layout.layout.height*.9); }}
+          //onPress = { // async () => {modalizeRef.current.close();  } }
+        />}
+          {searchXYVisible&&<SearchXYModalize
+          modalizeRef={modalizeRefCoords}
+          B_ID={B_ID}
+          B_NO={building.data?.B_NO}
+          B_NAME={building.data?.B_NAME}
+          B_BLOCK={building.data?.B_BLOCK}
+          B_PARCEL={building.data?.B_PARCEL}
+          B_STREET_NO={building.data?.B_STREET_NO}
+          B_IMAGE={building.data?.B_IMAGE}         
+          navigation={props.navigation}
+          onSelect={onSelect}
+          //adjustToContentHeight={true}
+          //onLayout={(layout) => { setViewerHeight(layout.layout.height*.9); }}
+          //onPress = { // async () => {modalizeRef.current.close();  } }
+        />}
+          {layersVisible&&<LayersModalize
+          modalizeRef={modalizeRefLayers}
+          visible_layers={visibleLayers?.data}
+          //B_ID={B_ID}       
+          navigation={props.navigation}
+          onSelect={onSelectLayer}
+          //adjustToContentHeight={true}
+          //onLayout={(layout) => { setViewerHeight(layout.layout.height*.9); }}
+          //onPress = { // async () => {modalizeRef.current.close();  } }
+        />}
+         {searchPlaceVisible&&<SearchPlaceModalize
+          modalizeRef={modalizeRefSearchPlace}
+          B_ID={B_ID}
+          B_NO={building.data?.B_NO}
+          B_NAME={building.data?.B_NAME}
+          B_BLOCK={building.data?.B_BLOCK}
+          B_PARCEL={building.data?.B_PARCEL}
+          B_STREET_NO={building.data?.B_STREET_NO}
+          B_IMAGE={building.data?.B_IMAGE}         
+          navigation={props.navigation}
+          onSelect={onSelect}
+          //adjustToContentHeight={true}
+          //onLayout={(layout) => { setViewerHeight(layout.layout.height*.9); }}
+          //onPress = { // async () => {modalizeRef.current.close();  } }
+        />}
+        {!employeeTabletPermissions.loading&&pointCategoriesVisible&&<PointModalize
+          modalizeRef={modalizeRefPoint}
+          PERMISSIONS={employeeTabletPermissions?.data}
+          COORDS={coords}
+          B_ID={B_ID}
+          B_NO={building.data?.B_NO}
+          B_NAME={building.data?.B_NAME}
+          B_BLOCK={building.data?.B_BLOCK}
+          B_PARCEL={building.data?.B_PARCEL}
+          B_STREET_NO={building.data?.B_STREET_NO}
+          B_IMAGE={building.data?.B_IMAGE}         
+          navigation={props.navigation}
+          onSelect={onSelect}
+          //adjustToContentHeight={true}
+          //onLayout={(layout) => { setViewerHeight(layout.layout.height*.9); }}
+          //onPress = { // async () => {modalizeRef.current.close();  } }
+        />}
         </>
   );
 }
@@ -402,5 +648,27 @@ export default TabletScreen;
 const styles = StyleSheet.create({
   screen: {
     backgroundColor: colors.dark,
+  },
+  menue:{
+     flexDirection:"row",
+     backgroundColor:'rgba(200,200,200,.6)',
+     height:50,padding:0,position:"absolute",bottom:0,right:0,width:'100%'
+
+  },
+  icon: {
+    padding:0,
+    marginTop:0,
+    paddingVertical:5,
+    paddingStart:2,
+    paddingEnd:2,
+    borderRadius:0,
+    borderLeftColor:colors.primary,
+    borderLeftWidth:.1,
+    width:'100%',
+    alignContent:"center",
+    justifyContent: "flex-start",
+    alignItems:"baseline",
+    
+
   },
 });

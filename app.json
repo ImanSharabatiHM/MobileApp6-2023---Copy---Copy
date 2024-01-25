@@ -2,34 +2,31 @@
   "expo": {
     "scheme": "com.hebron.hebronmunicipality",
     "name": "بلديّة الخليـل",
-    "slug": "HebronMobile",
+    "slug": "hebronline",
     "privacy": "unlisted",
-    "plugins": [ 
-        [ "@config-plugins/react-native-pdf"],  
-     ["@config-plugins/react-native-blob-util"],
-     ["@config-plugins/react-native-ble-plx",   
-     {
-      "isBackgroundEnabled": true,
-      "modes": ["peripheral", "central"],
-      "bluetoothAlwaysPermission": "Allow $(PRODUCT_NAME) to connect to bluetooth devices"
-    }],
-      
+    "plugins": [
+      [
+        "@config-plugins/react-native-pdf"
+      ],
+      [
+        "@config-plugins/react-native-blob-util"
+      ],
+
       [
         "expo-notifications",
         {
           "icon": "./app/assets/icon.png",
-          "color": "#ffffff"
+          "color": "#ddd",
+          "sounds":["./assets/sounds/hm.wav"] 
+            
         }
       ],
-    
-
       [
         "expo-camera",
         {
           "cameraPermission": "السماح لتطبيق بلدية الخليل بالوصول للكاميرا لإضافة صور للشكوى أو الطلب"
         }
       ]
-   
     ],
     "platforms": [
       "ios",
@@ -37,12 +34,15 @@
       "web"
     ],
     "notification": {
-      "icon": "./app/assets/icon.png"
+      "icon": "./app/assets/icon.png",
+      "color":"#000" ,
+       
+      "sounds":["./assets/sounds/hm.wav"]
     },
     "runtimeVersion": {
       "policy": "sdkVersion"
     },
-    "version": "1.0",
+    "version": "3.1.6",
     "orientation": "portrait",
     "icon": "./app/assets/icon.png",
     "splash": {
@@ -60,29 +60,27 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.hebron.hebronmunicipalityios",
-      "buildNumber": "1.3.0",
+      "buildNumber": "3.1.6",
       "infoPlist": {
         "NSPhotoLibraryUsageDescription": "بإمكان التطبيق الوصول للملفات لإضافة الصور اللازمة للطلب أو الشكوى",
         "NSLocationAlwaysUsageDescription": "يستخدم التطبيق الموقع الحالي لإرساله مع بيانات الشكوى",
         "NSLocationWhenInUseUsageDescription": "يستخدم التطبيق الموقع الحالي لإرساله مع بيانات الشكوى",
         "NSLocationAlwaysAndWhenInUseUsageDescription": "يستخدم التطبيق الموقع الحالي لإرساله مع بيانات الشكوى",
         "NSCameraUsageDescription": "يستخدم التطبيق الكاميرا لإضافة الصور اللازمة للطلب أو الشكوى",
-        "UIBackgroundModes": ["location", "fetch"]
-
+        "NSBluetoothAlwaysUsageDescription":"يستخدم التطبيق البلوتوث للاتصال بالطابعةوطباعة بعض المذكرات"
       }
     },
     "android": {
       "package": "com.hebronline",
       "googleServicesFile": "./google-services.json",
       "useNextNotificationsApi": true,
-      "versionCode": 68,
+      "versionCode": 72,
       "adaptiveIcon": {
         "foregroundImage": "./app/assets/icon.png",
         "backgroundColor": "#2893e0"
       },
-    
       "permissions": [
-       "ACCESS_BACKGROUND_LOCATION",
+        "ACCESS_BACKGROUND_LOCATION",
         "READ_EXTERNAL_STORAGE",
         "CAMERA",
         "WRITE_EXTERNAL_STORAGE",
@@ -91,22 +89,28 @@
         "READ_CALENDAR",
         "WRITE_CALENDAR",
         "ACCESS_FINE_LOCATION",
-        "ACCESS_BACKGROUND_LOCATION",
-         "BLUETOOTH_ADMIN", 
-         "BLUETOOTH_CONNECT", 
-         "ACCESS_COARSE_LOCATION",
-          "BLUETOOTH_ADVERTISE", 
-          "BLUETOOTH_SCAN",
-           "BLUETOOTH"
+        "BLUETOOTH_ADMIN",
+        "BLUETOOTH_CONNECT",
+        "ACCESS_COARSE_LOCATION",
+        "BLUETOOTH_ADVERTISE",
+        "BLUETOOTH_SCAN",
+        "BLUETOOTH",
+        "android.permission.READ_EXTERNAL_STORAGE",
+        "android.permission.WRITE_EXTERNAL_STORAGE",
+        "android.permission.DOWNLOAD_WITHOUT_NOTIFICATION",
+        "android.permission.ACCESS_NETWORK_STATE",
+        "android.permission.BLUETOOTH",
+        "android.permission.BLUETOOTH_ADMIN",
+        "android.permission.BLUETOOTH_CONNECT",
+        "android.permission.CAMERA",
+        "android.permission.RECORD_AUDIO"
       ]
     },
     "description": "إنه تطبيق الهاتف المتحرك الرسمي لبلدية الخليـل. بفضل هذا التطبيق ، يمكنك بسهولة الاستفادة من أخبار البلدية الحالية ، والأحداث ، والاستعلام عن الديون والدفع ، والطلب ، وتقديم الشكاوى والاستعلام على مدار الساعة طوال أيام الأسبوع من أي مكان. يمكنك أيضًا الوصول إلى الخدمات الشخصية عن طريق تسجيل الدخول عبر بوابة الحكومة الإلكترونية.",
     "extra": {
       "eas": {
-        "projectId": "794005b7-9231-4358-864c-8c652d7289d7"
+        "projectId": "f45eae04-6fea-40ac-8b83-9955b73e0f09"
       }
-    },
-     "currentFullName": "@iman.n.sh/HebronMobile",
-    "originalFullName": "@iman.n.sh/HebronMobile"
+    }
   }
 }

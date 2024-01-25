@@ -129,13 +129,14 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: colors.light,
     borderRadius: 15,
-    height: 75,
+    height: 70,
     justifyContent: "center",
-    marginVertical: 10,
+    marginVertical: 0,
     overflow: "hidden",
     width: 75,
   },
   image: {
+    
     height: "100%",
     width: "100%",
     alignContent:"stretch",

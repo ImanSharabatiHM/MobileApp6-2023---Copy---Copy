@@ -82,11 +82,8 @@ function CardEmployee({
         </View>
       </AppModalize>
 
-    <TouchableWithoutFeedback >
-    < View style={styles.firstContainer}>
-    <View style={styles.mainContainer}>
-       
-       
+    <TouchableWithoutFeedback  onPress={() =>   {  Linking.openURL("tel://" + Mobile); }} >
+     <View style={styles.mainContainer}>   
           <View style={styles.card}>
            {(<Image
             style={[styles.image]}
@@ -98,8 +95,6 @@ function CardEmployee({
           />
         )}
         </View>
-        
- 
         <View style={styles.detailsContainer}>
           
           {Name && (
@@ -118,7 +113,7 @@ function CardEmployee({
           )}
 
           {Mobile && (
-            <Text style={styles.mobile} numberOfLines={2}>
+            <Text style={styles.mobile} numberOfLines={4}>
               <MaterialCommunityIcons
             style={styles.actionButtonIcon}
             name="phone-in-talk"
@@ -130,52 +125,9 @@ function CardEmployee({
       
 
       </View>
-      {false && <View style={styles.buttonsContainer}>
-        <Button 
-      textStyle={[styles.buttonTxt]}
-      buttonStyle={[styles.newUserButton]}
-      onPress={async (items) => {
-       var item={route:constants.MAPLOCATIONURL,title:"موقع الوحدة"};
-        setNavItem(item);
-        webmodalizeRef.current.open();       
-       } }
-      title="تفاصيل الموقع" />
-
-
-
-      {false&&<Button 
-      textStyle={[styles.buttonTxt]}
-      buttonStyle={[styles.newUserButton]}
-      onPress={() =>   { navigation.navigate(routes.REQUESTS,{item:unit,FromUnits:true}) } }
-      title="تقديم طلب" />
-      }
        
-       
-       
-       {false&& <Button 
-      textStyle={[styles.buttonTxt]}
-      buttonStyle={[styles.newUserButton]}
-      /*onPress={async() => {
-        console.log(JSON.stringify(unit)+"sss");
-        var waste="النفايات: "+unit.TAX.TAX_Waste+"شيكل . \n";
-        var heraf="الحرف والصناعات: "+unit.TAX.TAX_HERAF+"دينار . \n";
-        var maaref="المعارف: "+unit.TAX.TAX_MAAREF+"دينار . \n";
-        var lafetat="اللافتات: "+unit.TAX.TAX_YAFTAT+"دينار . \n";
-        var water="المياه: "+unit.TAX.TAX_WATER+"شيكل . \n";
-        msg=waste+heraf+maaref+lafetat+water;
-        var item={route:constants.MAPLOCATIONURL,title:"الرسوم المترتبة على الوحدة",msg:msg};
-         setNavItem(item);
-         settaxVisible(true);
-         modalizeRef.current.open();       
-        } }*/
-        onPress={() =>   { navigation.navigate(routes.TAXDETAILS,{U_ID:unit.U_ID}) } }
-      title="الرسوم" />}
-         
-       
-        </View>}
 
-        </View>
-    </TouchableWithoutFeedback>
+     </TouchableWithoutFeedback>
 
     <AppModalize
         ref={webmodalizeRef}
@@ -201,9 +153,8 @@ function CardEmployee({
 
 const styles = StyleSheet.create({
   mainContainer: {
-    overflow: "hidden",
-    width:"100%",
-    height:150,
+    borderRadius:8,
+    height:180,  
     flexDirection:"row",
     marginLeft:0,
     marginTop:10,
@@ -220,6 +171,7 @@ const styles = StyleSheet.create({
   },
  
   card: { 
+     height:'100%',
     flex:1,  
     width:"100%",
     borderRadius: 8,
@@ -246,6 +198,7 @@ const styles = StyleSheet.create({
 
   },
   detailsContainer: {
+    height:300,
     flex:2,
     alignItems:"flex-start",
     //padding: 20,

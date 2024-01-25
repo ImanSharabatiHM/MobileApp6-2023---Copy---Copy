@@ -19,7 +19,7 @@ function AppTextInput({
   ...otherProps
 }) {
   return (
-    <View    style={showPlaceholder ? { marginTop: 10} : null}>
+    <View    style={showPlaceholder ? { marginTop: 10,marginStart:10} : {marginStart:10}}>
       {showPlaceholder && (
         <AppText style={[styles.placeholder]}>{otherProps.placeholder}</AppText>
       )}

@@ -44,7 +44,7 @@ function AddSignboardScreen({ navigation, route }) {
   const [uploadVisible, setUploadVisible] = useState(false);
   const [progress, setProgress] = useState(0);
   const [isDeleted, setIsDeleted] = useState(false);
-
+   const[open,setOpen]=useState(false);
   const [loading, setLoading] = useState(false);
   const [info, setInfo] = useState(null);
   const [isConnected, setIsConnected] = useState(true);
@@ -52,10 +52,10 @@ function AddSignboardScreen({ navigation, route }) {
   const [U_ID, setU_ID] = useState("");
   const [B_ID, setB_ID] = useState(route.params.B_ID);
   const [signBorads, setSignBorads] = useState({ loading: false, data: null });
-  const [selectedSignBoard, setSelectedSignBoard] = useState({  TYPE_ID: 1,
+  const [selectedSignBoard, setSelectedSignBoard] = useState({  TYPE_ID: 2,
     SerialNo:0,
     CommercialName: "يافطة جديدة",   
-    UseID: 1,
+    UseID: 2,
     UnitID: "",
     Width: 0,
     Height: 0,
@@ -74,7 +74,7 @@ function AddSignboardScreen({ navigation, route }) {
     
     
     });
-  const [isForBuild, setIsForBuild] = useState(true);
+  const [isForBuild, setIsForBuild] = useState(false);
   const [useID, setUseID] = useState(1);
 
   async function handleNetwork() {
@@ -91,22 +91,17 @@ function AddSignboardScreen({ navigation, route }) {
     setUnits({ loading: true, data: null });
     const result = await tabletApi.GetUnitDescriptionByBID(B_ID);
     if (!result.ok) {
-      // setError(true);
       setUnits({ loading: false, data: null });
       return;
     }
     let data = result.data;//.sort(function (a, b) { return b.hitCount - a.hitCount; }) .slice(0, 5);
-
-    //data=[{
-    //  "U_ID": -1,
-    //},data];
-    // /console.log(data);
-    // data =[{U_ID:-1}].concat(data);
-   // console.log(data);
-   console.log(data);
-
     setUnits({ loading: false, data });
   };
+
+  const handleOpenChange =async (val)=>
+  {
+    setOpen(val);
+  }
   const getSignBoards = async (UnitID) => {
     const token = await authStorage.getToken();
     setSignBorads({ loading: true, data: null });
@@ -159,7 +154,7 @@ function AddSignboardScreen({ navigation, route }) {
     const token = await authStorage.getToken();
     console.log(token);
     let signBoardToAdd = {
-      TYPE_ID: 1,
+      TYPE_ID: selectedSignBoard.TYPE_ID,
       CommercialName: signBoard.CommercialName,
       SerialNo:selectedSignBoard.SerialNo,
       UseID: signBoard.UseID,
@@ -178,7 +173,8 @@ function AddSignboardScreen({ navigation, route }) {
       if (progress == 1) setLoading(true);
     });
     if (!result.ok) {
-      console.log(result);
+     // console.log(result);
+
 
       setUploadVisible(false);
       setInfo({
@@ -186,11 +182,12 @@ function AddSignboardScreen({ navigation, route }) {
 
 
       });
+      handleOpenChange(false);
       setLoading(false);
       return;
     }
     else {
-      console.log(result);
+      //console.log(result);
       if (result.data) {
         setInfo({
           Status: result.data.ResponseObject,
@@ -198,7 +195,8 @@ function AddSignboardScreen({ navigation, route }) {
         setLoading(false);
       }
     }
-    resetForm();
+   resetForm();
+    
   };
 
 
@@ -242,17 +240,17 @@ function AddSignboardScreen({ navigation, route }) {
 
   return (
     <>
-      {info && (
+      {info&&!open && (
         <Info
           numberOfLines={5}
-          buttonText="أعد التقديم"
-          buttonVisible={info.Status !== "" ? false : true}
+          buttonText="إضافة جديدة"
+          buttonVisible={true}
           color={colors.danger}
           message={
             info.Status
 
           }
-          onPress={() => setInfo(null)}
+          onPress={() => {setInfo(null);handleOpenChange(true);}}
         />
       )}
       {!isConnected && (
@@ -285,7 +283,7 @@ function AddSignboardScreen({ navigation, route }) {
             Height: selectedSignBoard.Height,
             Width: selectedSignBoard.Width,
             Notes: selectedSignBoard.Notes,
-            ForBuilding: 1,
+            ForBuilding:  selectedSignBoard.TYPE_ID,
             UseID: selectedSignBoard.UseID,
             IsDeleted:selectedSignBoard.IsDeleted
           }}
@@ -318,11 +316,13 @@ function AddSignboardScreen({ navigation, route }) {
                   //{ label: "الكل", value: 5 }
                 ]} />
               {!units.loading && units.data && !isForBuild && <Picker
+                handleOpenChange={handleOpenChange}
+                Open={open}
                 type={"unitsumm"}
                 unitsPicker={true}
                 navigation={navigation}
                 items={units.data}
-                name={"U_IDTxt"}
+                //name={"U_IDTxt"}
                 editable={false}
                 width={"100%"}
                 placeholder="رقم الوحدة"
@@ -331,11 +331,11 @@ function AddSignboardScreen({ navigation, route }) {
                 selectedItemChanged={(unit) => {
                   setU_ID(unit.U_ID);
                   getSignBoards(unit.U_ID);
-                  //  / scrollToIndexUnit(unit.label);      
+                  ///scrollToIndexUnit(unit.label);      
                 }}
               />}
               {true && <Picker
-                items={
+               items={
                   signBorads.data?.map(
                     (item) => {
                       return {
@@ -345,16 +345,17 @@ function AddSignboardScreen({ navigation, route }) {
                          ;
                     })
                 }
+                //items={signBorads?.data}
                 name="OldSignBorads"
                 placeholder="اختر يافطة"
-                showPlaceholder={false}
-
+                showPlaceholder={true}
+                signBoardPicker={true}
                 selectedItemChanged={(signBoard) => {
-                 // console.log(signBoard);
-                  console.log(signBoard.value);
+                  // console.log(signBoard);
+                  //console.log(signBoard.value);
                  // if(signBoard.value>0)//Update or delete 
                   //setOperation(2);
-                  console.log(signBoard.item);
+                  //console.log(signBoard.CommercialName);
                   setSelectedSignBoard(signBoard.item)}}
               />}
               <Field
@@ -362,6 +363,7 @@ function AddSignboardScreen({ navigation, route }) {
                 placeholder={"الاسم التجاريّ"}
                 style={[styles.name]}
                 showPlaceholder={false}
+                //value={selectedSignBoard.CommercialName}
               /><View style={[styles.dateSection]}>
                <Field
                 name="Height"

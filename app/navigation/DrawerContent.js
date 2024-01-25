@@ -48,8 +48,10 @@ function DrawerContent(props) {
       return;
     }
     console.log(result);
-
+    if(result.data==1)
     setShowIncompleteFeature(result.data);
+    else     setShowIncompleteFeature(false);
+    //setShowIncompleteFeature(result.data);
   };
   const getShowEPaymentFeature = async () => {
     const result = await contentApi.ShowEPaymentFeature();
@@ -61,7 +63,9 @@ function DrawerContent(props) {
       return;
     }
 
-    setShowEPaymentFeature(result.data);
+    setShowEPaymentFeature(0);
+
+    //setShowEPaymentFeature(result.data);
     authStorage.storeEPayment("0");
 
   };
@@ -83,7 +87,8 @@ function DrawerContent(props) {
     setEmployeePermissions({loading:true,data:null});
   
     var token = await authStorage.getToken();
-    const result = await CustomerApi.GetEmployeePermissions(token);   console.log(result);
+    const result = await CustomerApi.GetEmployeePermissions(token);
+    console.log(result);
 
     if (!result.ok) { 
       setEmployeePermissions({loading:false,data:null});
@@ -144,7 +149,7 @@ function DrawerContent(props) {
 
   return (
     <>
-      <View style={styles.drawerContainer}>
+      {true&&<View style={styles.drawerContainer}>
         <Drawer.Section style={styles.topDrawerItem}>
           {user?.role == "EDevlet" && (
             <ListItem
@@ -250,11 +255,24 @@ function DrawerContent(props) {
               }
 
             />}
-              {showIncompleteFeature  && (user?.role == "HMUser" || user?.role == "CUSER") && <ListItem
+              {showIncompleteFeature  && (user?.role == "HMUser" || user?.role == "CUSER") && employeePermissions.data?.TELEPHONE_BOOK==1 && <ListItem
               key={"item220"}
-              title="استعلام "
+              title="دليل الهاتف"
               onPress={() =>
-                props.navigation.navigate(routes.SEARCHCUST)
+                props.navigation.navigate(routes.SEARCHCUST,{TELEPHONE_BOOK_CUST:employeePermissions.data?.TELEPHONE_BOOK_CUST})
+              }
+              listStyle={styles.drawerItem}
+              textStyle={styles.drawerTextStyle}
+              IconRightComponent={
+                <Icon name={'account-search'} localIcon={false} size={40} color={"#fff"} />
+              }
+
+            />}
+            {user?.serialnumber == "1927"&&showIncompleteFeature  && (user?.role == "HMUser" || user?.role == "CUSER") && <ListItem
+              key={"item1220"}
+              title="طلبات الموظف"
+              onPress={() =>
+                props.navigation.navigate(routes.ALLTALABTS,{B_ID:-1,FromMap:false})
               }
               listStyle={styles.drawerItem}
               textStyle={styles.drawerTextStyle}
@@ -284,7 +302,7 @@ function DrawerContent(props) {
               textStyle={styles.drawerTextStyle}
               IconRightComponent={
                 <Icon name={'account-search'} localIcon={false} size={40} color={"#fff"} /> } />}
-            {showIncompleteFeature &&true && user?.serialnumber == "1927" && (user?.role == "HMUser" || user?.role == "CUSER") && <ListItem
+            {showIncompleteFeature &&false && user?.serialnumber == "1927" && (user?.role == "HMUser" || user?.role == "CUSER") && <ListItem
               key={"item22100"}
               title="اجراءت التابلت للأبنية"
               onPress={() =>
@@ -309,7 +327,7 @@ function DrawerContent(props) {
             />}
             {showIncompleteFeature && employeePermissions.data?.VECHILE_TRACK==1 && (user?.role == "HMUser" || user?.role == "CUSER") && <ListItem
               key={"item93"}
-              title="متابعة مسار الحركة"
+              title="متابعة مسار المركبة"
               onPress={() => props.navigation.navigate(routes.TRACKING)}
               listStyle={styles.drawerItem}
               textStyle={styles.drawerTextStyle}
@@ -327,63 +345,7 @@ function DrawerContent(props) {
                 <Icon name={'mail'} localIcon={false} size={40} color={"#fff"} />
               }
             />}
-            {false && user?.role == "HMUser" && showIncompleteFeature && <ListItem
-              key={"item25"}
-              title=" الدخول لتطبيق الميدان"
-              onPress={() =>
-                props.navigation.navigate(routes.TABLET)
-              }
-              listStyle={styles.drawerItem}
-              textStyle={styles.drawerTextStyle}
-              IconRightComponent={ <Icon name={'apps'} localIcon={false} size={40} color={"#fff"} />}
-            />}
-            {user?.role == "HMUser" &&app.data?.APP_NAME_AR&& showIncompleteFeature && <ListItem
-              key={"item26"}
-              //title="تطبيق الميـــدان"
-              title={app.data?.APP_NAME_AR}
-              onPress={() => props.navigation.navigate(routes.TABLETMAIN,  { name: app.data?.APP_NAME_AR})}
-              listStyle={styles.drawerItem}
-              textStyle={styles.drawerTextStyle}
-              IconRightComponent={
-                <Icon name={'application-cog-outline'} localIcon={false} size={40} color={"#fff"} />
-              }
-            />}
-            {user?.role == "HMUser" && showIncompleteFeature && user?.serialnumber == "1927" && <ListItem
-              key={"item27"}
-              title="مدير تطبيق الميدان"
-              onPress={() =>
-                props.navigation.navigate(routes.TABLETADMIN)
-              }
-              listStyle={styles.drawerItem}
-              textStyle={styles.drawerTextStyle}
-              IconRightComponent={
-                <Icon name={'apps'} localIcon={false} size={40} color={"#fff"} />
-              }
-            />}
-            {false && user?.role == "HMUser" && showIncompleteFeature && user?.serialnumber == "1927" && <ListItem
-              key={"item28"}
-              title="ترحيل بيانات تطبيق الميدان"
-              onPress={() =>
-                props.navigation.navigate(routes.TABLETUPLOAD)
-              }
-              listStyle={styles.drawerItem}
-              textStyle={styles.drawerTextStyle}
-              IconRightComponent={
-                <Icon name={'apps'} localIcon={false} size={40} color={"#fff"} />
-              }
-            />}
-            {false && user?.role == "HMUser" && showIncompleteFeature && user?.serialnumber == "1927" && <ListItem
-              key={"item30"}
-              title="تنزيل بيانات تطبيق الميدان"
-              onPress={() =>
-                props.navigation.navigate(routes.TABLETDOWNLOAD)
-              }
-              listStyle={styles.drawerItem}
-              textStyle={styles.drawerTextStyle}
-              IconRightComponent={
-                <Icon name={'apps'} localIcon={false} size={40} color={"#fff"} />
-              }
-            />}
+           
             {showIncompleteFeature && employeePermissions.data?.WATER_NOTIFICATIONS==1 && user?.role == "HMUser" && <ListItem
               key={"item31"}
               title="التحكم بإشعارات المياه"
@@ -438,7 +400,7 @@ function DrawerContent(props) {
                 <Icon name={'account-clock'} localIcon={false} size={40} color={"#fff"} />
               }
             />}
-              {user?.role == "HMUser" && employeePermissions.data?.OVERTIME==1 && <ListItem
+              {showIncompleteFeature && user?.role == "HMUser" && employeePermissions.data?.OVERTIME==1 && <ListItem
               key={"item50"}
               title="العمل الإضافي"
               onPress={() =>
@@ -474,7 +436,161 @@ function DrawerContent(props) {
                 <Icon name={'account-multiple-check'} localIcon={false} size={40} color={"#fff"} />
               }
             />}
-             
+                          {showIncompleteFeature &&( employeePermissions.data?.PROJECTS_MAP==1 || user?.role == "CUSER") &&<ListItem
+              key={"item118"}
+              title="خريطة المشاريع"
+               onPress={() => props.navigation.navigate(routes.PROJECTSMAP)}
+              listStyle={styles.drawerItem}
+              textStyle={styles.drawerTextStyle}
+              IconRightComponent={
+                <Icon name={'map'} localIcon={false} size={40} color={"#fff"} />
+              }
+            />}
+              {user?.role != "Anonymous" && showIncompleteFeature && employeePermissions.data?.COLLECTION==1  && <ListItem
+              key={"item101"}
+              title="منظومة الجباية"
+              onPress={() =>
+                props.navigation.navigate(routes.PAYMENT,{ U_ID: -1 })}
+              listStyle={styles.drawerItem}
+              textStyle={styles.drawerTextStyle}
+              IconRightComponent={
+                <Icon name={'account-cash'} localIcon={false} size={40} color={"#fff"} />
+              }
+            />}
+              {user?.role != "Anonymous" && showIncompleteFeature && employeePermissions.data?.COLLECTION==1  && <ListItem
+              key={"item1001"}
+              title="صفحة الوكلاء"
+              onPress={() =>
+                props.navigation.navigate(routes.TAXAGENT,{ U_ID: -1 })}
+              listStyle={styles.drawerItem}
+              textStyle={styles.drawerTextStyle}
+              IconRightComponent={
+                <Icon name={'account-cash'} localIcon={false} size={40} color={"#fff"} />
+              }
+            />}
+              {user?.role != "Anonymous"  && employeePermissions.data?.WATER_READINGS==1  && <ListItem
+              key={"item1101"}
+              title="قراءة المياه"
+              onPress={() =>
+                props.navigation.navigate(routes.WATERREADERSERVICES)}
+              listStyle={styles.drawerItem}
+              textStyle={styles.drawerTextStyle}
+              IconRightComponent={
+                <Icon name={'water'} localIcon={false} size={40} color={"#fff"} />
+              }
+            />}
+              {(user?.role == "HMUser" || user?.role == "CUSER") && <ListItemSeparator seperatorStyle={styles.seperator} />}
+              {(user?.role == "HMUser" || user?.role == "CUSER") && <ListItem
+              key={"item2112"}
+              title="تطبيق الميـدان"
+              listStyle={styles.drawerSection}
+              textStyle={styles.drawerSectionTextStyle}
+            />}
+             {false && user?.role == "HMUser" && showIncompleteFeature && <ListItem
+              key={"item25"}
+              title=" الدخول لتطبيق الميدان"
+              onPress={() =>
+                props.navigation.navigate(routes.TABLET)
+              }
+              listStyle={styles.drawerItem}
+              textStyle={styles.drawerTextStyle}
+              IconRightComponent={ <Icon name={'apps'} localIcon={false} size={40} color={"#fff"} />}
+            />}
+            {user?.role == "HMUser" &&app.data?.APP_NAME_AR&& showIncompleteFeature>=0 && <ListItem
+              key={"item26"}
+              //title="تطبيق الميـــدان"
+              title={app.data?.APP_NAME_AR}
+              onPress={() => props.navigation.navigate(routes.TABLETMAIN,  { name: app.data?.APP_NAME_AR})}
+              listStyle={styles.drawerItem}
+              textStyle={styles.drawerTextStyle}
+              IconRightComponent={
+                <Icon name={'application-cog-outline'} localIcon={false} size={40} color={"#fff"} />
+              }
+            />}
+            {user?.role == "HMUser" && showIncompleteFeature && user?.serialnumber == "1927" && <ListItem
+              key={"item27"}
+              title="مدير تطبيق الميدان"
+              onPress={() =>
+                props.navigation.navigate(routes.TABLETADMIN)
+              }
+              listStyle={styles.drawerItem}
+              textStyle={styles.drawerTextStyle}
+              IconRightComponent={
+                <Icon name={'apps'} localIcon={false} size={40} color={"#fff"} />
+              }
+            />}
+            {user?.role == "HMUser" && showIncompleteFeature && user?.serialnumber == "1927" && <ListItem
+              key={"item027"}
+              title="إضافة مستخدم جديد"
+              onPress={() =>
+                props.navigation.navigate(routes.NEWTABLETUSER)
+              }
+              listStyle={styles.drawerItem}
+              textStyle={styles.drawerTextStyle}
+              IconRightComponent={
+                <Icon name={'account-plus'} localIcon={false} size={40} color={"#fff"} />
+              }
+            />}
+             {user?.role == "HMUser" && showIncompleteFeature && user?.serialnumber == "1927" && <ListItem
+              key={"item127"}
+              title="إضافة تطبيق جديد"
+              onPress={() =>
+                props.navigation.navigate(routes.NEWTABLETAPP)
+              }
+              listStyle={styles.drawerItem}
+              textStyle={styles.drawerTextStyle}
+              IconRightComponent={
+                <Icon name={'plus'} localIcon={false} size={40} color={"#fff"} />
+              }
+            />}
+            {user?.role == "HMUser" && showIncompleteFeature && (user?.serialnumber == "1927" ||user?.serialnumber == "1465") && <ListItem
+              key={"item11127"}
+              title="صلاحيات الموظف"
+              onPress={() =>
+                props.navigation.navigate(routes.EMPLOYEEPERMISSIONS)
+              }
+              listStyle={styles.drawerItem}
+              textStyle={styles.drawerTextStyle}
+              IconRightComponent={
+                <Icon name={'plus'} localIcon={false} size={40} color={"#fff"} />
+              }
+            />}
+              {user?.role == "HMUser" && showIncompleteFeature && (user?.serialnumber == "1927" ||user?.serialnumber == "1465") && <ListItem
+              key={"item12127"}
+              title="صلاحيات الطبقات"
+              onPress={() =>
+                props.navigation.navigate(routes.LAYERSPERMISSIONS)
+              }
+              listStyle={styles.drawerItem}
+              textStyle={styles.drawerTextStyle}
+              IconRightComponent={
+                <Icon name={'plus'} localIcon={false} size={40} color={"#fff"} />
+              }
+            />}
+            {false && user?.role == "HMUser" && showIncompleteFeature && user?.serialnumber == "1927" && <ListItem
+              key={"item28"}
+              title="ترحيل بيانات تطبيق الميدان"
+              onPress={() =>
+                props.navigation.navigate(routes.TABLETUPLOAD)
+              }
+              listStyle={styles.drawerItem}
+              textStyle={styles.drawerTextStyle}
+              IconRightComponent={
+                <Icon name={'apps'} localIcon={false} size={40} color={"#fff"} />
+              }
+            />}
+            {false && user?.role == "HMUser" && showIncompleteFeature && user?.serialnumber == "1927" && <ListItem
+              key={"item30"}
+              title="تنزيل بيانات تطبيق الميدان"
+              onPress={() =>
+                props.navigation.navigate(routes.TABLETDOWNLOAD)
+              }
+              listStyle={styles.drawerItem}
+              textStyle={styles.drawerTextStyle}
+              IconRightComponent={
+                <Icon name={'apps'} localIcon={false} size={40} color={"#fff"} />
+              }
+            />}
              <ListItemSeparator seperatorStyle={styles.seperator} />
              {(user?.role == "HMUser" || user?.role == "CUSER") && <ListItem
               key={"item210"}
@@ -556,7 +672,7 @@ function DrawerContent(props) {
                 <Icon name={'folder-alert'} localIcon={false} size={40} color={"#fff"} />
               }
             />}
-            {user?.role != "Anonymous" && false && <ListItem
+            {user?.role != "Anonymous" && true && <ListItem
               key={"item10"}
               title="الأمور المالية"
               onPress={() =>
@@ -571,17 +687,6 @@ function DrawerContent(props) {
               key={"item100"}
               title="الأمور المالية-دفع"
               onPress={() =>
-                props.navigation.navigate(routes.EPAYMENT,{ U_ID: -1 })}
-              listStyle={styles.drawerItem}
-              textStyle={styles.drawerTextStyle}
-              IconRightComponent={
-                <Icon name={'account-cash'} localIcon={false} size={40} color={"#fff"} />
-              }
-            />}
-              {user?.role != "Anonymous" && employeePermissions.data?.COLLECTION==1  && <ListItem
-              key={"item101"}
-              title="منظومة الجباية"
-              onPress={() =>
                 props.navigation.navigate(routes.PAYMENT,{ U_ID: -1 })}
               listStyle={styles.drawerItem}
               textStyle={styles.drawerTextStyle}
@@ -589,6 +694,7 @@ function DrawerContent(props) {
                 <Icon name={'account-cash'} localIcon={false} size={40} color={"#fff"} />
               }
             />}
+
              
 
             {user?.role != "Anonymous" && false && <ListItem
@@ -652,6 +758,7 @@ function DrawerContent(props) {
                 <Icon name={'file-certificate'} localIcon={false} size={40} color={"#fff"} />
               }
             />}
+            
             {user?.role != "Anonymous" && false && <ListItem
               key={"item15"}
               title="تعديل البيانات"
@@ -691,12 +798,11 @@ function DrawerContent(props) {
                 <Icon name={'account-group'} localIcon={false} size={40} color={"#fff"} />
               }
             />
-             {employeePermissions.data?.PROJECTS_MAP==1
-             &&
-             (user?.serialnumber == "1927" || user?.role == "CUSER") &&<ListItem
-              key={"item118"}
+
+            {showIncompleteFeature &&(user?.serialnumber=="1927" || user?.role == "Anonymous") &&<ListItem
+              key={"item1118"}
               title="خريطة المشاريع"
-              onPress={() => props.navigation.navigate(routes.PROJECTSMAP)}
+              onPress={() => props.navigation.navigate(routes.PROJECTSPUBLICMAP)}
               listStyle={styles.drawerItem}
               textStyle={styles.drawerTextStyle}
               IconRightComponent={
@@ -905,7 +1011,7 @@ function DrawerContent(props) {
             />
           </View>
         </Drawer.Section>
-      </View>
+      </View>}
       <AppModalize ref={modalizeRef} title="تسجيل الدخول">
         <AppWebView
           source={{

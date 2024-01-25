@@ -102,7 +102,7 @@ function TaxDetailsScreen({ navigation, route }) {
     getUnitTaxes(route.params.U_ID,1,fromDate);
     dayjs.extend(updateLocale);
     dayjs.extend(relativeTime);
-    //  /getNobetciEczaneApi.request("ss");
+    //getNobetciEczaneApi.request("ss");
   }, []);
   const handleChange1 = async (TaxType ) => {
     setTaxType(TaxType);

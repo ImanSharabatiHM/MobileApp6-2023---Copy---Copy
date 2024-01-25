@@ -1,10 +1,12 @@
 import React from "react";
 import { StyleSheet, Text, TouchableOpacity } from "react-native";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 import colors from "../config/colors";
 import style from "../config/styles";
 
 function AppButton({
+  iconName,
   enabled=true,
   title,
   onPress,
@@ -18,7 +20,12 @@ function AppButton({
       onPress={onPress}
       disabled={!enabled}
     >
-      <Text style={[style.text, textStyle]}>{title}</Text>
+       {iconName&&<MaterialCommunityIcons
+                name={iconName}
+                color={colors.dark}
+                size={35}
+              />}
+     {title&& <Text style={[style.text, textStyle]}>{title}</Text>}
     </TouchableOpacity>
   );
 }
