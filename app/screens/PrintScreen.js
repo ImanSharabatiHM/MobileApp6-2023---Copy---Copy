@@ -1,6 +1,5 @@
 import React, {useState} from 'react';
 import {StyleSheet, Text, View,Button} from 'react-native';
-import {RNZebraBluetoothPrinter}  from 'react-native-zebra-bluetooth-printer';
 import {BleManager} from 'react-native-ble-plx'
 
 const PrintScreen = () => {
@@ -22,13 +21,13 @@ const PrintScreen = () => {
   const connectPrinter = async () => {
    console.log
    ("fffffffffccccccc"); 
-    const printer = await RNZebraBluetoothPrinter .init();
+   // const printer = await RNZebraBluetoothPrinter .init();
 
-   const isBluetoothEnabled = await RNZebraBluetoothPrinter .isEnabled();
-     console.log(printer);
-    const devices = await RNZebraBluetoothPrinter .getDevices();
+  // const isBluetoothEnabled = await RNZebraBluetoothPrinter .isEnabled();
+    // console.log(printer);
+    //const devices = await RNZebraBluetoothPrinter .getDevices();
 
-    console.log(devices);
+    //console.log(devices);
     if (devices.length === 0) {
       return;
     }

@@ -53,6 +53,13 @@ const storeOverTimeNotes = async (id) => {
     console.log("Error storing the overtime notes for user", error);
   }
 };
+const storeOverTimeCount = async (count) => {
+  try {
+    await SecureStore.setItemAsync("count", count);
+  } catch (error) {
+    console.log("Error storing the initial counter for user", error);
+  }
+};
 const storeStartTime = async (time) => {
   try {
     await SecureStore.setItemAsync("starttime", time);
@@ -107,6 +114,14 @@ const getOverTimeNotes = async () => {
    return await SecureStore.getItemAsync("notes");
   } catch (error) {
     console.log("Error getting the overtime notes", error); 
+  }
+};
+
+const getOverTimeCount = async () => {
+  try {
+   return await SecureStore.getItemAsync("count");
+  } catch (error) {
+    console.log("Error getting the initial ", error); 
   }
 };
 
@@ -247,6 +262,8 @@ export default {
   storeAuthUser,
   storeTrackID,
   storeOverTimeNotes,
+  storeOverTimeCount,
+  getOverTimeCount,
   getOverTimeNotes,
   getTrackID,
   getEPayment,

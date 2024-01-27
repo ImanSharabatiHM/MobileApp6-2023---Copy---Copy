@@ -61,7 +61,8 @@ function SearchCustomerScreen({ navigation, route }) {
   const modalizeRef = useRef(null);
   const webModalizeRef = useRef(null);
   const [navItem, setNavItem] = useState(false);
-  const[custSearch,setCustSearch]=useState(true);
+  const[custSearch,setCustSearch]=useState(false);
+  const[searchPermission,setSearchPermission]=useState(route.params.TELEPHONE_BOOK_CUST);
 
 
 
@@ -149,13 +150,21 @@ function SearchCustomerScreen({ navigation, route }) {
       <Form        
           key={"RequestForm"}
           initialValues={{
-            RequestType:"1",            
+            RequestType:"2",            
           }}       
         >
           <ScrollView>
          <View style={styles.Form}>
       {true&&<FormRadioButtonGroup  handleChange1={handleChange1} name="RequestType" 
-         items={[{ label: "مواطن", value: "1" }, { label: "موظف", value: "2" }]} />
+         items={searchPermission==1?[
+          { label: "موظف", value: "2" },
+         
+         { label: "مواطن", value: "1" } ]:
+         [{ label: "موظف", value: "2" }]
+        
+        }
+         
+         />
          }
          </View>
          </ScrollView>
@@ -186,7 +195,7 @@ function SearchCustomerScreen({ navigation, route }) {
             showPlaceholder={false}
             containerStyle={styles.searchBox}
             textStyle={[styles.searchBoxText]}
-             autoFocus={true}
+            autoFocus={true}
             onChangeText={handleChange}
             placeholder= "البحث من خلال اسم الموظف"
           />

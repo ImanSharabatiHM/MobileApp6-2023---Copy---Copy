@@ -36,6 +36,7 @@ import { Dimensions } from "react-native";
 import useAuth from "../auth/useAuth";
 import authStorage from "../auth/storage";
 import { TokenError } from "expo-auth-session";
+import AppText from "../components/Text";
 const { width, height } = Dimensions.get("window");
 const html="<html dir=\"rtl\" lang=\"ar\">"+
 "    <head>" +
@@ -79,7 +80,9 @@ const html="<html dir=\"rtl\" lang=\"ar\">"+
 function TaxPaymentScreen({ navigation, route }) {
   const getNobetciEczaneApi = useApi(eDevletApi.getNobetciEczaneler);
   const [unitTaxes, setUnitTaxes] = useState({ loading: false, data: [] });
-  const [U_ID, setU_ID] = useState(route.params.U_ID);
+  const [U_ID, setU_ID] = useState(route.params.U_ID?route.params.U_ID:null);
+  const [TAX_CODE, setTAX_CODE] = useState(route.params.TAX_CODE?route.params.TAX_CODE:null);
+
   const modalizeRef = useRef(null);
   const [viewerHeight, setViewerHeight] = useState(height);
   const [fromDate, setFromDate] = useState(new Date(new Date().getFullYear()-9, 0, 1));
@@ -93,16 +96,21 @@ function TaxPaymentScreen({ navigation, route }) {
   const [custName, setCustName] = useState("");
   const [transId, setTransId] = useState(0);
    const[printColor,setPrintColor]=useState("light"); 
-   const[printEnabled,setPrintEnabled]=useState(false); 
+   const[payColor,setPayColor]=useState("light"); 
+   const[payAmount,setPayAmount]=useState(0);
 
-   const [custId, setCustId] = useState(null);
+   const[printEnabled,setPrintEnabled]=useState(false); 
+   const[payEnabled,setPayEnabled]=useState(false); 
+
+
+   const [custId, setCustId] = useState(route.params.CUST_ID?route.params.CUST_ID:null);
    const {user,setUser}=useAuth();
    const [selectedPrinter, setSelectedPrinter] = React.useState();
    const[PaymentLink,setPaymentLink]=useState("");
    const[PaymentReference,setPaymentReference]=useState("");
    const[Voucher,setVoucher]=useState(null);
    const[VoucherNo,setVoucherNo]=useState(null);
-   const [ctoken]=useState("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6Ijg1MDEyMDA2NCIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL25hbWUiOiLYtNin2K_ZiiDZhdin2YfYsSDZgdmH2YXZiiDYstix2YgiLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJITVVzZXIiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA5LzA5L2lkZW50aXR5L2NsYWltcy9hY3RvciI6IjEiLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3NlcmlhbG51bWJlciI6IjExNDciLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9zdHJlZXRhZGRyZXNzIjoi2YjYp9iv2Yog2KfYqNmIINin2YPYqtmK2YTZhyAiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9zdGF0ZW9ycHJvdmluY2UiOiIg2KfZhNiu2YTZitmEICIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL2NvdW50cnkiOiLZgdmE2LPYt9mK2YbZiiIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL21vYmlsZXBob25lIjoiMDU5NzA1MjMxNCIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL2hvbWVwaG9uZSI6IjAiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9lbWFpbGFkZHJlc3MiOiIiLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL2dyb3Vwc2lkIjoiMCIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvcHJpbWFyeWdyb3Vwc2lkIjoiIiwiZXhwIjoxOTQzOTUwOTU3LCJpc3MiOiJodHRwOi8vbG9jYWxob3N0IiwiYXVkIjoiaHR0cDovL2xvY2FsaG9zdCJ9.LfFmfl2efP0jmY7J0kdNh3Gbbyn9vFw0kJLVq0C1EZo");
+   const [ctoken]=useState("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6Ijk0OTc5MDMyMyIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL25hbWUiOiLZitin2LPYsSAg2YbYuNin2YUgINmF2K3ZhdivINin2YXZitmGINin2YTYrNi52KjYsdmKICIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvcm9sZSI6IkhNVXNlciIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDkvMDkvaWRlbnRpdHkvY2xhaW1zL2FjdG9yIjoiMSIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvc2VyaWFsbnVtYmVyIjoiMjE1NiIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL3N0cmVldGFkZHJlc3MiOiLYsdin2LMg2KfZhNis2YjYsdipICIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL3N0YXRlb3Jwcm92aW5jZSI6Itin2YTYrtmE2YrZhCAiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9jb3VudHJ5IjoiIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvbW9iaWxlcGhvbmUiOiIwNTk3OTI5MjE4IiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvaG9tZXBob25lIjoiMCIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL2VtYWlsYWRkcmVzcyI6IiIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvZ3JvdXBzaWQiOiIwIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9wcmltYXJ5Z3JvdXBzaWQiOiIiLCJleHAiOjE5NTE4MDY2ODAsImlzcyI6Imh0dHA6Ly9sb2NhbGhvc3QiLCJhdWQiOiJodHRwOi8vbG9jYWxob3N0In0.W1EPcCGPSitGxABAijOQDHsz8-5hOgqVlvIK7fhzPdo");
 
     
    const[PaymentLinkVisible,setPaymentLinkVisible]=useState(false);
@@ -116,22 +124,22 @@ function TaxPaymentScreen({ navigation, route }) {
 
    const result = await customerApi.GetCustomerNameByID2(id,token);
      if (!result.ok) {
-       console.log(result);
+      // console.log(result);
        //setError(true);
        //setUnits({ loading: false, data:null });
        return;
      } 
-     console.log(result);
+     //console.log(result);
    
      let data = result.data ;//.sort(function (a, b) { return b.hitCount - a.hitCount; }) .slice(0, 5);
     // setUnits({ loading: false, data:data });
    
-     console.log(custId);
+     //console.log(custId);
      setCustName(data);
    };
    const PrintPaymentVoucher=async(VoucherNo)=>
   {
-     console.log("In print Payments "+VoucherNo);
+     //console.log("In print Payments "+VoucherNo);
     const result= await customerApi.PrintPaymentVoucher(VoucherNo,payToken);
     //console.log(result);
     if (!result.ok) {
@@ -149,20 +157,23 @@ function TaxPaymentScreen({ navigation, route }) {
 
   }
    const print = async () => {
-     // On iOS/android prints the given html. On web prints the HTML from the current page.
+    // On iOS/android prints the given html. On web prints the HTML from the current page.
     // console.log('data:application/pdf;base64,'+Voucher);
     const res= await Print.printAsync({
       uri:'data:application/pdf;base64,'+Voucher,
       //  html,
-       //printerUrl: selectedPrinter?.url, // iOS only
+      //printerUrl: selectedPrinter?.url, // iOS only
      });
-     console.log(res);
+     //console.log(res);
      clearAll();
    };
    const clearAll = async () => {
     setPrintEnabled(false);
     setUnitTaxes({ loading: false, data: [] });
     setPayTotal(0);
+    setPayColor("light");
+    setPayEnabled(false);
+
     setCustId("");
     setCustName("");
     
@@ -201,33 +212,26 @@ function TaxPaymentScreen({ navigation, route }) {
 
   const PayFees=async()=>
   {
-
-    //var fees=GetFees();
     GenerateTransID();
-
-     
-
   }
 
+ 
   const PostPaymentByCustomerID2=async(mtransId)=>
   {
     const fees=await GetFees();
-    const PayTokenRes= await customerApi.GenerateCollectionToken(ctoken);
-    console.log(PayTokenRes);
-    var PayToken= PayTokenRes.data.ResponseObject;
-     setPayToken(PayToken);
-    console.log(user.nameidentifier,payToken);
+   
+   // console.log(user.nameidentifier,payToken);
     const result= await customerApi.PostPaymentByCustomerID2(PayToken,{
-      CUSTOMER_ID:custId,Amount:payTotal,Fees:fees,Notes:"test",TransactionId:mtransId
+      CUSTOMER_ID:custId,Amount:Math.round(payTotal),Fees:fees,Notes:"test",TransactionId:mtransId
        },(progress) => {
         //setProgress(progress);
        // if (progress == 1) setLoading(true);
       });
-      console.log(result);
+     // console.log(result);
       if(result.data.ResponseObject)
       {
       var v_NO=result.data.VoucherNo;
-      console.log(v_NO,result);
+     // console.log(v_NO,result);
       
       setVoucherNo(v_NO);
       PrintPaymentVoucher(v_NO);
@@ -260,19 +264,19 @@ function TaxPaymentScreen({ navigation, route }) {
   {
     //console.log(user.nameidentifier,payToken);
     const res= await customerApi.CheckVisaPayment(PaymentReference,payToken);
-    console.log(res);
+    //console.log(res);
   }
   const GenerateTransID=async()=>
   {
     //console.log(user.nameidentifier,payToken);
     const result= await customerApi.GenerateTransID(payToken);
-    console.log(result);
     if (!result.ok) {
       //  / setError(true);
         setTransId(0); 
         return;
       }
       PostPaymentByCustomerID2(result.data.ResponseObject);
+     //console.log("Trans ID :"+result.data.ResponseObject);
 
       setTransId(result.data.ResponseObject);
   }
@@ -280,14 +284,16 @@ function TaxPaymentScreen({ navigation, route }) {
   const GenerateCollectionToken=async()=>
   {
 
-    const PayTokenRes= await customerApi.GenerateCollectionToken(ctoken);
+    const token=await authStorage.getToken();
+
+    const PayTokenRes= await customerApi.GenerateCollectionToken(token);//ctoken
     if(!PayTokenRes.ok)
     {
       return;
     }
-    console.log(PayTokenRes);
+    //console.log(PayTokenRes);
     var PayToken= PayTokenRes.data.ResponseObject;
-    console.log(PayToken);
+    // console.log("Generate Collectio Token from  "+token+"  =   "+PayToken);
     setPayToken(PayToken);
   }
   const GetFeesByCustomerID = async (C_ID,U_ID,T_DATE) => {
@@ -297,9 +303,15 @@ function TaxPaymentScreen({ navigation, route }) {
     setUnitTaxes({ loading: true, data: [] });
     //token="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjQ0NDQ0NCIsImV4cCI6MTY3NjI4ODE3MiwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdCIsImF1ZCI6Imh0dHA6Ly9sb2NhbGhvc3QifQ.q_Zocy_aGZMNNJJTEdcbOgF2DMBSlNRyzBb-sz_wik0";
   
-    // const result = await customerApi.GetCustomerFinancial(user.nameidentifier,F_TYPE);   
-  const result = await customerApi.GetFeesByCustomerID(C_ID,payToken);   
-   
+    // const result = await customerApi.GetCustomerFinancial(user.nameidentifier,F_TYPE); 
+  //  console.log(payToken); 
+  console.log("OKKKKKKKKKKKKKKKK");
+  const result = await customerApi.GetFeesByCustomerID(C_ID,token,1,TAX_CODE);   
+   console.log(result);
+
+   console.log(C_ID);
+   console.log(payToken);
+  
   //const result = await customerApi.GetFeesByCustomerID("904479599",token);   
 
   //console.log(result);
@@ -337,11 +349,11 @@ function TaxPaymentScreen({ navigation, route }) {
     //token="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjQ0NDQ0NCIsImV4cCI6MTY3NjI4ODE3MiwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdCIsImF1ZCI6Imh0dHA6Ly9sb2NhbGhvc3QifQ.q_Zocy_aGZMNNJJTEdcbOgF2DMBSlNRyzBb-sz_wik0";
   
     // const result = await customerApi.GetCustomerFinancial(user.nameidentifier,F_TYPE);   
-  const result = await customerApi.GetFeesByCustomerID(user.nameidentifier,payToken);   
+  const result = await customerApi.GetFeesByCustomerID(user.nameidentifier,payToken,);   
    
   //const result = await customerApi.GetFeesByCustomerID("904479599",token);   
 
-   console.log(result);
+   //console.log(result);
     //const result = await customerApi.getPayeeTaxesByPayeeCode("852950427");   
     if (!result.ok) {
     //  / setError(true);
@@ -367,17 +379,21 @@ function TaxPaymentScreen({ navigation, route }) {
   };
   
   useEffect(() => {
-    //console.log(route.params.U_ID)
     //getUnits();
    // getUnitTaxes(route.params.U_ID,1,fromDate);
-   GenerateCollectionToken();
+
+   GenerateCollectionToken(); 
+    if (route.params.CUST_ID){getCustomer();
+      GetFeesByCustomerID(custId,-1,fromDate)
+    }
+
     dayjs.extend(updateLocale);
     dayjs.extend(relativeTime);
     //  /getNobetciEczaneApi.request("ss");
   }, []);
  const onNavigationStateChange = state => {
 
-    console.log("State: "+JSON.stringify(state));
+   // console.log("State: "+JSON.stringify(state));
     const { url } = state;
     const { loading } = state;
     const callback_url = 'CheckVisaPayment';// to be changed
@@ -388,29 +404,32 @@ function TaxPaymentScreen({ navigation, route }) {
       setPaymentLinkVisible(false);
     }
 };
-  const handleChange = async (ID,PAY ) => {
-    console.log("ID "+ID+"   "+PAY+"   ");
-    var t=payTotal;
-    var len=unitTaxes.data.length;
-    for(var i=0;i<len;i++)
+const handleChange = async (ID,PAY ) => {
+  //console.log("ID "+ID+"   "+PAY+"   ");
+  var t=payTotal;
+  var len=unitTaxes.data.length;
+  setPrintEnabled(true);
+  for(var i=0;i<len;i++)
+  {
+    var obj=unitTaxes.data[i];
+    if(ID==obj.FEE_ID){
+    obj.PAY=PAY;//console.log("ffff" + obj.PAY);}
+    if(PAY&&obj.IS_PAYABLE&&!obj.IS_FREEZ)
     {
-      var obj=unitTaxes.data[i];
-      if(ID==obj.FEE_ID){
-      obj.PAY=PAY;//console.log("ffff" + obj.PAY);}
-      if(PAY)
-      {
-        t=t+obj.AMT;
-      }
-      else
-      {
-      t=t-obj.AMT;}
-      console.log(t);
-      setPayTotal(t);
-      break;   
+      t=t+obj.AMT_REM_AFTER_DISC;
     }
+    else { t=t-obj.AMT_REM_AFTER_DISC;}
+   // console.log(t);
+    if(t>0)  {setPayColor("secondaryLight");setPayEnabled(true); }   
+    else {setPayColor("light");  setPayEnabled(false); } 
 
-}     
-}
+    setPayTotal(t);
+    break;   
+  }
+
+} 
+
+}   
  const onChangeDate = async (item) => {
   //console.log("sssdfiffee"+item +"  "+(new Date(item))+"    "+fromDate);
 
@@ -430,7 +449,7 @@ const validationSchema = Yup.object().shape({
  
 });
 const handleSubmit = async (Request, { resetForm }) => {
-  console.log(user);
+  //console.log(user);
   setLoading(true);
   var token = await authStorage.getToken();
 
@@ -443,7 +462,7 @@ const handleSubmit = async (Request, { resetForm }) => {
   const result = await customerApi.ResetCustPassword(RequestToAdd,token);
   //console.log(JSON.stringify(result)+"  \n\n "+JSON.stringify(RequestToAdd));
   if (!result.ok) {
-    console.log(result);
+   // console.log(result);
     //setUploadVisible(false);
     setInfo({
        RequestStatus: "لم يتم تقديم الطلب",
@@ -492,11 +511,12 @@ const handleSubmit = async (Request, { resetForm }) => {
 
         <View style={styles.section}>
         { <View style={[styles.buttonClose]}>
-            {true&&<Button  
-             
-             buttonStyle={{marginTop:5,height:'65%'}}
-             color={"secondaryLight"}
-             textStyle={styles.buttonTxt} title={"  دفع الرسوم المحددة  "  + payTotal +"  شيكل"}
+              {true&&<Button  
+              enabled={payEnabled}  
+             buttonStyle={{marginTop:5,height:'67%',width:'49%',padding:0,borderRadius: 10,
+            }}
+             color={payColor}//"secondaryLight"
+             textStyle={styles.buttonTxt} title={" دفع    "  + Math.round(payAmount) +"  شيكل"}
              onPress={
               () => {
                 PayFees();
@@ -504,9 +524,9 @@ const handleSubmit = async (Request, { resetForm }) => {
             }
             }      
              />}
-            { true&&<Button
-              enabled={true}  
-             buttonStyle={{marginTop:5,height:'62%'}}
+             { true&&<Button
+              enabled={printEnabled}  
+             buttonStyle={{marginTop:5,height:'67%',width:'49%',padding:0,borderRadius: 10,marginStart:10,}}
              color={printColor}//"secondaryLight"
              textStyle={styles.buttonTxt} title="طباعة" 
              onPress={
@@ -546,6 +566,28 @@ const handleSubmit = async (Request, { resetForm }) => {
         }}
       />}
 
+      <Field
+          keyboardType="number-pad"
+          maxLength={9}
+          editable={true}
+          name="PayAmount"
+          onChangeText={
+           
+            value => {
+               console.log(value);
+               setPayAmount(value);
+            }
+          }
+
+ 
+          //showPlaceholder={user.role=="Anonymous"} // handleChange1={handleTypeChange}
+          showPlaceholder={true}
+          placeholder="المبلغ المراد دفعه"
+          style={[styles.payAmountField]}
+        //  onDone={newText => setCustId(newText)}
+         // onEndEditing={getCustomer}
+
+        />
 <FormDatePicker
                   name="From"
                   placeholder={"من تاريخ:"}
@@ -562,7 +604,9 @@ const handleSubmit = async (Request, { resetForm }) => {
         initialValues={{
           CustName:custName,
           CustID:custId,
-          CustMobile:"",         
+          CustMobile:"",
+          TOTAL:payAmount,
+          //PayAmount:payTotal         
         }}
         onSubmit={handleSubmit}
         validationSchema={validationSchema}
@@ -580,6 +624,7 @@ const handleSubmit = async (Request, { resetForm }) => {
               setCustId(newText);
               if(newText.length==9){
                 getCustomer(newText);
+                //console.log(newText);
                 GetFeesByCustomerID(newText,-1,fromDate);
 
 
@@ -607,13 +652,17 @@ const handleSubmit = async (Request, { resetForm }) => {
           style={[styles.name]}
           showPlaceholder={true}
         />
-          {false&&<Field
-           keyboardType="number-pad"
-           name="CustMobile"
-           showPlaceholder={true}
-           placeholder="رقم الهاتف المحمول"
-          style={[styles.name]}
-        />}
+           <Field   
+      editable={false}
+       name={"TOTAL"}
+       value={"مجموع الرسوم المحددة"+" = "+Math.round((payTotal*10))/10+'₪'}
+       width={'100%'}
+       //showPlaceholder={user.role=="Anonymous"}
+       showPlaceholder={false}
+       placeholder={"مجموع الرسوم المحددة"+" = "+payTotal +"₪"}
+       style={[styles.totalTextStyle]}
+       
+      />
 
         </View>
        {false&& <SubmitButton title="إرسال طلب التعديــل" />}
@@ -659,18 +708,19 @@ const handleSubmit = async (Request, { resetForm }) => {
           renderItem={({ item }) => (
             <Card
             handleChange={handleChange}
+            VIEWCHECK={item.IS_PAYABLE==1 && item.IS_FREEZ==0?true:false}
             ID={item.FEE_ID}
-            Pay={item.PAY}
-            TAX_NAME={item.TAX_NAME}
+            PAY={item.PAY}
+            TAX_NAME={item.TAX_NAME+"  "}
             TAX_DATE={dayjs(item.TAX_DATE).locale("ar").format('D/MM/YYYY' )}
             AMOUNT={item.AMT+ '₪'}
-            CURN={item.CURRENCY_ID}
+            CURN={item.CURRENCY_ID+' '}
             DISCOUNT={item.DISC_LOC + '₪'}
-            LOCAL_AMOUNT={item.LOCAL_AMOUNT}
-            LOCAL_AMOUNT_AFTER_DISCOUNT={item.AMT_REM_AFTER_DISC+ '₪'} 
+            LOCAL_AMOUNT={item.REM_LOC_AMT+'₪'}
+            LOCAL_AMOUNT_AFTER_DISCOUNT={taxType==1?item.REM_LOC_AMT_AFTER_DISC+ '₪':(item.AMT+" " +item.CURRENCY_ID+"")} 
             onPress={() => {
                 setTaxItem(item);
-                console.log(item);
+                //console.log(item);
                  modalizeRef.current.open();
               }}
              
@@ -718,20 +768,22 @@ const handleSubmit = async (Request, { resetForm }) => {
           async () => {modalizeRef.current.close();         
        }}
       >
-          <View style={{ height: viewerHeight*.8 }}>
+          <View style={{ height: viewerHeight*.9 }}>
           <ActivityIndicator visible={false} />
           <CardTaxDetails
-          ADDRESS={taxItem?.ADDRESS==""?"غير معرّف":taxItem.ADDRESS}
-           BLOCK={taxItem?.BLOCK+''}
-          PARCEL={taxItem?.PARCEL+''}
-           UNIT={taxItem?.UNIT==""?"غير معرّف":taxItem.UNIT}
-            TAX_NAME={taxItem.TAX_NAME+""}
+          ADDRESS={taxItem?.LOCATION==""?"غير معرّف":taxItem.LOCATION}
+           BLOCK={taxItem?.BLOCK_NO+''}
+          PARCEL={taxItem?.PARCEL_NO+''}
+           UNIT={taxItem?.UNIT_ID==""?"غير معرّف":taxItem.UNIT_ID}
+            TAX_NAME={taxItem?.TAX_NAME+" "+(taxItem?.WATER_SERVICE_NO!=0?"/رقم الخدمة: "+taxItem?.WATER_SERVICE_NO:"")}
             TAX_DATE={dayjs(taxItem.TAX_DATE).locale("ar").format('D/MM/YYYY' )}
-            AMOUNT={taxItem.AMOUNT+''}
-            CURN={taxItem.CURN+""}
-            DISCOUNT={taxItem.DISCOUNT+''}
-            LOCAL_AMOUNT={taxItem.LOCAL_AMOUNT+''}
-            LOCAL_AMOUNT_AFTER_DISCOUNT={taxItem.LOCAL_AMOUNT_AFTER_DISCOUNT+ '₪'} 
+            AMOUNT={taxItem?.AMT+''}
+            CURN={taxItem?.CURRENCY_ID+""}
+            AMT_REM_AFTER_DISC={taxItem.AMT_REM_AFTER_DISC+""}
+            DISCOUNT={taxItem?.DISC+''}
+            DISCOUNT_LOCAL={taxItem.DISC_LOC+'₪'}            
+            LOCAL_AMOUNT={taxItem.REM_LOC_AMT+'₪'}
+            LOCAL_AMOUNT_AFTER_DISCOUNT={taxItem.REM_LOC_AMT_AFTER_DISC+ '₪'} 
             />
 
         </View>
@@ -744,15 +796,27 @@ const styles = StyleSheet.create({
   listItem: {
     backgroundColor: colors.white,
   },
+  payAmountField:
+  {
+    width:'50%',
+
+  },
   buttonClose: {
+    flexDirection:"row",
     marginTop:0,
     width: "95%",
     height:50,
     alignSelf: "center",
-    marginBottom:30,
+    marginBottom:0,
  
   },
+  totalTextStyle: {
+    color: colors.danger,
+    fontFamily:'Cairo_700Bold',
+
+  },
   buttonTxt: {
+    
     color:colors.white,
     fontSize:14,
     alignContent:"center",

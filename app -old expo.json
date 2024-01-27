@@ -1,0 +1,111 @@
+{
+  "expo": {
+    "scheme": "com.hebron.hebronmunicipality",
+    "name": "بلديّة الخليـل",
+    "slug": "HM",
+    "privacy": "unlisted",
+    
+    "plugins": [ 
+        [ "@config-plugins/react-native-pdf"],  
+     ["@config-plugins/react-native-blob-util"],
+     ["@config-plugins/react-native-ble-plx",   
+     {
+      "isBackgroundEnabled": true,
+      "modes": ["peripheral", "central"],
+      "bluetoothAlwaysPermission": "Allow $(PRODUCT_NAME) to connect to bluetooth devices to use printer"
+    }],
+      
+      [
+        "expo-notifications",
+        {
+          "icon": "./app/assets/icon.png",
+          "color": "#ffffff"
+        }
+      ],
+    
+
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "السماح لتطبيق بلدية الخليل بالوصول للكاميرا لإضافة صور للشكوى أو الطلب"
+        }
+      ]
+   
+    ],
+    "platforms": [
+      "ios",
+      "android",
+      "web"
+    ],
+    "notification": {
+      "icon": "./app/assets/icon.png"
+    },
+    "runtimeVersion": {
+      "policy": "sdkVersion"
+    },
+    "version": "3.1.1",
+    "orientation": "portrait",
+    "icon": "./app/assets/icon.png",
+    "splash": {
+      "image": "./app/assets/splash.png",
+      "resizeMode": "cover",
+      "backgroundColor": "#0091e7"
+    },
+    "updates": {
+      "fallbackToCacheTimeout": 0,
+      "url": "https://u.expo.dev/794005b7-9231-4358-864c-8c652d7289d7"
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.hebron.hebronmunicipalityios",
+      "buildNumber": "3.1.1",
+      "infoPlist": {
+        "NSPhotoLibraryUsageDescription": "بإمكان التطبيق الوصول للملفات لإضافة الصور اللازمة للطلب أو الشكوى",
+        "NSLocationAlwaysUsageDescription": "يستخدم التطبيق الموقع الحالي لإرساله مع بيانات الشكوى",
+        "NSLocationWhenInUseUsageDescription": "يستخدم التطبيق الموقع الحالي لإرساله مع بيانات الشكوى",
+        "NSLocationAlwaysAndWhenInUseUsageDescription": "يستخدم التطبيق الموقع الحالي لإرساله مع بيانات الشكوى",
+        "NSCameraUsageDescription": "يستخدم التطبيق الكاميرا لإضافة الصور اللازمة للطلب أو الشكوى"
+      }
+    },
+    "android": {
+      "package": "com.hebronline",
+      "googleServicesFile": "./google-services.json",
+      "useNextNotificationsApi": true,
+      "versionCode": 69,
+      "adaptiveIcon": {
+        "foregroundImage": "./app/assets/icon.png",
+        "backgroundColor": "#2893e0"
+      },
+    
+      "permissions": [
+       "ACCESS_BACKGROUND_LOCATION",
+        "READ_EXTERNAL_STORAGE",
+        "CAMERA",
+        "WRITE_EXTERNAL_STORAGE",
+        "READ_INTERNAL_STORAGE",
+        "WRITE_INTERNAL_STORAGE",
+        "READ_CALENDAR",
+        "WRITE_CALENDAR",
+        "ACCESS_FINE_LOCATION",
+        "ACCESS_BACKGROUND_LOCATION",
+         "BLUETOOTH_ADMIN", 
+         "BLUETOOTH_CONNECT", 
+         "ACCESS_COARSE_LOCATION",
+          "BLUETOOTH_ADVERTISE", 
+          "BLUETOOTH_SCAN",
+           "BLUETOOTH"
+      ]
+    },
+    "description": "إنه تطبيق الهاتف المتحرك الرسمي لبلدية الخليـل. بفضل هذا التطبيق ، يمكنك بسهولة الاستفادة من أخبار البلدية الحالية ، والأحداث ، والاستعلام عن الديون والدفع ، والطلب ، وتقديم الشكاوى والاستعلام على مدار الساعة طوال أيام الأسبوع من أي مكان. يمكنك أيضًا الوصول إلى الخدمات الشخصية عن طريق تسجيل الدخول عبر بوابة الحكومة الإلكترونية.",
+    "extra": {
+      "eas": {
+        "projectId": "794005b7-9231-4358-864c-8c652d7289d"
+      }
+    },
+     "currentFullName": "@iman.sh/HM",
+    "originalFullName": "@iman.sh/HM"
+  }
+}

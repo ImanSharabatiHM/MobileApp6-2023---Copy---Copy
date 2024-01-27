@@ -31,8 +31,18 @@ const validationSchema = Yup.object().shape({
   ComplaintCustID: Yup.string().required("رقم الهوية مطلوب")
   .min(9, "يجب إدخال 9 أرقام")
   .max(9),
-  //ComplaintDept: Yup.string().required("القسم"),
-  //ComplaintDeptProblem: Yup.string().required("المشكلة الفرعية"),
+  ComplaintDept: Yup.object().test('is-selected', 'يرجى اختيار القسم', (value) => {
+    console.log(value);
+    // Check if a department has been selected.
+    return value && value.value !== -1;
+  }),
+  ComplaintDeptProblem: Yup.object().required("اسم مقدم الطلب"),
+
+  ComplaintDeptProblem: Yup.object().test('is-selected', 'يرجى اختيار المشكلة الفرعية', (value) => {
+    console.log("aaaa",value);
+    // Check if a department has been selected.
+    return value !== null && value !== undefined && value.value !== -1;
+  }),
   ComplaintCustName: Yup.string().required("اسم مقدم الطلب"),
   ComplaintAddr: Yup.string().required("العنوان"),
   ComplaintCustMobile:Yup.string().required("رقم هاتف مقدم الطلب"),
@@ -51,7 +61,7 @@ function ComplaintsScreen({ navigation }) {
   const [loading, setLoading] = useState(false);
   const [info, setInfo] = useState(null);
   const [isConnected, setIsConnected] = useState(true);
-
+  const [selectedSub,setSelectedSub]=useState({label:' ',value:-1});
   async function handleNetwork() {
     const { isInternetReachable } = await Network.getNetworkStateAsync();
     setIsConnected(isInternetReachable)
@@ -70,10 +80,10 @@ function ComplaintsScreen({ navigation }) {
  
 
   const handleSubmit = async (complaint, { resetForm }) => {
-    console.log(user);
+   // console.log(user);
     setProgress(0);
     setUploadVisible(true);
- console.log(complaint.ComplaintDept);
+    //console.log(complaint.ComplaintDept);
     let complaintToAdd = {    
       TYPE_ID : 1,
       CATEGORY_ID : complaint.ComplaintDept.value,//8,
@@ -101,13 +111,13 @@ function ComplaintsScreen({ navigation }) {
     // LOCATION: location?.latitude ? location?.latitude : ""+","+ location?.longitude ? location?.longitude : "",     
     };
 
-    console.log(JSON.stringify(complaintToAdd));
+    //console.log(JSON.stringify(complaintToAdd));
     const result = await complaintApi.createCM(complaintToAdd, (progress) => {
       setProgress(progress);
       if (progress == 1) setLoading(true);
     });
     if (!result.ok) {
-      console.log(result);
+     // console.log(result);
 
       setUploadVisible(false);
       setInfo({
@@ -209,8 +219,8 @@ function ComplaintsScreen({ navigation }) {
       <Form
         initialValues={{
           ComplaintImage:[],
-          ComplaintDept:{label:'المرور',value:3},
-          ComplaintDeptProblem:{label:'اعتداء\إغلاق رصيف',value:106},
+          ComplaintDept:{label:' ',value:-1},
+          ComplaintDeptProblem:{label:' ',value:-1},
           ComplaintCustName:user.name,
           ComplaintCustID:user.nameidentifier,
           ComplaintAddr:"",
@@ -235,9 +245,12 @@ function ComplaintsScreen({ navigation }) {
         name="ComplaintDept"
         placeholder="القسم"
         showPlaceholder={false}
-        
+        connectedFieldName={"ComplaintDeptProblem"}
         selectedItemChanged={(Dept) =>   
-          getDeptProblemsApi.request(Dept.value)
+          {
+            getDeptProblemsApi.request(Dept.value);
+            
+          }
        
         }
       />
@@ -247,7 +260,8 @@ function ComplaintsScreen({ navigation }) {
             return {label: DeptProblem.NAME ,value: DeptProblem.ID };
                   })}
         name="ComplaintDeptProblem"
-        placeholder="يرجى تحديد المشكلة"       
+        placeholder="يرجى تحديد المشكلة"     
+          
       />
         <Field
           name="ComplaintCustName"

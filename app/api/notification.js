@@ -5,7 +5,6 @@ const endpoint = "/api/MobileAPIController";
 const getNotifications = (CustNo) => client.get(endpoint + "/MobileNotifications",{CustNo});
 const getNotificationsNotReadCount = (CustNo) => client.get(endpoint + "/MobileNotificationsNotReadCount",{CustNo});
 
-//MobileAPIController/MobileNotificationsUpdateStatus?NotificationID=1&StatusID=1
 const deleteNotification = (NotificationID, StatusID="2") =>
  // client.delete(endpoint + "/userNotifications/" + id);
  client.get(endpoint+"/MobileNotificationsUpdateStatus",{ NotificationID ,StatusID});

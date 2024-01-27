@@ -153,9 +153,11 @@ function HomeScreen({ navigation }) {
       setError(true);
       return;
     }
-     //console.log(result);
-    
+    if(result.data==1)
     setShowIncompleteFeature(result.data);
+    else     setShowIncompleteFeature(false);
+
+    
   };
   const getNotifications = async () => {
     //console.log(user.nameidentifier);
@@ -309,7 +311,8 @@ function HomeScreen({ navigation }) {
     else{
       if(item.route=="UserTax")  navigation.navigate(routes.EPAYMENT,{U_ID:-1})
       else
-       navigation.navigate(item.route);
+      {console.log(item.route);
+        navigation.navigate(item.route);} 
       }
   };
 

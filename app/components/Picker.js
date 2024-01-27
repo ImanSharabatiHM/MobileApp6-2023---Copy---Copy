@@ -8,6 +8,7 @@ import {
 } from "react-native";
 import Card from "../components/CardUnitPicker";
 import CardSumm from "../components/CardUnitSummPicker";
+import CardSignBoard from "../components/CardSignBoard";
 
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import Constants from "expo-constants";
@@ -22,10 +23,13 @@ import AppText from "./Text";
 import colors from "../config/colors";
 import Button from"../components/Button"
 function AppPicker({
+  handleOpenChange=null,
+  Open=false,
   type="",
   icon,
   items,
   navigation,
+  signBoardPicker=false,
   waterPicker=false,
   unitsPicker=false,
   numberOfColumns = 1,
@@ -136,12 +140,14 @@ function AppPicker({
         </View>
       
       </TouchableWithoutFeedback>
-      <Modal visible={modalVisible} animationType="slide">
+      <Modal visible={modalVisible || Open} animationType="slide">
         <Screen style={styles.modalContainer}>
           <View style={[styles.buttonClose]}>
             <Button buttonStyle={styles.buttonClose} textStyle={styles.buttonTxt} title="إغلاق" onPress={() => 
               {setFilteredTxt("");
               setModalVisible(false);
+              if (handleOpenChange!=null) handleOpenChange(false);
+
               }} />
           </View>
           {(waterPicker||unitsPicker)&&<View style={[styles.txtSearch]}>
@@ -178,6 +184,8 @@ function AppPicker({
                onPress={() => {
                 if(item.DAMGE=="N")
                 {setModalVisible(false);
+                 handleOpenChange(false);
+
                 setFilteredTxt("");
                 setFiltered(items);
                 onSelectItem(item);
@@ -194,8 +202,33 @@ function AppPicker({
           )}
         />
       )}
-          {!unitsPicker&&<FlatList
-            
+      {signBoardPicker&&<FlatList          
+            data={filteredTxt==""? items : filtered}         
+            keyExtractor={(item,index) => item.UnitID+"_"+index}
+            renderItem={({ item }) => (
+              <CardSignBoard
+              CommercialName={item.item.CommercialName}
+              Height={item.item.Height+""}
+              Width={item.item.Width+""}
+              Notes={item.item.Notes}    
+              navigation={navigation}    
+              imageHeight={250}
+              onPress={() => {
+                setFilteredTxt("");
+                setFiltered(items);
+                onSelectItem(item);
+                selectedItemChanged(item);
+                setModalVisible(false);
+                 // getUnit(item);
+                  //modalizeRef.current.open();
+                }}
+                thumbnailUrl ={"http://10.11.20.9/php/ImagesHeraf/1-197-0.jpg"}
+                imageUrl= {item.Image}//{item.img}
+              />
+            )}
+            ItemSeparatorComponent={ListItemSeparator}
+          />}
+          {!unitsPicker&&!signBoardPicker&&<FlatList          
             data={filteredTxt==""? items : filtered}         
             keyExtractor={(item) => item.value.toString()}
             numColumns={numberOfColumns}
@@ -232,6 +265,7 @@ function AppPicker({
               unitUse={item.UNIT_USE==""?"غير معروف":item.UNIT_USE}
               imageHeight={250}
               onPress={() => {
+ 
                 setModalVisible(false);
                 setFilteredTxt("");
                 setFiltered(items);

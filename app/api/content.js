@@ -22,7 +22,7 @@ const getBaskanMesajNew = () => client.get(endpoint + "/baskanMesajNew");
 const getDuyurular = () => client.get(endpoint + "/duyurular");
 const GetClarifications = () => clientEs.get(mobile + "/GetClarifications");
 const ShowIncompleteFeature = () => clientEs.get(mobile+"/ShowIncompleteFeature");
-const ShowEPaymentFeature = () => clientEs.get(mobile+"/GetShowEPaymentFeatur");
+const ShowEPaymentFeature = () => clientEs.get(mobile+"/ShowEPaymentFeature");
 const getWaterSchedule = () => clientEs.get("/api/MobileAPIController/Water_s_plan_all2");
 const getWaterAreas = () => clientEs.get("/api/MobileAPIController/GetWaterAreas");
 const GetMobileDeviceUserSummary = () => clientEs.get("/api/MobileAPIController/GetMobileDeviceUserSummary");

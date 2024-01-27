@@ -109,6 +109,7 @@ function WaterConsumScreen({ navigation, route }) {
       setWaterConsums({ loading: false, data:[] });
       return;
     }
+    console.log(result);
     setWaterConsums({ loading: false, data:result.data.WaterConsumption });
     console.log(result.data.WaterConsumption.slice(0,10));
     /*var fdata;
@@ -127,13 +128,14 @@ function WaterConsumScreen({ navigation, route }) {
   const getWaterServices = async () => {
     setWaterServices({ loading: true, data: [] });
     var Token=await authStorage.getToken();
+    t="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjkwNDQ3OTU5OSIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL25hbWUiOiLYrtin2YTYryDZhdit2YXYryDYrdiz2YrZhiDYtNin2YjYsSDYqtmF2YrZhdmKIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9yb2xlIjoiQ2l0aXplbiIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvc2VyaWFsbnVtYmVyIjoiMCIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL3N0cmVldGFkZHJlc3MiOiIiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9zdGF0ZW9ycHJvdmluY2UiOiLYp9mE2K7ZhNmK2YQiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9jb3VudHJ5IjoiIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvbW9iaWxlcGhvbmUiOiIwNTk3OTc1NTM3IiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvaG9tZXBob25lIjoiMCIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL2VtYWlsYWRkcmVzcyI6IiIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvZ3JvdXBzaWQiOiIwIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9wcmltYXJ5Z3JvdXBzaWQiOiIiLCJleHAiOjE5NTQzMDg3NDQsImlzcyI6Imh0dHA6Ly9sb2NhbGhvc3QiLCJhdWQiOiJodHRwOi8vbG9jYWxob3N0In0.hu8p1slmlldvsC6cjJqOy2gTfjJH2chIyuPOb6Nrfaw"
     const result = await customerApi.GetWaterServicesByCustNo(Token);   
     if (!result.ok) {
       console.log(result);
       setWaterServices({ loading: false, data:[] });
       return;
     }
-    console.log(result);
+    //console.log(result);
     setWaterServices({ loading: false, data:result.data.Services });
 
   };

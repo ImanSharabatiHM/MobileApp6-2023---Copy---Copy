@@ -60,6 +60,8 @@ const MPIFORM = (params) => {
 
 const POSTALURL = "https://postcode.palestine.ps/Mapweb-HebronMun.html";
 const PROJECTMAP="https://www.arcgis.com/apps/MapSeries/index.html?appid=fbef757828e04e588192f4d00ea347f2";
+const PROJECTPUBLICMAP="https://www.arcgis.com/apps/instant/portfolio/index.html?appid=f68f45c1ed624cad93ef5a7040249990";
+
 const CADASTRAL="http://10.11.16.101/cadastral/#";
 const MAPLOCATIONURL="http://82.213.32.201/MapLoc";
 const HMURL="http://www.hebron-city.ps";
@@ -85,6 +87,7 @@ const EDEVLETALERTMESSAGE = `للاستفادة من هذه الخدمة ، يج
 const EDEVLETALERTMESSAGETITLE = "لم يتمّ تسجيل الدخول حتى الآن..";
 
 export default {
+  PROJECTPUBLICMAP,
   PROJECTMAP,
   YEARSFORRAYIC,
   ILCEKODU,

@@ -57,8 +57,7 @@ function CardUnitSummPicker({
     const token = await authStorage.getToken();
     setSignBorads({ loading: true, data: null });
     const result = await tabletApi.GetSignBoards(UnitID, token);
-    console.log(result);
-    if (!result.ok) {
+     if (!result.ok) {
       // setError(true);
       setSignBorads({ loading: false, data: null });
       return;
@@ -102,7 +101,8 @@ function CardUnitSummPicker({
              title={SIGNBOARD_COUNT+""}
              onPress={() => {
               if(SIGNBOARD_COUNT>0){setYaftatVisible(!yaftatVisible);getSignBoards(unitId);
-              console.log(yaftatVisible);}}}      
+              console.log(yaftatVisible);
+            }}}      
              />
           </View>}
           <ListItemSeparator v seperatorStyle={styles.seperatorStyleTable} />

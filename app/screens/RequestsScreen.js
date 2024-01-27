@@ -128,18 +128,36 @@ const getSubCategories = async (code) => {
   getCategories();
     
   }, []);
+
+  
   const validationSchema = Yup.object().shape({
  
     RequestCustID: Yup.string().required("رقم الهوية مطلوب")
     .min(9, "يجب إدخال 9 أرقام")
     .max(9),
-    RequestCode: Yup.string().required("*نوع الطلب"),
-    RequestUnitNo:fromUnits?Yup.string().required("رقم الوحدة*"):"",
-    UnitNo:!fromUnits?Yup.string().required("رقم الوحدة*"):"",
+    
+    
+ 
+    UnitNo:!fromUnits?Yup.object().nullable().required("*رقم الوحدة مطلوب"):"",
+      RequestUnitNo:fromUnits?Yup.string().required("رقم الوحدة*"):"",
+    //UnitNo:!fromUnits?Yup.string().required("رقم الوحدة*"):"",
   
     RequestCustMobile:Yup.string().required("رقم هاتف مقدم الطلب*"),
     RequestNotes:Yup.string().required("الملاحظات*"),
-   // RequestImages: Yup.array().required("المرفقات*"),
+    RequestImages0txt: requiredDocs.data?.length>0? Yup.string().required("المرفق مطلوب*"):"",
+     RequestImages1txt: requiredDocs.data?.length>1? Yup.string().required("المرفق مطلوب*"):"",
+    RequestImages2txt: requiredDocs.data?.length>2? Yup.string().required("المرفق مطلوب*"):"",
+    RequestImages3txt: requiredDocs.data?.length>3? Yup.string().required("المرفق مطلوب*"):"",
+    RequestImages4txt: requiredDocs.data?.length>4? Yup.string().required("المرفق مطلوب*"):"",
+    RequestImages5txt: requiredDocs.data?.length>5? Yup.string().required("المرفق مطلوب*"):"",
+    RequestImages6txt: requiredDocs.data?.length>6? Yup.string().required("المرفق مطلوب*"):"",
+    RequestImages7txt: requiredDocs.data?.length>7? Yup.string().required("المرفق مطلوب*"):"",
+    RequestImages8txt: requiredDocs.data?.length>8? Yup.string().required("المرفق مطلوب*"):"",
+    RequestImages9txt: requiredDocs.data?.length>9? Yup.string().required("المرفق مطلوب*"):"",
+    RequestImages10txt: requiredDocs.data?.length>10? Yup.string().required("المرفق مطلوب*"):"",
+   
+
+
   
   });
 
@@ -186,15 +204,15 @@ let RequestToAdd = {
 
  //Attachments :  await getBase64Images(Request.RequestImages0[0])    
    };
+
+   console.log(RequestToAdd);
     const result = await RequestApi.PostNewTalab(RequestToAdd, (progress) => {
       setProgress(progress);
       if (progress == 1) setLoading(true);
     });
-console.log(RequestToAdd);
     if (!result.ok) {
       setUploadVisible(false);
-      setInfo({
-         RequestStatus: result.data.Message,
+      setInfo({ RequestStatus: result.data.Message,
          RequestNo: "",  
       });
       setLoading(false);
@@ -317,7 +335,7 @@ console.log(RequestToAdd);
              // s={modalizeRef}
               unit={item}
               navigation={navigation}
-               title={"aa"}
+              title={"aa"}
               imageHeight={250}
               onPress={() => {
                 setmainCategoriesVisible(false);
@@ -354,6 +372,21 @@ console.log(RequestToAdd);
           RequestImages9:[],
           RequestImages10:[],
           RequestImages11:[],
+          RequestImages:[],
+          RequestImages0txt:"",
+          RequestImages2txt:"",
+          RequestImages3txt:"",
+          RequestImages4txt:"",
+          RequestImages5txt:"",
+          RequestImages6txt:"",
+          RequestImages7txt:"",
+          RequestImages8txt:"",
+          RequestImages9txt:"",
+          RequestImages10txt:"",
+          RequestImages11txt:"",
+
+
+          
           RequestCustName:user.name,
           RequestCustID:user.nameidentifier,
           RequestUnitNo:route.params.item?.U_ID+"",//unit.UNIT_NO,
@@ -510,14 +543,15 @@ console.log(RequestToAdd);
               <View style={{flex:5}}>
             <Field   
             editable={false} 
-            name={"RequestImages"+index+"-txt"}
+            value={""}
+            name={"RequestImages"+index+"txt"}
             placeholder={item}
             style={[styles.name]}
             showPlaceholder={true}
           />
           </View>
           <View style={{flex:1}}>
-             <FormImagePicker style={{width:'100%',borderRadius:7}} name={"RequestImages"+index} attach = 'true'/></View>
+             <FormImagePicker  style={{width:'100%',borderRadius:7}} name={"RequestImages"+index} attach = 'true' request={true}/></View>
             </View>
           )}
         />}
@@ -525,7 +559,7 @@ console.log(RequestToAdd);
         </View>}
         </View>
         
-        <SubmitButton title="إرســـال" />
+        <SubmitButton enabled={selectedRequest.TalabCode!=0?true:false} title={"إرســـال"} />
         </ScrollView>
 
       </Form>}

@@ -31,8 +31,6 @@ const endpoint = "/api/MobileAPIController";
   const GetMuthDocAttachments = (Token,MuthDoc,MuthDocNo) =>
   client.get(endpoint+ "/GetMuthDocAttachments", {Token,MuthDoc,MuthDocNo});
 
-
- 
   const GetDocArchiveReport = (Token,DocArchive) =>
   client.get(endpoint+ "/GetDocArchiveReport", {Token,DocArchive});
 
