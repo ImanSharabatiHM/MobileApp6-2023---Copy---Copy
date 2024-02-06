@@ -3,8 +3,7 @@ import clientIman from "./client";
 const mobileendpoint="/api/MobileAPIController";
 import db from "../utility/database";
 
-const endpoint = "/MobileAPIController";
-
+ 
 const InsertEmployeeLocation11 = (x,y,trackId,type,tok,d) =>
 {
 var params="x="+x+"&y="+y+"&trackId="+trackId+"&type="+type;
@@ -22,13 +21,15 @@ client.get(mobileendpoint+"/InsertEmpLocation",params);
 const sendStoredApiRequests=  ()=>
 {
   db.retrieveApiRequests((apiRequests) => {
-   // alert(apiRequests.length);
-    apiRequests.forEach((request) => {
-    //  alert("will send REQUEST fROM DB  "+request.id);
+    console.log("I will send stored Locations in sendStoredApiRequests api",apiRequests.length);
+    apiRequests.forEach((request) => {   
+      
+  console.log("OKKK");
+    console.log("will send REQUEST fROM DB  "+request.id);
       // Retry the API call for each stored request
       console.log(request);
       const res= client.get(request.endpoint, request.body);
-
+       console.log(res);
       db.removeApiRequest(request.id);
      /* makeApiCall(request.endpoint, request.method, request.headers, request.body)
         .then((response) => {
@@ -101,7 +102,15 @@ const GetTrackID = (Token) =>
         onUploadProgress(progress.loaded / progress.total),
     });
   };
-    
+  const  GetFindAndInsertTrack= (trackID, empNo, startTime , endTime, startCount, endCount, Notes, overTimeID) =>
+  client.get(mobileendpoint+ "/GetFindAndInsertTrack", {trackID, empNo, startTime , endTime, startCount, endCount, Notes, overTimeID}); 
+  
+
+  const GetTalabat = (Token,SDate,EDate,TalabCode,BID) =>
+  client.get(mobileendpoint+ "/GetTalabat", {Token,SDate,EDate,TalabCode,BID}); 
+  
+  const GetBuildingCoordinates = (B_ID) =>
+  client.get(mobileendpoint+ "/GetBuildingCoordinates", {B_ID}); 
     
 
 export default {
@@ -112,6 +121,9 @@ export default {
   ReInsertEmployeeLocation,
   CheckOverTimeRequest,
   PostOverTimeRequest,
+  GetFindAndInsertTrack,
   GetTrackID,
-  sendStoredApiRequests
+  GetTalabat,
+  sendStoredApiRequests,
+  GetBuildingCoordinates
 };

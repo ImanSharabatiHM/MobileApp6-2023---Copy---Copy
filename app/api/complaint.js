@@ -1,6 +1,6 @@
 import client from "./clientEs";
 
-const endpoint = "/MobileAPIController";
+const endpoint = "/api/MobileAPIController";
 
  const getComplaintDepts = (Token) => client.get(endpoint + "/GetCMCategories3",{Token});
 
@@ -17,7 +17,7 @@ export const createCM = (complaint, onUploadProgress) => {
       onUploadProgress: (progress) =>
         onUploadProgress(progress.loaded / progress.total),
     });
-  };
+};
 export default {
   createCM,
   GetCMUserComplaintsByID,

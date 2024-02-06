@@ -9,6 +9,7 @@ const createTable = () => {
   };
 
   const storeApiRequest = (endpoint, method, headers, body) => {
+    console.log("Will store Locationnnn");
     db.transaction((tx) => {
       tx.executeSql(
         'INSERT INTO api_requests_locations (endpoint, method, headers, body) VALUES (?, ?, ?, ?);',
@@ -20,6 +21,7 @@ const createTable = () => {
 
 
   const retrieveApiRequests = (callback) => {
+    console.log("Willll Retrieve APIIII");
     db.transaction((tx) => {
       tx.executeSql('SELECT * FROM api_requests_locations;', [], (_, { rows }) => {
         const apiRequests = rows._array.map((row) => ({

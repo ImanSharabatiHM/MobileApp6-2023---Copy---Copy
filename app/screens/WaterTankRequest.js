@@ -190,12 +190,11 @@ const getCustomer = async (id) => {
     };
     console.log(requestToAdd);
     var token = await authStorage.getToken();
-    const result="";
-  /*  const result=await requestApi.RequestWaterTank(token,requestToAdd, (progress) => {
+   const result=await requestApi.RequestWaterTank(token,requestToAdd, (progress) => {
       setProgress(progress);
       if (progress == 1) setLoading(true);
     });
-    */ 
+     
  
     console.log(result);
     if (!result.ok) {

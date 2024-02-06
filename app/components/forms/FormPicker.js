@@ -9,6 +9,9 @@ import  Button  from "../Button";
 import colors from "../../config/colors";
 
 function AppFormPicker({
+  signBoardPicker=false,
+  handleOpenChange=null,
+  Open=false,
   type="",
   items,
   name,
@@ -24,10 +27,11 @@ function AppFormPicker({
   width,
 }) {
   const { errors, setFieldValue, touched, values } = useFormikContext();
-
   return (
     <>
       {<Picker
+      handleOpenChange={handleOpenChange}
+      signBoardPicker={signBoardPicker}
         navigation={navigation}
         items={items}
         type={type}
@@ -35,10 +39,11 @@ function AppFormPicker({
         unitsPicker={unitsPicker}
         searchPlaceHolder={searchPlaceHolder}
         numberOfColumns={numberOfColumns}
-       
+        Open={Open}
         onSelectItem={(item) => {
+          console.log("sss")
           setFieldValue(name, item);
-          if (connectedFieldName) setFieldValue(connectedFieldName, null);
+          if (connectedFieldName) {setFieldValue(connectedFieldName, null);}
         }}
         PickerItemComponent={PickerItemComponent}
         placeholder={placeholder}

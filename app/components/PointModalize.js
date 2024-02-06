@@ -13,10 +13,17 @@ import {ScrollView } from "react-native";
 import * as Yup from "yup";     
 import { Form, FormPicker as Picker, SubmitButton, FormField as Field } from "../components/forms";
 import FormImagePicker from "../components/forms/FormImagePicker";
+<<<<<<< HEAD
 import AddCarCounterForm from "../screens/TabletScreens/AddCarCounterForm";
 import AddStreetSignForm from "../screens/TabletScreens/AddStreetSignForm";
 
 import AddBumpForm from "../screens/TabletScreens/AddBumpForm"
+=======
+import AddCarCounterForm from "../screens/TabletsScreens/AddCarCounterForm";
+import AddStreetSignForm from "../screens/TabletsScreens/AddStreetSignForm";
+
+import AddBumpForm from "../screens/TabletsScreens/AddBumpForm"
+>>>>>>> b670f789e5440b5c554e87ca37afd60d8369e515
 import constants from "../config/constants";
         
 

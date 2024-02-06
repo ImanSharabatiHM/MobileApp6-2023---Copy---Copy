@@ -4,12 +4,16 @@ import { useFormikContext } from "formik";
 import ErrorMessage from "./ErrorMessage";
 import ImageInputList from "../ImageInputList";
 
-function FormImagePicker({ name,style,attach=false }) {
+function FormImagePicker({ name,style,attach=false,request=false }) {
   const { errors, setFieldValue, touched, values } = useFormikContext();
   const imageUris = values[name];
 
   const handleAdd = (uri) => {
     setFieldValue(name, [...imageUris, uri]);
+    if (request)
+     {console.log("OK");setFieldValue(name+"txt", uri);}
+    
+    
   };
 
   const handleRemove = (uri) => {
@@ -17,6 +21,8 @@ function FormImagePicker({ name,style,attach=false }) {
       name,
       imageUris.filter((imageUri) => imageUri !== uri)
     );
+    if (request)
+     {setFieldValue(name+"txt", "");console.log("OK");}
   };
 
   return (

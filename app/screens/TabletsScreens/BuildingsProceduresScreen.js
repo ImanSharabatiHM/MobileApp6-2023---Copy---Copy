@@ -60,7 +60,7 @@ function BuildingsProceduresScreen({ navigation, route }) {
     loading: false, data:
       [
         { TalabCode: '1', TextAr: 'يافطات', ImageName: "bannersIcon" },
-        { TalabCode: '2', TextAr: 'مياه', ImageName: "waterIcon" },
+        { TalabCode: '2', TextAr: 'تصوير', ImageName: "waterIcon" },
         { TalabCode: '3', TextAr: 'وحدات', ImageName: "buildingsIcon" },
         { TalabCode: '4', TextAr: 'صرف', ImageName: "sewageIcon" },
         { TalabCode: '5', TextAr: 'حرف', ImageName: "industryIcon" },
@@ -95,13 +95,7 @@ function BuildingsProceduresScreen({ navigation, route }) {
       return;
     }
     console.log(result);
-    let data = result.data ;//.sort(function (a, b) { return b.hitCount - a.hitCount; }) .slice(0, 5);
-    
-    //data=[{
-    //  "U_ID": -1,
-    //},data];
-    // /console.log(data);
-     
+    let data = result.data ;//.sort(function (a, b) { return b.hitCount - a.hitCount; }) .slice(0, 5);    
     setBuilding({ loading: false, data });
   };
   const getCategories = async () => {
@@ -271,17 +265,6 @@ function BuildingsProceduresScreen({ navigation, route }) {
             PARCEL={building.data?.B_PARCEL+''}
             IMAGE={building.data?.B_IMAGE}//{item.img}
             B_ID={route.params.B_ID}
-
-            /*  ADDRESS={taxItem?.ADDRESS==""?"غير معرّف":taxItem.ADDRESS}
-            UNIT={taxItem?.UNIT==""?"غير معرّف":taxItem.UNIT}
-              TAX_NAME={taxItem.TAX_NAME+""}
-              TAX_DATE={dayjs(taxItem.TAX_DATE).locale("ar").format('D/MM/YYYY' )}
-              AMOUNT={taxItem.AMOUNT+''}
-              CURN={taxItem.CURN+""}
-              DISCOUNT={taxItem.DISCOUNT+''}
-              LOCAL_AMOUNT={taxItem.LOCAL_AMOUNT+''}
-              LOCAL_AMOUNT_AFTER_DISCOUNT={taxItem.LOCAL_AMOUNT_AFTER_DISCOUNT+ '₪'} 
-              */
               />
            <ListItemSeparator  seperatorStyle={styles.seperatorStyleTable} />
           {mainCategories.data && mainCategoriesVisible && !fromUnits && (
@@ -299,8 +282,16 @@ function BuildingsProceduresScreen({ navigation, route }) {
                   imageHeight={50}
                   onPress={() => {
                     //setmainCategoriesVisible(false);
+
                     console.log("ddd");
+                    if(item.TalabCode==1)
                     navigation.navigate(routes.SIGNBOARD,{B_ID:route.params.B_ID}); 
+                    else if(item.TalabCode==1)
+                    {
+                      navigation.navigate(routes.SIGNBOARD,{B_ID:route.params.B_ID}); 
+
+                    }
+
                    // BNO:route.params.BNO, STNO:route.params.STNO,BLOCK:route.params.BLOCK,PARCEL:route.params.PARCEL
                     // modalizeRef.current.open();
                   }}

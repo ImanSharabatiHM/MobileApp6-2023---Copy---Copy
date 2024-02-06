@@ -3,24 +3,47 @@ import { useEffect,useState,useRef } from "react";
 import * as Notifications from "expo-notifications";
 import * as Location from 'expo-location';
 import * as Camera from 'expo-camera';
- 
+import  * as Constants  from 'expo-constants';
+import {navigationRef} from './../navigation/rootNavigation'
 import expoPushTokensApi from "../api/expoPushTokens";
 import authApi from "../api/auth";
 import * as Device from "expo-device";
 import useAuth from "../auth/useAuth";
 import * as Network from 'expo-network';
 import routes from "../navigation/routes";
+import constants from "../config/constants";
 
 Notifications.setNotificationHandler({
-  handleNotification: async () => ({
-    shouldShowAlert: true,
-    shouldPlaySound: false,
-    shouldSetBadge: false,
-  }),
+  handleNotification: async (notification) => {
+    console.log("NOTTTI")
+    console.log(notification)
+    const { channelId } = notification.request.trigger;
+console.log(channelId);
+    // Check if a specific channelId is provided
+    if (channelId) {
+      if (channelId === 'tracking') {
+        // Handle notifications for the 'tracking' channel differently
+        return {
+          shouldShowAlert: true,
+          shouldPlaySound: true,
+          shouldSetBadge: false,
+        };
+      }
+      // Handle other channels as needed
+    }
+
+    // Default handling for notifications without a channelId
+    return {
+      shouldShowAlert: true,
+      shouldPlaySound: true,
+      shouldSetBadge: false,
+    };
+  },
 });
-export default useNotifications = (notificationListenerr,navigation) => {
+export default useNotifications = (navigation) => {
   
   const [expoPushToken, setExpoPushToken] = useState('');
+  const[experienceId,setExperienceId]=useState("@iman.sh/hebronline");
   const [notification, setNotification] = useState(false);
   const notificationListener = useRef();
   const { user, logInWithEDevlet, logOut } = useAuth();
@@ -29,6 +52,7 @@ export default useNotifications = (notificationListenerr,navigation) => {
 
   const responseListener = useRef();
   useEffect(() => {
+    f();
     handleNetwork();
      //getBadgeCount();
     registerForPushNotifications().then(token => setExpoPushToken(token));
@@ -38,11 +62,11 @@ export default useNotifications = (notificationListenerr,navigation) => {
       version: Device.osVersion,
     };
     authApi.updateDevice(device);
-    if (notificationListenerr)
+    if (notificationListener)
      {
       const subscription = Notifications.addNotificationResponseReceivedListener(
         //notificationListenerr
-        notification => {
+      notification => {
           console.log("useNotification.jsssss",(notification));
           handleNotificationResponse(notification);
 
@@ -65,6 +89,19 @@ export default useNotifications = (notificationListenerr,navigation) => {
     };
 
   }, []);
+  async function f()
+  {
+     await Notifications.setNotificationChannelAsync('tracking', {
+      importance: Notifications.AndroidImportance.MAX,
+      //vibrationPattern: [0, 250, 250, 250],
+      enableLights: true,
+      lockscreenVisibility: Notifications.AndroidNotificationVisibility.PUBLIC,
+      bypassDnd: false,
+      lightColor: "#FFFFFF",
+      name: "Tracking notifications",
+      sound: "hm.wav", // Provide ONLY the base filename
+    }); 
+  }
   async function handleNetwork() {
     const { isInternetReachable } = await Network.getNetworkStateAsync();
     setIsConnected(isInternetReachable)
@@ -89,8 +126,9 @@ export default useNotifications = (notificationListenerr,navigation) => {
       const newBadgeCount = badgeCount + 1;
        updateBadgeCount(newBadgeCount);
       
-      const screenToOpen = response.notification.request.content.data.screen;
-      //navigation.navigate(routes.NOTIFICATIONS);
+     //  const screenToOpen = response.notification.request.content.data.screen;
+   // props.navigation.navigate(routes.NOTIFICATIONS);
+    //navigationRef.navigate(routes.NOTIFICATIONS); // Navigate to the specified screen
     }
   };
  
@@ -122,11 +160,17 @@ export default useNotifications = (notificationListenerr,navigation) => {
         alert('Failed to get push token for push notification!');
         return;
       }
-      const token = await Notifications.getExpoPushTokenAsync();//.getDevicePushTokenAsync();//Notifications.getExpoPushTokenAsync();
-      //const token = await Notifications.getDevicePushTokenAsync();//Notifications.getExpoPushTokenAsync();
+      const token = await Notifications.getExpoPushTokenAsync(
+
+      // {projectId: "f45eae04-6fea-40ac-8b83-9955b73e0f09"}
+          {experienceId:experienceId}
+
+      );//.getDevicePushTokenAsync();//Notifications.getExpoPushTokenAsync();
+      const deviceToken=await Notifications.getDevicePushTokenAsync();
+       //const token = await Notifications.getDevicePushTokenAsync();//Notifications.getExpoPushTokenAsync();
       //console.log(user);
-      expoPushTokensApi.register(token.data,user.nameidentifier==""?"0":user.nameidentifier,Device.deviceName);
-      console.log("useNotification.js",token.data,"eeeeee",user.nameidentifier," ");
+      expoPushTokensApi.register(token.data,user.nameidentifier==""?"0":user.nameidentifier,Device.deviceName+"/"+Device.modelName+"/"+Device.osBuildId,deviceToken.data,experienceId);
+      console.log("useNotification.js",token.data,"eeeeee",user.nameidentifier," dtoken ", deviceToken);
       setExpoPushToken(token.data);
       //token=token.data;
     } catch (error) {

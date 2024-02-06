@@ -1,5 +1,5 @@
 import React, { useEffect, useState,useRef } from "react";
-import { Linking, StyleSheet,ScrollView } from "react-native";
+import { Linking, StyleSheet,ScrollView ,PermissionsAndroid,Platform} from "react-native";
 import FormDatePicker from "../components/forms/FormDatePicker";
 import ActivityIndicator from "../components/ActivityIndicator";
 import Screen from "../components/Screen";
@@ -30,6 +30,7 @@ import Alertmsg from "../components/Alertmsg";
 //import RNZebraBluetoothPrinter from 'react-native-zebra-bluetooth-printer';
 import { AppModalize } from "../components/Modalize";
 import contentApi from "../api/content";
+import * as IntentLauncher from 'expo-intent-launcher';
 
 import icons from "../config/icons";
 import { View } from "react-native-animatable";
@@ -102,7 +103,20 @@ function TaxEPaymentScreen({ navigation, route }) {
    const[PaymentLinkVisible,setPaymentLinkVisible]=useState(false);
    const[showEPaymentFeature,setShowEPaymentFeature]=useState(false);
 
-
+   const openAppWithExtras = async (packageName, className) => {
+    const extras = {
+      transRef: '123456',
+      externalCall: true,
+      qrCode: '1*1002*100200**25.00*376*'+ PaymentReference+'*20230918**1',
+    };
+  
+    try {
+      await IntentLauncher.startActivityAsync(packageName, { extras, className,packageName });
+      console.log('Successfully launched the application');
+    } catch (error) {
+      console.log('Failed to launch the application:', error);
+    }
+  };
     
    const getShowEPaymentFeature = async () => {
     const result = await contentApi.ShowEPaymentFeature();
@@ -165,16 +179,17 @@ function TaxEPaymentScreen({ navigation, route }) {
     setTaxType(TaxType);
     getUnitTaxes(U_ID,TaxType,fromDate)
  }
-  const GetenrateLink=async()=>
+  const GetenrateLink=async(Type)=>
   {
     const token=await authStorage.getToken();
     const fees=await GetFees();
-    const PayTokenRes= await customerApi.GeneratePaymentToken(token);
+    const PayTokenRes= await customerApi.GenerateEPaymentToken(token,Type);
     var PayToken= PayTokenRes.data.ResponseObject;
     setPayToken(PayToken);
-    console.log(user.nameidentifier,PayToken);
-    const link= await customerApi.GeneratePaymentLink(PayToken,{
-      CustomerID:user.nameidentifier,Amount:payTotal,Fees:fees,Notes:"test"
+    console.log(user.nameidentifier,"Pay Tokeeennnn",PayToken);
+    
+    const link= await customerApi.GeneratePaymentLinkTest(PayToken,{
+      CustomerID:user.nameidentifier,Amount:Math.round(payTotal),Fees:fees,Notes:"test"
        },(progress) => {
         //setProgress(progress);
        // if (progress == 1) setLoading(true);
@@ -184,10 +199,19 @@ function TaxEPaymentScreen({ navigation, route }) {
       setPaymentLink(link.data.ResponseObject.PaymentLink);
       setPaymentReference(link.data.ResponseObject.PaymentReference);
       setVoucherNo(link.data.ResponseObject.VoucherNo);
+      
+      if(Type=="5")
       modalizeRefwv.current.open();
+      else if(Type=="2")
+      {
+        openAppWithExtras('com.pcnc.wallet', 'com.pcnc.wallet.ui.SplashActivity')
+
+
+      }
+      return;
       //setPaymentLinkVisible(true);
-    console.log(link.data.ResponseObject.PaymentLink);
-    console.log(link.data.ResponseObject.PaymentReference);
+      // console.log(link.data.ResponseObject.PaymentLink);
+      // console.log(link.data.ResponseObject.PaymentReference);
 
 
 
@@ -534,12 +558,25 @@ const SelectAll = async (PAY) => {
           )}
         />
         )}
-         {(showEPaymentFeature&&!PaymentLinkVisible&&!unitTaxes.loading&&unitTaxes.data.length>0&& <View style={[styles.buttonPay]}>
+         {((showEPaymentFeature||0)&&!PaymentLinkVisible&&!unitTaxes.loading&&unitTaxes.data.length>0&& 
+         <View style={[styles.buttonPay]}>
          <Button          
          buttonStyle={{marginTop:5,height:'75%',width:'72%',marginHorizontal:'12%'}}
          color={"primary"}
          textStyle={styles.buttonTxt} title="دفع الكتروني" 
-         onPress={() => {GetenrateLink();
+         onPress={() => {GetenrateLink("5");
+           // navigation.navigate(routes.TAXTOTAL,{U_ID:-1})
+          }}     
+         /> 
+        </View>)}
+        {((showEPaymentFeature||0)&&!PaymentLinkVisible&&!unitTaxes.loading&&unitTaxes.data.length>0&& 
+         <View style={[styles.buttonPay]}>
+         <Button          
+         buttonStyle={{marginTop:5,height:'75%',width:'72%',marginHorizontal:'12%'}}
+         color={"primary"}
+         textStyle={styles.buttonTxt} title="PalPay" 
+         onPress={() => {
+          GetenrateLink("2");
            // navigation.navigate(routes.TAXTOTAL,{U_ID:-1})
           }}     
          /> 
@@ -567,25 +604,23 @@ const SelectAll = async (PAY) => {
         adjustToContentHeight={true}
       //  / onLayout={(layout) => { setViewerHeight(layout.layout.height*.9); }}
         onPress = { 
-          async () => {modalizeRef.current.close();         
-       }}
-      >
+          async () => {modalizeRef.current.close(); }}>
           <View style={{ height: viewerHeight*.8 }}>
           <ActivityIndicator visible={false} />
           <CardTaxDetails
           ADDRESS={taxItem?.LOCATION==""?"غير معرّف":taxItem.LOCATION}
-           BLOCK={taxItem?.BLOCK_NO+''}
+          BLOCK={taxItem?.BLOCK_NO+''}
           PARCEL={taxItem?.PARCEL_NO+''}
-           UNIT={taxItem?.UNIT_ID==""?"غير معرّف":taxItem.UNIT_ID}
-            TAX_NAME={taxItem.TAX_NAME+""}
-            TAX_DATE={dayjs(taxItem.TAX_DATE).locale("ar").format('D/MM/YYYY' )}
-            AMOUNT={taxItem.AMT+''}
-            CURN={taxItem.CURRENCY_ID+""}
-            AMT_REM_AFTER_DISC={taxItem.AMT_REM_AFTER_DISC+""}
-            DISCOUNT={taxItem.DISC+''}
-            DISCOUNT_LOCAL={taxItem.DISC_LOC+'₪'}            
-            LOCAL_AMOUNT={taxItem.REM_LOC_AMT+'₪'}
-            LOCAL_AMOUNT_AFTER_DISCOUNT={taxItem.REM_LOC_AMT_AFTER_DISC+ '₪'} 
+          UNIT={taxItem?.UNIT_ID==""?"غير معرّف":taxItem.UNIT_ID}
+          TAX_NAME={taxItem.TAX_NAME+""}
+          TAX_DATE={dayjs(taxItem.TAX_DATE).locale("ar").format('D/MM/YYYY' )}
+          AMOUNT={taxItem.AMT+''}
+          CURN={taxItem.CURRENCY_ID+""}
+          AMT_REM_AFTER_DISC={taxItem.AMT_REM_AFTER_DISC+""}
+          DISCOUNT={taxItem.DISC+''}
+          DISCOUNT_LOCAL={taxItem.DISC_LOC+'₪'}            
+          LOCAL_AMOUNT={taxItem.REM_LOC_AMT+'₪'}
+          LOCAL_AMOUNT_AFTER_DISCOUNT={taxItem.REM_LOC_AMT_AFTER_DISC+ '₪'} 
             />
 
         </View>

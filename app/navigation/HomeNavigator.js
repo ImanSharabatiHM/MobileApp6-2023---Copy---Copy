@@ -54,10 +54,29 @@ import TabletScreen from "../screens/TabletScreen";
 import TabletScreenOnline from "../screens/TabletScreenOnline";
 import SearchCustomerScreen from "../screens/SearchCustomerScreen";
 import AddSignboardScreen from "../screens/TabletsScreens/AddSignboardScreen";
+import AddImageScreen from "../screens/TabletsScreens/AddImageScreen";
+
 import AddUnitWarningScreen from "../screens/TabletsScreens/AddUnitWarningScreen";
 import BuildingsProceduresScreen from "../screens/TabletsScreens/BuildingsProceduresScreen";
+import BuildingUnitsScreen from "../screens/TabletsScreens/BuildingUnitsScreen";
+import WaterServicesScreen from "../screens/TabletsScreens/WaterServicesScreen";
+import WaterReaderServicesScreen from "../screens/TabletsScreens/WaterReaderServicesScreen";
+
+import TalabatsScreen from "../screens/TabletsScreens/TalabatsScreen";
+import AllTalabatsScreen from "../screens/TabletsScreens/AllTalabatsScreen";
+import AddBlackListScreen from "../screens/TabletsScreens/AddBlackListScreen";
+import AddLandMarkScreen from "../screens/TabletsScreens/AddLandMarkScreen";
+import AddBumpScreen from "../screens/TabletsScreens/AddBumpScreen";
+import AddContainerScreen from "../screens/TabletsScreens/AddContainerScreen";
+import AddFarmScreen from "../screens/TabletsScreens/AddFarmScreen";
+import AddStreetSignScreen from "../screens/TabletsScreens/AddStreetSignScreen";
+import AddCarCounterScreen from "../screens/TabletsScreens/AddCarCounterScreen";
+
+import NewTabletUser from "../screens/TabletsScreens/NewTabletUser";
 
 
+import LayersPermissions from "../screens/TabletsScreens/LayersPermissions";
+import EmployeePermissions from "../screens/TabletsScreens/EmployeePermissions";
 
 import TabletAdminScreen from "../screens/TabletAdminScreen";
 import TabletMainScreen from "../screens/TabletMainScreen";
@@ -65,7 +84,7 @@ import UploadTabletScreen from "../screens/UploadTabletScreen";
 import DownloadTabletScreen from "../screens/DownloadTabletScreen";
 import PrintScreen from "../screens/PrintScreen"
 import BluetoothScreen from "../screens/BluetoothScreen"
-
+import TaxAgentScreen from "../screens/TaxAgentScreen";
 import UpdateCustScreen from "../screens/UpdateCustScreen";
 import SearchEmployeeScreen from "../screens/SearchEmployeeScreen";
 import TaxPaymentScreen from "../screens/TaxPaymentScreen";
@@ -73,6 +92,14 @@ import TrackingScreen from "../screens/TrackingScreen";
 import OverTimePermissionsScreen from "../screens/OverTimePermissionsScreen";
 import OverTimeRegistrationScreen from "../screens/OverTimeRegistrationScreen";
 import ProjectsMapScreen from "../screens/ProjectsMapScreen";
+import ProjectsPublicMapScreen from "../screens/ProjectsPublicMapScreen";
+import NewTabletApp from "../screens/TabletsScreens/NewTabletApp";
+
+import ElectricityServicesScreen from "../screens/TabletsScreens/ElectricityServicesScreen";
+
+import UpdateWaterServiceScreen from "../screens/UpdateWaterServiceScreen";
+import { UpdateSignBoard } from "../api/tablet";
+
 
 const Stack = createStackNavigator();
 console.log("Home Navigator");
@@ -132,6 +159,7 @@ const HomeNavigator = () => (
     <Stack.Screen
       name={routes.LOGINHM}
       component={LoginhmScreen}
+
       options={{
         headerStyle: { backgroundColor: colors.primary },
       headerTintColor:colors.white,
@@ -186,6 +214,71 @@ const HomeNavigator = () => (
       headerTitleStyle:styles.headerText,
       headerStyleInterpolator: forFade,
       headerTitle:  'طباعة',
+      headerMode: 'float',
+      headerTitleAlign: "center",
+      headerBackTitleVisible: false,
+ 
+
+      }}
+    />
+
+<Stack.Screen
+      name={routes.NEWTABLETAPP}
+      component={NewTabletApp}
+      options={{
+        headerStyle: { backgroundColor: colors.primary },
+      headerTintColor:colors.white,
+      headerTitleStyle:styles.headerText,
+      headerStyleInterpolator: forFade,
+      headerTitle:  'تطبيق جديد',
+      headerMode: 'float',
+      headerTitleAlign: "center",
+      headerBackTitleVisible: false,
+ 
+
+      }}
+    />
+<Stack.Screen
+      name={routes.EMPLOYEEPERMISSIONS}
+      component={EmployeePermissions}
+      options={{
+        headerStyle: { backgroundColor: colors.primary },
+      headerTintColor:colors.white,
+      headerTitleStyle:styles.headerText,
+      headerStyleInterpolator: forFade,
+      headerTitle:  'صلاحيات الموظف',
+      headerMode: 'float',
+      headerTitleAlign: "center",
+      headerBackTitleVisible: false,
+ 
+
+      }}
+    />
+    <Stack.Screen
+      name={routes.LAYERSPERMISSIONS}
+      component={LayersPermissions}
+      options={{
+        headerStyle: { backgroundColor: colors.primary },
+      headerTintColor:colors.white,
+      headerTitleStyle:styles.headerText,
+      headerStyleInterpolator: forFade,
+      headerTitle:  'صلاحيات الطبقات',
+      headerMode: 'float',
+      headerTitleAlign: "center",
+      headerBackTitleVisible: false,
+ 
+
+      }}
+    />
+<Stack.Screen
+      name={routes.NEWTABLETUSER}
+      component={NewTabletUser}
+      options={{
+        headerStyle: { backgroundColor: colors.primary },
+      headerTintColor:colors.white,
+      headerTitleStyle:styles.headerText,
+      headerStyleInterpolator: forFade,
+      headerTitle:  'مستخدم جديد',
       headerMode: 'float',
       headerTitleAlign: "center",
       headerBackTitleVisible: false,
@@ -257,6 +350,73 @@ const HomeNavigator = () => (
 
       }}
     />
+
+
+<Stack.Screen
+      name={routes.CARCOUNT}
+      component={AddCarCounterScreen}
+      options={{
+        headerStyle: { backgroundColor: colors.primary },
+      headerTintColor:colors.white,
+      headerTitleStyle:styles.headerText,
+      headerStyleInterpolator: forFade,
+      headerTitle:  'إضافة عداد سيارات',
+      headerMode: 'float',
+      headerTitleAlign: "center",
+      headerBackTitleVisible: false,
+ 
+
+      }}
+    />
+
+<Stack.Screen
+      name={routes.CONTAINER}
+      component={AddContainerScreen}
+      options={{
+        headerStyle: { backgroundColor: colors.primary },
+      headerTintColor:colors.white,
+      headerTitleStyle:styles.headerText,
+      headerStyleInterpolator: forFade,
+      headerTitle:  'إضافة حاوية  ',
+      headerMode: 'float',
+      headerTitleAlign: "center",
+      headerBackTitleVisible: false,
+ 
+
+      }}
+    />
+    <Stack.Screen
+      name={routes.FARM}
+      component={AddFarmScreen}
+      options={{
+        headerStyle: { backgroundColor: colors.primary },
+      headerTintColor:colors.white,
+      headerTitleStyle:styles.headerText,
+      headerStyleInterpolator: forFade,
+      headerTitle:  'إضافة  مزروعات  ',
+      headerMode: 'float',
+      headerTitleAlign: "center",
+      headerBackTitleVisible: false,
+ 
+
+      }}
+    />
+<Stack.Screen
+      name={routes.STREETSIGN}
+      component={AddStreetSignScreen}
+      options={{
+        headerStyle: { backgroundColor: colors.primary },
+      headerTintColor:colors.white,
+      headerTitleStyle:styles.headerText,
+      headerStyleInterpolator: forFade,
+      headerTitle:  'إضافةإشارة مرور  ',
+      headerMode: 'float',
+      headerTitleAlign: "center",
+      headerBackTitleVisible: false,
+ 
+
+      }}
+    />
        <Stack.Screen
       name={routes.EPAYMENT}
       component={TaxEPaymentScreen}
@@ -297,7 +457,7 @@ const HomeNavigator = () => (
       headerTintColor:colors.white,
       headerTitleStyle:styles.headerText,
       headerStyleInterpolator: forFade,
-      headerTitle:  'متبعة مسار الحركة',
+      headerTitle:  'متابعة مسار الحركة',
       headerMode: 'float',
       headerTitleAlign: "center",
       headerBackTitleVisible: false,
@@ -740,7 +900,7 @@ const HomeNavigator = () => (
 
       }}
     />
-         <Stack.Screen
+      <Stack.Screen
       name={routes.PAYMENT}
       component={TaxPaymentScreen}
       options={{
@@ -749,6 +909,23 @@ const HomeNavigator = () => (
       headerTitleStyle:styles.headerText,
       headerStyleInterpolator: forFade,
       headerTitle:  'منظومة الجباية',
+      headerMode: 'float',
+      headerTitleAlign: "center",
+      headerBackTitleVisible: false,
+ 
+
+      }}
+    />
+
+<Stack.Screen
+      name={routes.TAXAGENT}
+      component={TaxAgentScreen}
+      options={{
+        headerStyle: { backgroundColor: colors.primary },
+      headerTintColor:colors.white,
+      headerTitleStyle:styles.headerText,
+      headerStyleInterpolator: forFade,
+      headerTitle:  'صفحة وكلاء البلدية',
       headerMode: 'float',
       headerTitleAlign: "center",
       headerBackTitleVisible: false,
@@ -885,8 +1062,23 @@ const HomeNavigator = () => (
 
       }}
     />
-    <Stack.Screen
-    
+      <Stack.Screen
+      name={routes.PROJECTSPUBLICMAP}
+      component={ProjectsPublicMapScreen}
+      options={{
+      headerStyle: { backgroundColor: colors.primary },
+      headerTintColor:colors.white,
+      headerTitleStyle:styles.headerText,
+      headerStyleInterpolator: forFade,
+      headerTitle:  'خريطة المشاريع',
+      headerMode: 'float',
+      headerTitleAlign: "center",
+      headerBackTitleVisible: false,
+ 
+
+      }}
+    />
+    <Stack.Screen   
       name={routes.BUILDINGSPROC}
       component={BuildingsProceduresScreen}
       options={{
@@ -919,17 +1111,185 @@ const HomeNavigator = () => (
 
       }}
     /> 
-   
+      
     <Stack.Screen
       name={routes.SIGNBOARD}
       component={AddSignboardScreen}
       options={{
+      headerTransparent:false,
       headerStyle: { backgroundColor: colors.primary },
       headerTintColor:colors.white,
       headerTitleStyle:styles.headerText,
       headerStyleInterpolator: forFade,
       headerTitle:  'إضافة يافطة',
       headerMode: 'float',
+      headerTitleAlign: "center",
+      headerBackTitleVisible: false,
+      }}
+    /> 
+        <Stack.Screen
+      name={routes.BLACKLIST}
+      component={AddBlackListScreen}
+      options={{
+      headerTransparent:false,
+      headerStyle: { backgroundColor: colors.primary },
+      headerTintColor:colors.white,
+      headerTitleStyle:styles.headerText,
+      headerStyleInterpolator: forFade,
+      headerTitle:  'إضافة للقائمة السوداء',
+      headerMode: 'float',
+      headerTitleAlign: "center",
+      headerBackTitleVisible: false,
+      }}
+    /> 
+            <Stack.Screen
+      name={routes.ADDLANDMARK}
+      component={AddLandMarkScreen}
+      options={{
+      headerTransparent:false,
+      headerStyle: { backgroundColor: colors.primary },
+      headerTintColor:colors.white,
+      headerTitleStyle:styles.headerText,
+      headerStyleInterpolator: forFade,
+      headerTitle:  'إضافة مواقع',
+      headerMode: 'float',
+      headerTitleAlign: "center",
+      headerBackTitleVisible: false,
+      }}
+    /> 
+             <Stack.Screen
+      name={routes.ADDPUMP}
+      component={AddBumpScreen}
+      options={{
+      headerTransparent:false,
+      headerStyle: { backgroundColor: colors.primary },
+      headerTintColor:colors.white,
+      headerTitleStyle:styles.headerText,
+      headerStyleInterpolator: forFade,
+      headerTitle:  'إضافة مطب',
+      headerMode: 'float',
+      headerTitleAlign: "center",
+      headerBackTitleVisible: false,
+      }}
+    /> 
+     <Stack.Screen
+      name={routes.BUILDINGUNITS}
+      component={BuildingUnitsScreen}
+      options={{
+      headerTransparent:false,
+      headerStyle: { backgroundColor: colors.primary },
+      headerTintColor:colors.white,
+      headerTitleStyle:styles.headerText,
+      headerStyleInterpolator: forFade,
+      headerTitle:  'وحدات الأبنية',
+      headerMode: 'float',
+      headerTitleAlign: "center",
+      headerBackTitleVisible: false,
+      }}
+    /> 
+     <Stack.Screen
+      name={routes.WATERSERVICES}
+      component={WaterServicesScreen}
+      options={{
+      headerTransparent:false,
+      headerStyle: { backgroundColor: colors.primary },
+      headerTintColor:colors.white,
+      headerTitleStyle:styles.headerText,
+      headerStyleInterpolator: forFade,
+      headerTitle:  'اشتراكات المياه',
+      headerMode: 'float',
+      headerTitleAlign: "center",
+      headerBackTitleVisible: false,
+      }}
+    /> 
+    
+    <Stack.Screen
+      name={routes.ELECTRICSERVICES}
+      component={ElectricityServicesScreen}
+      options={{
+      headerTransparent:false,
+      headerStyle: { backgroundColor: colors.primary },
+      headerTintColor:colors.white,
+      headerTitleStyle:styles.headerText,
+      headerStyleInterpolator: forFade,
+      headerTitle:  'اشتراكات الكهرباء',
+      headerMode: 'float',
+      headerTitleAlign: "center",
+      headerBackTitleVisible: false,
+      }}
+    /> 
+    <Stack.Screen
+      name={routes.UPDATEWATERSERVICE}
+      component={UpdateWaterServiceScreen}
+      options={{
+      headerTransparent:false,
+      headerStyle: { backgroundColor: colors.primary },
+      headerTintColor:colors.white,
+      headerTitleStyle:styles.headerText,
+      headerStyleInterpolator: forFade,
+      headerTitle:  'تحديث بيانات الاشتراك',
+      headerMode: 'float',
+      headerTitleAlign: "center",
+      headerBackTitleVisible: false,
+      }}
+    /> 
+      <Stack.Screen
+      name={routes.WATERREADERSERVICES}
+      component={WaterReaderServicesScreen}
+      options={
+        {
+      
+      headerTransparent:false,
+      headerStyle: { backgroundColor: colors.primary },
+      headerTintColor:colors.white,
+      headerTitleStyle:styles.headerText,
+      headerStyleInterpolator: forFade,
+      headerTitle:  'قراءة المياه',
+      headerMode: 'float',
+      headerTitleAlign: "center",
+      headerBackTitleVisible: false,
+      }}
+    /> 
+    <Stack.Screen
+      name={routes.TALABTS}
+      component={TalabatsScreen}
+      options={{
+      headerTransparent:false,
+      headerStyle: { backgroundColor: colors.primary },
+      headerTintColor:colors.white,
+      headerTitleStyle:styles.headerText,
+      headerStyleInterpolator: forFade,
+      headerTitle:  'طلبات البناء',
+      headerMode: 'float',
+      headerTitleAlign: "center",
+      headerBackTitleVisible: false,
+      }}
+    /> 
+    <Stack.Screen
+      name={routes.ALLTALABTS}
+      component={AllTalabatsScreen}
+      options={{
+      headerTransparent:false,
+      headerStyle: { backgroundColor: colors.primary },
+      headerTintColor:colors.white,
+      headerTitleStyle:styles.headerText,
+      headerStyleInterpolator: forFade,
+      headerTitle:  'الطّلبـات',
+      headerMode: 'float',
+      headerTitleAlign: "center",
+      headerBackTitleVisible: false,
+      }}
+    /> 
+      <Stack.Screen
+      name={routes.TAKEIMAGE}
+      component={AddImageScreen}
+      options={{
+      headerTransparent:true,
+      headerStyle: { backgroundColor: colors.primary },
+      headerTintColor:colors.white,
+      headerTitleStyle:styles.headerText,
+      headerStyleInterpolator: forFade,
+      headerMode: "screen",
       headerTitleAlign: "center",
       headerBackTitleVisible: false,
       }}
@@ -942,7 +1302,7 @@ const HomeNavigator = () => (
       headerTintColor:colors.white,
       headerTitleStyle:styles.headerText,
       headerStyleInterpolator: forFade,
-      headerTitle:  'إضافة يافطة',
+      headerTitle:  'إضافة إخطار',
       headerMode: 'float',
       headerTitleAlign: "center",
       headerBackTitleVisible: false,

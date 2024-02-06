@@ -1,5 +1,5 @@
 import {useRef, useState,React }from "react";
-import { View, StyleSheet, TouchableWithoutFeedback } from "react-native";
+import { View, StyleSheet, TouchableWithoutFeedback ,TouchableHighlight} from "react-native";
 import { Image } from "react-native";
 import Info from "./Info";
 import Message from "./Message";
@@ -43,6 +43,7 @@ function CardSignBoard({
   const wkt="POLYGON ((159920.9557 103851.8817, 159924.1642 103858.298800001, 159923.73 103857.77, 159914.12 103862.109999999, 159914.96 103863.09, 159910.2 103864.67, 159907.95 103858.310000001, 159920.9557 103851.8817))";
   return (
     <>
+        <TouchableHighlight underlayColor={colors.whatsapp}   activeOpacity={0.6} onPress={onPress} >
     < View style={styles.firstContainer}>
            {true&&<View style={styles.card}>
            {(<Image
@@ -74,6 +75,7 @@ function CardSignBoard({
       
 
       </View>
+    </TouchableHighlight>
            </>
   );
 }

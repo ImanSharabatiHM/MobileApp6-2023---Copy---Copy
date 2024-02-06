@@ -8,6 +8,7 @@ import {useState} from 'react';
 import jwtDecode from "jwt-decode";
 import dayjs from "dayjs";
 import settings from "../config/settings";
+import { makeUrl } from "expo-linking";
 
  const apiClient = create({
   baseURL: settings.apiUrlEs,
@@ -136,9 +137,9 @@ apiClient.get = async (url, params, axiosConfig) => {
      });
     });
   }
-  if (response.ok|| response.status==200) {
+   if (response.ok|| response.status==200 || response.HttpStatus==200) {
     // if (url.includes("toplanmaalanlari"))
-    cache.store(url, response.data);
+      cache.store(url, response.data);
     return response;
   }
   else
@@ -152,27 +153,15 @@ apiClient.get = async (url, params, axiosConfig) => {
       //alert("Will store request");
       db.storeApiRequest(url, 'POST', { 'Content-Type': 'application/json' }, params);
       db.retrieveApiRequests((apiRequests) => {
-        //alert(apiRequests.length);
-      /* apiRequests.forEach((request) => {
-          alert("REQUEST fROM DB  "+request.id);
-          // Retry the API call for each stored request
-          /*makeApiCall(request.endpoint, request.method, request.headers, request.body)
-            .then((response) => {
-              // Handle successful API call
-              removeApiRequest(request.id);
-            })
-            .catch((error) => {
-              // Handle API call failure
-              console.error('API call error:', error);
-            }); });*/
-       
+        console.log("Total StoredLocations = : "+ apiRequests.length);
+     
       });
 
 
     }
 
   }
-  if(url.includes("Token")||url.includes("InsertEmpLocation"))return response;
+   if(url.includes ("EPaymentsController")||url.includes("GetFindAndInsertTrack")||url.includes("Token")||url.includes("InsertEmpLocation"))return response;
    
 
   //if(url.includes("Token"))return { ok: false };

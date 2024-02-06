@@ -75,13 +75,14 @@ const styles = StyleSheet.create({
   card: {
     flex:1,
     borderRadius: 8,
-    margin:5,
+    margin:0,
     width:"100%",
     //backgroundColor: colors.danger,
     overflow: "hidden",
   },
   detailsContainer: {
     flex:2,
+    marginStart:10,
     alignItems:"flex-start"
   },
   seperatorStyleTable: {
@@ -163,7 +164,7 @@ const styles = StyleSheet.create({
     height:140,
     flexDirection:"row",
     marginLeft:15,
-    marginTop:10,
+    marginTop:3,
   },
   txtPaid:
   {color:colors.twitter},

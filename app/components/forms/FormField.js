@@ -27,8 +27,8 @@ function AppFormField({ name, width,showPlaceholder,style,onChangeText,  ...othe
           setIsBlured(true);
            
         }}
-        paddingVertical={6}
-        editable={true}       
+        paddingVertical={0}
+        editable={editable}       
         keyboardType={keyboardType}      
         onChangeText={(text) =>{           
           setFieldValue(name, text); 

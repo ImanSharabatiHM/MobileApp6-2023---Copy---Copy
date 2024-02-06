@@ -79,8 +79,12 @@ function CardLayer({
               imageUrl== "WARNINGS"?require('../assets/icons/passive/WARNINGS.png'):
               imageUrl== "VIOLATIONS"?require('../assets/icons/passive/VIOLATIONS.png'):
               imageUrl== "WPIPES"?require('../assets/icons/passive/WPIPES.png'):
+<<<<<<< HEAD
               imageUrl== "SEWEPIPES"?require('../assets/icons/passive/SEWAGEPIPES.png'):
               imageUrl== "SEWERMANHOLES"?require('../assets/icons/passive/SEWERMANHOLES.png'):
+=======
+              imageUrl== "SEWAGEPIPES"?require('../assets/icons/passive/SEWAGEPIPES.png'):
+>>>>>>> b670f789e5440b5c554e87ca37afd60d8369e515
               imageUrl== "FARMS"?require('../assets/icons/passive/FARMS.png'):
               imageUrl== "WPUMPS"? require('../assets/icons/passive/WPUMPS.png'):
               imageUrl== "WVALVES"?require('../assets/icons/passive/WVALVES.png'):

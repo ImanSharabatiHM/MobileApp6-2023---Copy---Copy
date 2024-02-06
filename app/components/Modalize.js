@@ -1,5 +1,5 @@
 import React, { useEffect,useRef, forwardRef ,useState} from "react";
-import { View, StyleSheet, Platform } from "react-native";
+import { View, StyleSheet, Platform,Dimensions } from "react-native";
 import { Modalize } from "react-native-modalize";
 import { Portal } from "react-native-paper";
 import colors from "../config/colors";
@@ -18,6 +18,8 @@ export const AppModalize = forwardRef(
     const modalizeRef = useRef(null);
     const combinedRef = useCombinedRefs(ref, modalizeRef);
     const [deviceType, setDeviceType] = useState(null);
+    const screenHeight = Dimensions.get('window').height;
+    const modalHeight = screenHeight / 2; // Cover half of the screen
     const handleDeviceType = async () => {
       let dType = await Device.getDeviceTypeAsync();
       setDeviceType(dType);
@@ -32,7 +34,7 @@ export const AppModalize = forwardRef(
         <Modalize
           ref={combinedRef}
           // withReactModal
-          handlePosition={"inside"}
+          handlePosition={"outside"}
           scrollViewProps={{
             showsVerticalScrollIndicator: false,
             stickyHeaderIndices: [0],
@@ -65,8 +67,8 @@ export const AppModalize = forwardRef(
                     
             </View>
           
-           <View style={s.contentimages} key="3">              
-           {images && (
+           {images &&<View style={s.contentimages} key="3">              
+            (
             <Carousel            
             height={deviceType === 1 ? 350 : 300}
             deviceType={deviceType}
@@ -83,13 +85,13 @@ export const AppModalize = forwardRef(
                 };
               })}
             />
-          )
+          ) </View>
           }       
  
-     </View>
-          <View style={s.content__inside} key="4">
-          {details && (<AppText   numberOfLines={100} style={s.content__details}>{details}</AppText>)}   
-          </View>
+    
+          {details &&<View style={s.content__inside} key="4">
+           (<AppText   numberOfLines={100} style={s.content__details}>{details}</AppText>)  
+          </View>} 
 
     
  
