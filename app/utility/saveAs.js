@@ -34,7 +34,7 @@ export async function generatePdf(data, filename,download=true) {
         await StorageAccessFramework.createFileAsync(permissions.directoryUri, filename, 'application/pdf')
           .then(async (uri) => {
             await FileSystem.writeAsStringAsync(uri, fileString, { encoding: FileSystem.EncodingType.Base64 });
-            alert('تم حفظ قسيمة الراتب')
+            alert('تم الحفظ!  ')
           })
           .catch((e) => {
           });

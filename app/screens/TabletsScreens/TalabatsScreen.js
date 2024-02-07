@@ -5,8 +5,12 @@ import tabletApi from "../../api/tablet";
 import Text from "../../components/Text";
 import { ListItemSeparator } from "../../components/lists";
 import authStorage from "../../auth/storage";
+<<<<<<< Updated upstream
 import dayjs from "dayjs";
 import "dayjs/locale/ar";
+=======
+
+>>>>>>> Stashed changes
 import colors from "../../config/colors";
 import Screen from "../../components/Screen";
 import useApi from "../../hooks/useApi";
@@ -41,6 +45,7 @@ function TalabatsScreen({ navigation,route }) {
   const ListHeader = () => {
     //View to set in Header
     return (
+<<<<<<< Updated upstream
       <Card
       //s={modalizeRef}
       iconName={"close"}
@@ -55,6 +60,40 @@ function TalabatsScreen({ navigation,route }) {
             />
    
  
+=======
+      <View style={styles.headerFooterStyle}>
+           {true && (
+            <Text style={styles.headerItemSmall} numberOfLines={1}>
+              {" "}
+            </Text>
+          )}
+          <ListItemSeparator v seperatorStyle={styles.seperatorStyleTable} />
+           {true && (
+            <Text style={styles.headerItemSmall} numberOfLines={1}>
+              {"الرقم"}
+            </Text>
+          )}
+          <ListItemSeparator v seperatorStyle={styles.seperatorStyleTable} />
+          {true && (
+            <Text style={styles.headerItemSmall} numberOfLines={1}>
+              { "التاريخ"}
+            </Text>
+          )}
+          <ListItemSeparator v seperatorStyle={styles.seperatorStyleTable} />
+           {true&& (
+            <Text style={styles.headerItem} numberOfLines={1}>
+              {"نوع الطلب"}
+            </Text>
+          )}
+          <ListItemSeparator v seperatorStyle={styles.seperatorStyleTable} />
+           {true && (
+            <Text style={styles.headerItem} numberOfLines={1}>
+              {"المقدِّم"}
+            </Text>
+          )}
+           <ListItemSeparator seperatorStyle={styles.seperatorStyleTable} />     
+      </View>
+>>>>>>> Stashed changes
     );
   };
   const getUnits = async () => {
@@ -87,9 +126,15 @@ function TalabatsScreen({ navigation,route }) {
   const getTalabats = async () => {
 
     const token = await authStorage.getToken();
+<<<<<<< Updated upstream
     //const token="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjkxMjA2NzY5MSIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL25hbWUiOiLYsdmI2KfZhiDZhtiy2KfYsSDZhdit2YXZiNivINin2KjZiNi52YrYtNipIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9yb2xlIjoiSE1Vc2VyIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9zZXJpYWxudW1iZXIiOiIxMDk1IiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvc3RyZWV0YWRkcmVzcyI6Itiv2YjZitix2KjYp9mGICIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL3N0YXRlb3Jwcm92aW5jZSI6Itin2YTYrtmE2YrZhCAiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9jb3VudHJ5Ijoi2YHZhNiz2LfZitmG2YrZhyAiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9tb2JpbGVwaG9uZSI6IjA1OTc5MTkzMzYiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9ob21lcGhvbmUiOiIwIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvZW1haWxhZGRyZXNzIjoiIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9ncm91cHNpZCI6IjAiLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3ByaW1hcnlncm91cHNpZCI6IiIsImV4cCI6MTk1MjQwNDY1NiwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdCIsImF1ZCI6Imh0dHA6Ly9sb2NhbGhvc3QifQ.SIw1BdZyi1cgYmz1_xIYMV6DoRmN7IjsNbB472HEdc0";
     setTalabats({ loading: true, data: null });
      console.log(route.params.B_ID);
+=======
+   //const token="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjkxMjA2NzY5MSIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL25hbWUiOiLYsdmI2KfZhiDZhtiy2KfYsSDZhdit2YXZiNivINin2KjZiNi52YrYtNipIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9yb2xlIjoiSE1Vc2VyIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9zZXJpYWxudW1iZXIiOiIxMDk1IiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvc3RyZWV0YWRkcmVzcyI6Itiv2YjZitix2KjYp9mGICIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL3N0YXRlb3Jwcm92aW5jZSI6Itin2YTYrtmE2YrZhCAiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9jb3VudHJ5Ijoi2YHZhNiz2LfZitmG2YrZhyAiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9tb2JpbGVwaG9uZSI6IjA1OTc5MTkzMzYiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9ob21lcGhvbmUiOiIwIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvZW1haWxhZGRyZXNzIjoiIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9ncm91cHNpZCI6IjAiLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3ByaW1hcnlncm91cHNpZCI6IiIsImV4cCI6MTk1MjQwNDY1NiwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdCIsImF1ZCI6Imh0dHA6Ly9sb2NhbGhvc3QifQ.SIw1BdZyi1cgYmz1_xIYMV6DoRmN7IjsNbB472HEdc0";
+    setTalabats({ loading: true, data: null });
+     
+>>>>>>> Stashed changes
     const result = await employeesApi.GetTalabat(token,'2010/04/15',
     dayjs((toDate)).locale("ar").format('YYYY/MM/DD')
     ,-1,route.params.B_ID==undefined?-1:route.params.B_ID);
@@ -115,7 +160,10 @@ function TalabatsScreen({ navigation,route }) {
   return (
     <>
      <ActivityIndicator visible={talabats.loading} />
+<<<<<<< Updated upstream
     
+=======
+>>>>>>> Stashed changes
      {!talabats.loading&&talabats.data&&   (
       <FlatList
       data={talabats.data}  
@@ -128,7 +176,11 @@ function TalabatsScreen({ navigation,route }) {
             iconName={"close"}
             TALAB={item}
             ODD={index%2==0}
+<<<<<<< Updated upstream
             TALAB_DATE={dayjs((item?.TALAB_DATE)).locale("ar").format('YYYY/MM/DD')}
+=======
+            TALAB_DATE={item?.TALAB_DATE}
+>>>>>>> Stashed changes
             TALAB_NO={item?.TALAB_NO}
             TALAB_NAME={item?.TALAB_NAME}
             CUST_NAME={item?.CUST_NAME}

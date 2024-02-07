@@ -1,13 +1,14 @@
 import React from "react";
 import PureChild from "react";
-import { View, StyleSheet, TouchableWithoutFeedback } from "react-native";
+import { View, StyleSheet,TouchableOpacity} from "react-native";
+import {TouchableWithoutFeedback} from "react-native-gesture-handler"
 import { Image } from "react-native-expo-image-cache";
 import ActionButton from "react-native-action-button";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 import Text from "./Text";
 import colors from "../config/colors";
-
+ 
 function CardMail({
   title,
   subTitle,
@@ -26,7 +27,7 @@ function CardMail({
  
   return (
     
-    <TouchableWithoutFeedback onPress={onPress}>
+    <TouchableOpacity onPress={onPress}>
       <View style={styles.card}>
         <View style={styles.detailsContainer}>
         <MaterialCommunityIcons
@@ -63,7 +64,7 @@ function CardMail({
           )}     
         </View>
       </View>
-    </TouchableWithoutFeedback>
+    </TouchableOpacity>
   
   );
 }

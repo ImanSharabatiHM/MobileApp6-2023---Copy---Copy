@@ -8,6 +8,7 @@ export default useLocation = () => {
     console.log("Check Location");
     try {
       const { granted } = await Location.requestForegroundPermissionsAsync();
+      console.log("In use Location hook",granted);
       if (!granted) return;
       const {
         coords: { latitude, longitude },

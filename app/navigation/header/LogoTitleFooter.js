@@ -9,7 +9,7 @@ function LogoTitleFooter({ logoStyle }) {
         {true&&<AppText
           style={[{ color:colors.white}, styles.title]}
           numberOfLines={1}>
-        برمجة وتصميم دائرة تكنولوجيا المعلومات - بلدية الخليل-2022      
+        برمجة وتصميم دائرة تكنولوجيا المعلومات - بلدية الخليل-2024      
         </AppText>}
     </View>
   );

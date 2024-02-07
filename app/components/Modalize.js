@@ -25,12 +25,13 @@ export const AppModalize = forwardRef(
       setDeviceType(dType);
     };
     useEffect(() => {
+      console.log("HEERRR");
       handleDeviceType();
    
     }, []);
   
     return (
-      <Portal>
+      
         <Modalize
           ref={combinedRef}
           // withReactModal
@@ -55,20 +56,19 @@ export const AppModalize = forwardRef(
                 size={35}
               />
             </TouchableOpacity>
-             {title &&  <AppText style={s.content__heading} numberOfLines={4}>
+             {true&&title &&  <AppText style={s.content__heading} numberOfLines={4}>
                 {title}
               </AppText>}
-              {subTitle && (
+              {true&&subTitle && (
                 <AppText style={s.content__subheading}>{subTitle}</AppText>
               )} 
-              {fullDate && (
+              {true&&fullDate && (
                 <AppText style={s.content__fulldate}>{fullDate}</AppText>
               )} 
                     
             </View>
           
-           {images &&<View style={s.contentimages} key="3">              
-            (
+           {false&&images &&(<View style={s.contentimages} key="3">                        
             <Carousel            
             height={deviceType === 1 ? 350 : 300}
             deviceType={deviceType}
@@ -85,22 +85,22 @@ export const AppModalize = forwardRef(
                 };
               })}
             />
-          ) </View>
+           </View>)
           }       
  
     
-          {details &&<View style={s.content__inside} key="4">
-           (<AppText   numberOfLines={100} style={s.content__details}>{details}</AppText>)  
-          </View>} 
+          {true&&details && 
+          <View style={s.content__inside} key="4">
+            <AppText style={s.content__details}>{details}</AppText>  
+        </View> } 
 
     
  
-          <View style={s.content__inside} key="1">
+          {<View style={s.content__inside} key="1">
             {children}
-          </View>
+          </View>}
         </Modalize>
-      </Portal>
-    );
+     );
   }
 );
 

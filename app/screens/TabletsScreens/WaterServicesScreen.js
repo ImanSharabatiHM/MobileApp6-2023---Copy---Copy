@@ -16,15 +16,7 @@ import useAuth from "../../auth/useAuth";
 import { color } from "react-native/Libraries/Components/View/ReactNativeStyleAttributes";
 const initialLayout = { width: Dimensions.get("window").width };
 import ActivityIndicator from "../../components/ActivityIndicator";
-import Card from "../../components/CardWaterRow";
-import auth from "../../api/auth";
-import authStorage from "../../auth/storage";
-
-function WaterServicesScreen({ navigation,route }) {
-  const modalizeRef = useRef(null);
-  const [proje, getProje] = useState(null);
   const [unit, getUnit] = useState(null);
-  const getProjelerApi = useApi(contentApi.getProjeler);
   const getCustomerUnitsApi = useApi(customerApi.GetUnitDescription);
   const [index, setIndex] = useState(0);
   const { user, logInWithEDevlet, logOut } = useAuth();
@@ -45,23 +37,36 @@ function WaterServicesScreen({ navigation,route }) {
           <ListItemSeparator v seperatorStyle={styles.seperatorStyleTable} />
            {true && (
             <Text style={styles.headerItemSmall} numberOfLines={1}>
+<<<<<<< Updated upstream
               {"الاشتراك"}
+=======
+              {"التسلسلي"}
+>>>>>>> Stashed changes
             </Text>
           )}
           <ListItemSeparator v seperatorStyle={styles.seperatorStyleTable} />
           {true && (
             <Text style={styles.headerItemSmall} numberOfLines={1}>
+<<<<<<< Updated upstream
               { "الوحدة"}
+=======
+              { "الرقم"}
+>>>>>>> Stashed changes
             </Text>
           )}
           <ListItemSeparator v seperatorStyle={styles.seperatorStyleTable} />
            {true&& (
+<<<<<<< Updated upstream
             <Text style={ styles.headerItem } numberOfLines={1}>
+=======
+            <Text style={styles.headerItem} numberOfLines={1}>
+>>>>>>> Stashed changes
               {"المستفيد"}
             </Text>
           )}
           <ListItemSeparator v seperatorStyle={styles.seperatorStyleTable} />
            {true && (
+<<<<<<< Updated upstream
             <Text style={styles.headerItemSmall} numberOfLines={1}>
               {"الاستخدام"}
             </Text>
@@ -72,10 +77,17 @@ function WaterServicesScreen({ navigation,route }) {
               {"رقم الشصي"}
             </Text>
           )}
+=======
+            <Text style={styles.headerItem} numberOfLines={1}>
+              {"الاستخدام"}
+            </Text>
+          )}
+>>>>>>> Stashed changes
            <ListItemSeparator seperatorStyle={styles.seperatorStyleTable} />     
       </View>
     );
   };
+<<<<<<< Updated upstream
   const getWaterServices = async () => {
     setUnits({ loading: true, data: null });
      const token = await authStorage.getToken();
@@ -93,6 +105,20 @@ function WaterServicesScreen({ navigation,route }) {
   };
   useEffect(() => {
     getWaterServices();
+=======
+  const getUnits = async () => {
+    setUnits({ loading: true, data: null });
+    const result = await tabletApi.GetUnitDescriptionByBID(B_ID);
+    if (!result.ok) {
+      setUnits({ loading: false, data: null });
+      return;
+    }
+    let data = result.data.sort(function (a, b) { return b.U_ID - a.U_ID; }) ;;//.sort(function (a, b) { return b.hitCount - a.hitCount; }) .slice(0, 5);
+    setUnits({ loading: false, data });
+  };
+  useEffect(() => {
+    getUnits();
+>>>>>>> Stashed changes
     //getCustomerUnitsApi.request(user.nameidentifier);//
   }, []);
 
@@ -105,6 +131,7 @@ function WaterServicesScreen({ navigation,route }) {
       ListHeaderComponent={ListHeader}
       all
       keyExtractor={(item) => item.U_ID+Math.random()}
+<<<<<<< Updated upstream
         renderItem={({ item,index }) => (
           <Card
             //s={modalizeRef}
@@ -122,6 +149,22 @@ function WaterServicesScreen({ navigation,route }) {
             unitUse={item.Use}
             SHASI_NO={item.SHASI_NO}
 
+=======
+        renderItem={({ item }) => (
+          <Card
+            //s={modalizeRef}
+            iconName={"close"}
+            unit={item}
+            DAMGE={item.DAMGE}
+            navigation={navigation}
+            title={item.STREET_DESC}
+            unitNo={item.UNIT_NO}
+            all={item.U_ID==-1}
+            other={item.U_ID==0}
+            unitId={item.U_ID}
+            unitOwner={item.USER_NAME+""}
+            unitUse={item.MAIN_USE_DESC+" /"+item.SUB_USE_DESC}
+>>>>>>> Stashed changes
              onPress={() => {
               if(item.DAMGE=="N")
               {
@@ -163,7 +206,11 @@ const styles = StyleSheet.create({
     textAlignVertical:"center",
     color:colors.facebook,
     fontFamily:"Cairo_700Bold",
+<<<<<<< Updated upstream
     width:"12%",
+=======
+    width:"15%",
+>>>>>>> Stashed changes
     textAlign:"center",
     paddingTop:5,
     marginRight:0,
@@ -204,7 +251,11 @@ const styles = StyleSheet.create({
     textAlignVertical:"center",
     color:colors.facebook,
     fontFamily:"Cairo_700Bold",
+<<<<<<< Updated upstream
     width:"32%",
+=======
+    width:"27%",
+>>>>>>> Stashed changes
     textAlign:"center",
     paddingTop:5,
     marginRight:0,

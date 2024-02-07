@@ -8,7 +8,7 @@ import HeaderButton from "../../navigation/header/Button";
 import colors from "../../config/colors";
 import useAuth from "../../auth/useAuth";
 import { BUTTON_HEIGHT } from "./SearchButton";
-import Animated from "react-native-reanimated";
+import Animated,{interpolate,Extrapolation} from "react-native-reanimated";
 import routes from "../../navigation/routes";
 import useNotificationsCount from "../../notification/useNotificationsCount";
 
@@ -20,27 +20,26 @@ export const MIN_HEADER_HEIGHT = 70 + Constants.statusBarHeight;
 export const MAX_HEADER_HEIGHT = MIN_HEADER_HEIGHT + BUTTON_HEIGHT + 230;
 export const HEADER_DELTA = MAX_HEADER_HEIGHT - MIN_HEADER_HEIGHT;
 
-const { interpolateNode, Extrapolate } = Animated;
 
 function Header({ navigation, y, sticky }) {
   const { notificationCount } = useNotificationsCount();
   const { user, logInWithUser } = useAuth();
-
-  const stickyOpacity = interpolateNode(y, {
-    inputRange: [HEADER_DELTA - 5, HEADER_DELTA - 2],
-    outputRange: [0, 1],
-    extrapolate: Extrapolate.CLAMP,
-  });
-  const textOpacity = interpolateNode(y, {
-    inputRange: [HEADER_DELTA - 8, HEADER_DELTA - 4],
-    outputRange: [0, 1],
-    extrapolate: Extrapolate.CLAMP,
-  });
-  const opacity = interpolateNode(y, {
-    inputRange: [-MAX_HEADER_HEIGHT / 2, 0, HEADER_DELTA - 2],
-    outputRange: [0, 1, 0],
-    extrapolate: Extrapolate.CLAMP,
-  });
+  // y=Number(JSON.stringify(y));
+  const stickyOpacity = interpolate(y.value, 
+    inputRange= [HEADER_DELTA - 5, HEADER_DELTA - 2],
+    outputRange= [0, 1],
+    extrapolate= Extrapolation.CLAMP,
+  );
+  const textOpacity = interpolate(y.value, 
+    inputRange= [HEADER_DELTA - 8, HEADER_DELTA - 4],
+    outputRange= [0, 1],
+    extrapolate= Extrapolation.CLAMP,
+  );
+  const opacity = interpolate(y.value, 
+    inputRange= [-MAX_HEADER_HEIGHT / 2, 0, HEADER_DELTA - 2],
+    outputRange= [0, 1, 0],
+    extrapolate= Extrapolation.CLAMP,
+  );
   //console.log("Headr.js",notificationCount);
   return (
     <>
@@ -78,7 +77,7 @@ function Header({ navigation, y, sticky }) {
         </Animated.View>
       )}
       {!sticky && (
-        <Animated.View style={[styles.container, { opacity }]}>
+        <Animated.View style={[styles.container, { opacity:opacity }]}>
           <Hamburger
             onPress={() => {
               navigation.toggleDrawer();

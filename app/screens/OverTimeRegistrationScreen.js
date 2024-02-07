@@ -9,7 +9,9 @@ import customerApi from "../api/customer";
 import employeesApi from "../api/employees";
  import Button from"../components/Button"
 import employeeApi from "../api/employees";
-
+import * as Notifications from 'expo-notifications';
+import Dialog from "react-native-dialog";
+import DialogInput from 'react-native-dialog-input';
 import dayjs from "dayjs";
 import "dayjs/locale/ar";
 import relativeTime from "dayjs/plugin/relativeTime";
@@ -38,16 +40,8 @@ import AppText from "../components/Text";
 import authStorage from "../auth/storage";
 import * as TaskManager from 'expo-task-manager';
 import { Stopwatch, Timer } from 'react-native-stopwatch-timer';
-import storage from "../auth/storage";
-import { diff } from "react-native-reanimated";
 import { Colors } from "react-native/Libraries/NewAppScreen";
 
-const validationSchema = Yup.object().shape({
- 
-    NOTES: Yup.string().required("سبب العمل الإضافي مطلوب"),
-    
- 
-});
 const LOCATION_TASK_NAME = 'background-location-task-track-EMPP';
  let foregroundSubscription = null
  //Insert Employee Location
@@ -61,41 +55,18 @@ const LOCATION_TASK_NAME = 'background-location-task-track-EMPP';
     } */
   };
 
-// Define the background task for location tracking
-TaskManager.defineTask(LOCATION_TASK_NAME, async ({ data, error }) => {
-  if (error) {
-    console.error(error)
-    return
-  }
-  if (data) {
-    // Extract location coordinates from data
-    const { locations } = data  
-    //console.log(locations);
-    const token = await authStorage.getToken();
-    const trackID = await authStorage.getTrackID();
-
-    const location = locations[0]
-    if (location) {     
-      var x=location.coords.longitude;
-      var y=location.coords.latitude;
-      var timestamp=location.timestamp;
-      console.log("Location in background(", x,",",y,")..");
-      //InsertEmployeeLocation(x,y,666,1,token);
-      var d=new Date();
-      var result = await employeeApi.InsertEmployeeLocation(x,y,trackID,1,token,d,timestamp);
-      if(result.status==200)
-       { console.log("Location was sent"); }
-     else 
-       console.log("Location was NOT SENT");
-
-    }
-  }
-})
+ 
 function OverTimeRegistrationScreen({ navigation }) {
+  const [locationStatus, setLocationStatus] = useState(null);
+  const [timeoutId, setTimeoutId] = useState(null);
+
   //const [trackID, setTrackId] = useState(null);
   const [notes, setNotes] = useState("");
-  const [storedNotes, setStoredNotes] = useState("");
+  const [storedCounter, setStoredCounter] = useState("");
+  const [storedTimer, setStoredTimer] = useState("");
 
+  const [storedNotes, setStoredNotes] = useState("");
+  const[isDialogVisible,setIsDialogVisible]=useState(false)
   const [position, setPosition] = useState(null);
   const [startEnabled, setStartEnabled] = useState(true);
   const [taskCompleted, setTaskCompleted] = useState(true);
@@ -105,8 +76,10 @@ function OverTimeRegistrationScreen({ navigation }) {
   const { user } = useAuth();
   const [selectedDateFrom, setSelectedDateFrom] = useState(null);
   const [selectedDateTo, setSelectedDateTo] = useState(null);
-
-
+  const [inistialCount,setInistialCount]=useState("")
+  const [finalCount,setFinalCount]=useState("")
+  const [request,setRequest]=useState(null)
+ 
   const [fromTxt, setFromTxt] = useState("");
   const [toTxt, setToTxt] = useState("");
 
@@ -115,21 +88,99 @@ function OverTimeRegistrationScreen({ navigation }) {
   //const location = useLocation();
   const [uploadVisible, setUploadVisible] = useState(false);
   const [requiredNotesVisible, setRequiredNotesVisible] = useState(false);
+  const [requiredCountVisible, setRequiredCountVisible] = useState(false);
+  const [warningVisible, setWarningVisible] = useState(0);
 
   const [isDate, setIsDate] = useState(false);
   const [balance, setBalance] = useState({ loading: false, data: "رصيد الإجازات" });
   const [resetTimer, setResetTimer] = useState(false);
-
+  const[identifier,setIdentifier]=useState(0);
   const [progress, setProgress] = useState(0);
   const [loading, setLoading] = useState(true);
   const [from, setFrom] = useState((new Date).now);
   const [to, setTo] = useState((new Date).now);
   const [TotalTxt,setTotalTxt]=useState("");
   const [info, setInfo] = useState({allowed:false,Loading:false,message:"",done:false});
+
+
+  const checkProviderStatus = async () => {
+    try {
+      // Check if location services are enabled
+      const status = await Location.getProviderStatusAsync();
+      console.log("provider status : "+status);
+      //setLocationStatus(enabled);
+    } catch (error) {
+      console.log(error.message);
+      //setLocationStatus(`Error checking location status: ${error.message}`);
+    }
+  };
+  const checkLocationStatus = async () => {
+    try {
+      // Check if location services are enabled
+      const enabled = await Location.hasServicesEnabledAsync();
+      console.log("is enabled : "+enabled);
+      setLocationStatus(enabled);
+    } catch (error) {
+      setLocationStatus(`Error checking location status: ${error.message}`);
+    }
+  };
+
+// Define the background task for location tracking
+
+let LocCount = 0;
+
+TaskManager.defineTask(LOCATION_TASK_NAME, async ({ data, error }) => {
+  const token = await authStorage.getToken();
+  const trackID = await authStorage.getTrackID();
+  var d=new Date();
+  console.log(error);
+  console.log("DATA:     #######:  ",data)
+  if (error) {
+    checkProviderStatus();
+
+    var result = await employeeApi.InsertEmployeeLocation(0,0,trackID,1,token,d,d);
+      if(result.status==200)
+       { console.log("Error in the task, i sent 0 0 "); }
+     else 
+       console.log("Error, can not send 0 0");
+    console.log("Error In task",error);
+   }
+  if (!data)
+  {
+    checkProviderStatus();
+    var result = await employeeApi.InsertEmployeeLocation(-1,-1,trackID,1,token,d,d);
+    if(result.status==200)
+     { console.log("no data, i sent -1 -1"); }
+   else 
+     console.log("no data, i can not send -1 -1");
+     console.log("No data ,No error" )
+  }
+  if (data) {
+    // Extract location coordinates from data
+    const { locations } = data  
+    //console.log(locations);
+    
+    const location = locations[0]
+    if (location) {     
+      var x=location.coords.longitude;
+      var y=location.coords.latitude;
+      var timestamp=location.timestamp;
+      LocCount +=1;
+      console.log("Location "+LocCount+" in background(", x,",",y,")..   "+timestamp);
+      //InsertEmployeeLocation(x,y,666,1,token);
+      var result = await employeeApi.InsertEmployeeLocation(x,y,trackID,1,token,d,timestamp);
+      if(result.status==200)
+       { console.log("Location was sent"); }
+     else 
+       console.log("Location was NOT SENT");
+
+    }
+  }
+})
   const requestPermissions = async () => {
       setToken(token)
       const foreground = await Location.requestForegroundPermissionsAsync();
-      if (foreground.granted||true){ 
+      if (foreground.granted){ 
         //console.log("OKKK");  
         let backgroundPermissionRequest =await Location.requestBackgroundPermissionsAsync();
         console.log("requestPermissions background", backgroundPermissionRequest);
@@ -145,6 +196,8 @@ function OverTimeRegistrationScreen({ navigation }) {
         console.log("already starteeeddddd!!!");
         const starttime = await authStorage.getStartTime();
         const storedNotes = await authStorage.getOverTimeNotes();
+        const storedcounter = await authStorage.getOverTimeCount();
+           console.log("STOREEEDDDD"+storedcounter);
 
         var ff=new Date();
         var starttimed=new Date(starttime);
@@ -156,6 +209,9 @@ function OverTimeRegistrationScreen({ navigation }) {
         setInitialTimer(diff);
         setSelectedDateFrom(new Date(starttime));
         setStoredNotes(storedNotes);
+        setStoredCounter(storedcounter);
+        setStoredTimer(diff);
+
       }
     setHasStarted(hasStarted);
     setStartEnabled(!hasStarted);
@@ -216,7 +272,7 @@ function OverTimeRegistrationScreen({ navigation }) {
     const token = await authStorage.getToken();
 
     const result = await employeesApi.sendStoredApiRequests(token);
-  
+    console.log("Stored Locations were sent resss: "+result);
    /* if (!result.ok) {
       
       return;
@@ -251,7 +307,32 @@ function OverTimeRegistrationScreen({ navigation }) {
         }
       )
     }
-  
+    async function scheduleAndCancel() {
+      await Notifications.cancelAllScheduledNotificationsAsync();
+      const identifier = await Notifications.scheduleNotificationAsync({
+
+
+        content: {
+        //  sound: "hm.wav",
+          title: 'متابعة مسار المركبة قيد التشغيل.',
+         },
+        trigger: {seconds: 600,repeats:true, channelId:'tracking'
+          },
+         
+      });
+      console.log(identifier);
+      setIdentifier(identifier);
+    //  await Notifications.cancelScheduledNotificationAsync(identifier);
+    }
+
+
+    async function  CancelNotification() {
+      const res1=  await Notifications.cancelAllScheduledNotificationsAsync();
+      console.log("I cancellls "+res1);
+      const res =   await Notifications.cancelScheduledNotificationAsync(identifier);
+      console.log(res);
+      
+    }
     // Stop location tracking in foreground
     const stopForegroundUpdate = () => {
       foregroundSubscription?.remove()
@@ -260,14 +341,28 @@ function OverTimeRegistrationScreen({ navigation }) {
   
     // Start location tracking in background
     const startBackgroundUpdate = async () => {
-      console.log(notes);
+       scheduleAndCancel();
+       console.log();
+      sendStoredLocations();
+      //removeStoredLocations();
+      if(inistialCount=="")
+      {
+        setRequiredCountVisible(true);
+        
+         }
       if(notes=="")
       {
         setRequiredNotesVisible(true);
+        
         return;
       }
+      
       setStoredNotes(notes);
+      setStoredCounter(inistialCount+"");
+      setStoredTimer(initialTimer);
       setRequiredNotesVisible(false);
+      setRequiredCountVisible(false);
+
       requestPermissions();
       const token = await authStorage.getToken();
       console.log(token);
@@ -286,7 +381,14 @@ function OverTimeRegistrationScreen({ navigation }) {
         console.log("Task is not defined")
         return
       }
-  
+      checkLocationStatus();
+      if (!locationStatus)
+      {    
+          console.log("You have to enable location");
+          const r=await Location.enableNetworkProviderAsync();
+          console.log(r);
+          return;
+      }
       console.log("background defined");
       // Don't track if it is already running in background
       const hasStarted = await Location.hasStartedLocationUpdatesAsync(
@@ -306,29 +408,48 @@ function OverTimeRegistrationScreen({ navigation }) {
         setTaskCompleted(false);
         setHasStarted(true);
         const starttime = await authStorage.storeStartTime(d.toISOString());
-        console.log(notes);
+        console.log(notes +"   "+inistialCount);
         const nn=await authStorage.storeOverTimeNotes(notes);
+        const mm=await authStorage.storeOverTimeCount(inistialCount+"");
 
         console.log("Start time was stored!!");
 
         console.log(d.toLocaleTimeString());
-        await Location.startLocationUpdatesAsync(LOCATION_TASK_NAME, {
+        try
+        {
+  await Location.startLocationUpdatesAsync(LOCATION_TASK_NAME, {
+          
         // For better logs, we set the accuracy to the most sensitive option
-        timeInterval:30000,  
+        //timeInterval:5000,  
         accuracy: Location.Accuracy.BestForNavigation,
-         //deferredUpdatesInterval:30000,
+        deferredUpdatesInterval:3000,
+        deferredUpdatesTimeout:5000,
          //deferredUpdatesDistance:3,
 
         // Make sure to enable this notification if you want to consistently track in the background
         showsBackgroundLocationIndicator: true,
         foregroundService: {
+
+          killServiceOnDestroy:false,
           notificationTitle: "Location",
           notificationBody: "Location tracking in background",
           notificationColor: "#fff",
-        },
-        deferredUpdatesInterval: 30000
+         },
+         pausesUpdatesAutomatically:false,
+
+        ///deferredUpdatesInterval: 5000
 
       })
+        }
+        catch(error)
+
+        {
+          console.log("ERORORORO",error);
+
+        }
+
+      
+      console.log("Lcation Tracking has startedddddd :))))))))");
     }
   
   
@@ -338,8 +459,10 @@ function OverTimeRegistrationScreen({ navigation }) {
       const hasStarted = await Location.hasStartedLocationUpdatesAsync(
         LOCATION_TASK_NAME
       )
-      if (hasStarted||true) {
-        await Location.stopLocationUpdatesAsync(LOCATION_TASK_NAME);
+      if (hasStarted||true) { 
+         CancelNotification();
+        const r=await Location.stopLocationUpdatesAsync(LOCATION_TASK_NAME);
+        sendStoredLocations();
         console.log("Location tacking stopped started on : "+selectedDateFrom.toLocaleTimeString());
         setStartEnabled(true);
         var end=new Date();
@@ -349,11 +472,12 @@ function OverTimeRegistrationScreen({ navigation }) {
         changeTotal(end,selectedDateFrom);
        }
     }
+
   useEffect(() => { 
    //stopBackgroundUpdate();
-   console.log("YESSS");
+    console.log("YESSS");
    //removeStoredLocations();
-    sendStoredLocations();
+    //sendStoredLocations();
     setLoading(true);
     CheckOverTimeRequest()
     setLoading(false);
@@ -423,20 +547,18 @@ function OverTimeRegistrationScreen({ navigation }) {
    // console.log("minnsss"+min+"hourrsss" +hour);
    
     if(totalTime>=60){
-      
-      
-      ;hour=(((totalTime-min))/60);
-    
-    
-    txt=min+"دقائق "+hour+" ساعات";
-    setTotalTxt(txt);}
+      hour=(((totalTime-min))/60);
+      txt=min+"دقائق "+hour+" ساعات";
+      setTotalTxt(txt);
+    }
     else if(totalTime<60){
       ;hour=Math.ceil(totalTime)/60;
       txt=min+"دقائق ";
       setTotalTxt(txt);}
+      setTotalTxt(txt);
   }
  // console.log("Diff:  "+  Math.floor(d)+2);
-   
+   return txt;
  }
  const handleConfirmFrom = (date) => {
   if(!isDate){
@@ -497,60 +619,131 @@ else
  
  
 };
-  const handleSubmit = async (request, { resetForm }) => {
+const handleSubmit= async (cc ) => {
+  setProgress(0);
+  //setUploadVisible(true);
+  const token = await authStorage.getToken();
+  console.log("Tokeeen",token);
+  const trackID = await authStorage.getTrackID();
+  console.log(trackID);
+   var to=new Date();
+  let requestToAdd = {  
+      INITIAL_COUNT:request.INITIAL_COUNT,
+      FINAL_COUNT:cc,     
+      EMP_NO: request.EMP_NO,
+      OVERTIME_MONTH:selectedDateFrom,
+      OVERTIME_DATE:selectedDateFrom,
+      NOTES:request.NOTES,
+      FROM_TIME:selectedDateFrom,
+      TO_TIME:to,
+      TIME_OUT:selectedDateFrom,
+      TRACK_ID:trackID
+
+  };
+
+
+  let requestToAddOverTime = {  
+    EMP_NO: request.EMP_NO,
+    OVERTIME_MONTH:selectedDateFrom,
+    OVERTIME_DATE:selectedDateFrom,
+    NOTES:request.NOTES,
+    FROM_TIME:selectedDateFrom,
+    TO_TIME:to,
+    TIME_OUT:selectedDateFrom,
+    TRACK_ID:trackID
+
+};
+   console.log(requestToAdd);
+    var result=null;
+    result = await employeesApi.PostOverTimeDetails(requestToAddOverTime,token, (progress) => {
+    setProgress(progress);
+    if (progress == 1) setLoading(true);
+  });
+
+  console.log(result);
+
+//console.log("trackID,request.EMP_NO,selectedDateFrom,to,request.INITIAL_COUNT,finalCount,request.NOTES,0   "+trackID+"  "+request.EMP_NO+"  "+selectedDateFrom+"  "+to+"  "+request.INITIAL_COUNT+"  "+cc+"  "+request.NOTES+"  "+"0");
+const res2=await employeeApi.GetFindAndInsertTrack(trackID,request.EMP_NO,selectedDateFrom,to,storedCounter,cc,storedNotes,0)
+  console.log(res2);
+  //console.log(result);
+  if (!result.ok) {
+    setUploadVisible(false);
+    setInfo({ Loading: false, allowed:false,message:"لم يتم إضافة العمل الإضافي بنجاح!",done:true });
+    setLoading(false);
+    return;
+  }
+  else {       
+    setLoading(false);
+    setUploadVisible(false);
+    setInfo({ Loading: false, allowed:false,message:" تمت إضافة العمل الإضافي بنجاح!!"+
+    "\n"+
+    "وقت البداية : "+dayjs(selectedDateFrom).locale("ar").format('YYYY/MM/DD   hh:mm:ss') +"\n"+
+    "وقت النهاية : "+dayjs(requestToAdd.TO_TIME).locale("ar").format('YYYY/MM/DD   hh:mm:ss')  +"\n"+
+    "مجموع الوقت :"+changeTotal(requestToAdd.TO_TIME,selectedDateFrom) +"\n"+
+    "رقم المسار: "+trackID.toString()
+
+    
+    ,done:true });
+
+  }
+  //resetFormm();
+}
+  const EndTrack = async (request1, { resetForm}) => {
+    setTaskCompleted(true);
+
     console.log("In submitt")
     stopBackgroundUpdate();
+    setIsDialogVisible(true);
+    setWarningVisible(0);
+    setRequest(request1);
+    //setResetFormm(resetForm);
+
     // / return;
-    setProgress(0);
-    setUploadVisible(true);
-    const token = await authStorage.getToken();
-    const trackID = await authStorage.getTrackID();
-     var to=new Date();
-    let requestToAdd = {       
-        EMP_NO: request.EMP_NO,
-        OVERTIME_MONTH:selectedDateFrom,
-        OVERTIME_DATE:selectedDateFrom,
-        NOTES:request.NOTES,
-        FROM_TIME:selectedDateFrom,
-        TO_TIME:to,
-        TIME_OUT:selectedDateFrom,
-        TRACK_ID:trackID
-
-    };
-    //console.log(requestToAdd);
-      var result=null;
-      result = await employeesApi.PostOverTimeDetails(requestToAdd,token, (progress) => {
-      setProgress(progress);
-      if (progress == 1) setLoading(true);
-    });
-       
-    //console.log(result);
-    if (!result.ok) {
-      setUploadVisible(false);
-      setInfo({ Loading: false, allowed:false,message:"لم يتم تسجيل العمل الإضافي بنجاح!",done:true });
-      setLoading(false);
-      return;
-    }
-    else {       
-      setLoading(false);
-      setUploadVisible(false);
-      setInfo({ Loading: false, allowed:false,message:"تم تسجيل العمل الإضافي بنجاح!!"+
-      "\n"+
-      "وقت البداية : "+selectedDateFrom +"\n"+
-      "وقت النهاية : "+selectedDateTo +"\n"+
-      "مجموع الوقت :"+TotalTxt
-
-      
-      ,done:true });
-
-    }
-    resetForm();
+    
   };
 
   return (
     <>
       {info.Loading&&<ActivityIndicator visible={loading} />}
+      <DialogInput isDialogVisible={isDialogVisible}
+      textInputProps={{keyboardType:"number-pad"}}
+      submitText={"اعتماد وإرسال"}
+      cancelText={"إغلاق"}
+      title={"إنهاء المسار"}
+      message={ warningVisible==0?"..أدخل قراءة عداد المركبة":warningVisible==1?"أدخل قراءة عداد المركبة.."+"\n"+"*القيمة 0 غير مسموحة":warningVisible==2?"أدخل قراءة عداد المركبة"+"\n"+"*خطأ في القيمة المدخلة":"أدخل قراءة عداد المركبة.."+"\n"+"*يجب أن تكون القيمة أكبر من البداية"}
+      
+      hintInput ={""}
+      submitInput={ (inputText) => {
+        if(inputText=="0")//القيمة 0 غير مسموحة(1)
+        {
+          setWarningVisible(1);
 
+        }
+        else if(inputText!="" && /^\d+$/.test(inputText))
+        {
+          if(Number(inputText)<storedCounter)
+          {
+            setWarningVisible(3);
+
+          }
+          else
+          {
+            setFinalCount(inputText);setIsDialogVisible(false);setWarningVisible(0);
+            handleSubmit(inputText);
+          }
+          
+        }
+        else //(2) خطأ في القيمة المدخلة 
+        {
+          setWarningVisible(2);
+
+        }
+
+        
+      
+      }}
+      closeDialog={ () => {}}>
+      </DialogInput>
       {!info.Loading&&!info.allowed && (
         <Info
           numberOfLines={5}
@@ -591,7 +784,7 @@ else
         {!balance.loading&& balance.data&&<Form        
           key={"RequestForm"}
           initialValues={{
-
+            INITIAL_COUNT: storedCounter ,
             CustName: user.name,
             EMP_NO: user.serialnumber,
             OVERTIME_DATE:"",
@@ -603,7 +796,7 @@ else
             ToTxt:"",
             Total:""
           }}
-          onSubmit={handleSubmit}
+          onSubmit={EndTrack}
          // validationSchema={validationSchema}
         >
           <ScrollView>
@@ -613,57 +806,49 @@ else
          items={[{ label: "إجازة", value: "1" }, { label: "إذن مغادرة", value: "2" }]} />
          }
          <Field
-                name="CustName"
-
-                
+                name="CustName"               
                 //showPlaceholder={user.role=="Anonymous"}
-                showPlaceholder={false}
+                showPlaceholder={true}
                 placeholder="اسم الموظف"
                 style={[styles.nameFull]}
                 editable={false} 
-              /> 
-        
-  
+              />
               <Field
                 keyboardType="number-pad"
                 maxLength={9}
                 name="EMP_NO"
                 //showPlaceholder={user.role=="Anonymous"}
-                showPlaceholder={false}
+                showPlaceholder={true}
                 placeholder="الرقم الوظيفي "
                 style={[styles.name]}
                 editable={false}
- 
-
-              />
-               <Field
+                />
+              {false&& <Field
                 name="Balance"
                 placeholder={"مجموع ساعات العمل الإضافي لهذا الشهر "}
                 showPlaceholder={true}
                 style={[styles.name]}
                 editable={false}
- 
-              />
+              />}
                 <Field                   
                   name="OVERTIME_DATE"
                   width={'100%'}
-                  placeholder={ "التاريخ : "+new Date().toLocaleDateString()}
-                  showPlaceholder={false}
+                  placeholder={ "التاريخ"}
+                  value={new Date().toLocaleDateString()}
+                  showPlaceholder={true}
                   editable={false}
                   style={styles.name}
                   mode={"date"}
-                   contWidth={'100%'}
-                   
+                  contWidth={'100%'} 
                   />
-                  <View style={[styles.dateSection]}>     
+                 {!startEnabled&& <View style={[styles.dateSection]}>     
                  <Field
                   name="FROM_TIME"
                   width={'100%'}
                   value={selectedDateFrom?selectedDateFrom.toLocaleTimeString():"غير محدد"}
                   placeholder={"بداية الوقت"}
                   style={styles.name}
-                  editable={false}
-                  
+                  editable={false}                 
                   />
                 <Field
                    value={selectedDateTo?selectedDateTo.toLocaleTimeString():" غير محدد"}
@@ -673,42 +858,65 @@ else
                    editable={false}
                    width={'100%'}
                  />
-                 </View>
-               
-              <Field
+                 </View>} 
+                 {false&&!startEnabled &&<Field
                 name="Total"
                 placeholder={TotalTxt==""?("مجموع الساعات"):TotalTxt}
-                showPlaceholder={false}
+                value={TotalTxt==""?"غير محدد":TotalTxt}
+                showPlaceholder={true}
                 style={[styles.name]}
                 editable={false}
-              />
+              />}          
+                  {startEnabled&&<Field
+                  name="INITIAL_COUNT"
+                  width={'100%'}
+                  //value={storedCounter}
+                  placeholder={"قراءة العداد (البداية)"}
+                  autoFocus={true}
+
+                  style={styles.name}
+                  editable={true}
+                  keyboardType="number-pad"
+                  onChangeText={(e)=>{setInistialCount(e);}}
+                  onDone={(e)=>{setInistialCount(e.nativeEvent.text);}}
+                  onEndEditing={(e)=>{setInistialCount(e.nativeEvent.text);}}
+                  /> }
+                  {!startEnabled&&<Field
+                  name="INITIAL_COUNT"
+                  width={'100%'}
+                   value={storedCounter}
+                  placeholder={"قراءة العداد (البداية)"}
+                  style={styles.name}
+                  editable={false} /> }
+                 {requiredCountVisible&&<AppText style={[styles.warning,{textAlign:"left",marginTop:0,fontSize:12}]}>**قراءة العداد عند البداية مطلوبة</AppText>}             
              
-           
               {startEnabled&&<Field
                 name="NOTES"
                // value={notes}
                 multiline
-                showPlaceholder={false}
-                numberOfLines={3}
-                placeholder={"سبب العمل الإضافي"}
-                style={[styles.name]}
+                showPlaceholder={true}
+                numberOfLines={1}
+                placeholder={"سبب العمل الإضافي  "}
+                style={[styles.name]}             
+                onChangeText={(e)=>{setNotes(e);}}
+                onDone={(e)=>{setNotes(e.nativeEvent.text);}}
                 onEndEditing={(e)=>{setNotes(e.nativeEvent.text);}}
               />}
 
              {!startEnabled&& <Field
                 name="NOTES"
-                 value={storedNotes}
+                value={storedNotes}
                 multiline
                 editable={false}
-                showPlaceholder={false}
-                numberOfLines={3}
-                placeholder={"سبب العمل ssالإضافي"}
+                showPlaceholder={true}
+                numberOfLines={1}
+                placeholder={"سبب العمل الإضافي"}
                 style={[styles.name]}
                 
               />}
-              {requiredNotesVisible&&<AppText style={[styles.warning,{textAlign:"left",marginTop:0,fontSize:12}]}>**سبب العمل الإضافي مطلوب.</AppText>}
+              {requiredNotesVisible&&<AppText style={[styles.warning,{textAlign:"left",marginTop:0,fontSize:12}]}>**سبب استخدام المركبة مطلوب.</AppText>}
 
-              <Stopwatch
+             {!startEnabled&&<Stopwatch
             laps
             //msecs
             startTime={initialTimer}
@@ -723,14 +931,23 @@ else
             /*getTime={(time) => {
               console.log(time);
             }}*/
-          />
+          />}
             </View>
             <View style={styles.separator} />
       {!hasStarted&&<Button
         onPress={startBackgroundUpdate}
-        title={startEnabled?"بدء العمل الإضافي":"تم البدء من ساعة "+"selectedDateFrom.toLocaleTimeString()"}
+        title={startEnabled?"بدء العمل الإضافي  ":"تم البدء من ساعة "+"selectedDateFrom.toLocaleTimeString()"}
         color={startEnabled?"secondaryLight":"running"}
-        enabled={startEnabled}
+       // enabled={startEnabled}
+        buttonStyle={{width:'80%',marginHorizontal:'10%',height:50 }}
+        textStyle={{fontSize:18}}
+
+      />}  
+       {false&&<Button
+        onPress={stopBackgroundUpdate}
+        title={"STOPPPPPP"}
+        color={startEnabled?"secondaryLight":"running"}
+        //enabled={startEnabled}
         buttonStyle={{width:'80%',marginHorizontal:'10%',height:60 }}
         textStyle={{fontSize:18}}
 
@@ -740,17 +957,15 @@ else
      {!taskCompleted&& <SubmitButton
         //onPress={stopBackgroundUpdate}
         title="إنهاء وتحويل للمسؤول  "
-        enabled={!startEnabled}
         color={startEnabled?"secondaryLight":"danger"}
-        buttonStyle={{width:'80%',marginHorizontal:'10%',height:60,backgroundColor:colors.danger }}
+        buttonStyle={{width:'80%',marginHorizontal:'10%',height:50,backgroundColor:colors.danger }}
         textStyle={{fontSize:18}}
 
       />}
-             {false&&taskCompleted&&hasStarted&&<SubmitButton buttonStyle={{width:'80%',marginHorizontal:'10%',height:60 ,backgroundColor:colors.secondaryLight}} title="تحويل الطلب للمسؤول" />}
-          </ScrollView>
-          
+      {false&&taskCompleted&&hasStarted&&<SubmitButton buttonStyle={{width:'80%',marginHorizontal:'10%',height:50 ,backgroundColor:colors.secondaryLight}} title="تحويل الطلب للمسؤول" />}
+          </ScrollView>         
         </Form>}
-      <AppText style={[styles.warning]}>** يُرجى العلم أنّه يتم تتبّع الموقع خلال ساعات العمل الإضافي.</AppText>
+      <AppText style={[styles.warning]}>**يُرجى إبقاء التطبيق متصلاً بشبكة الإنترنت أثناء تتبع المسار وتفعيل تحديد الموقع </AppText>
       </Screen>
     </>
   );
@@ -774,40 +989,38 @@ const options = {
   },
 }
 const styles = StyleSheet.create({
-  section: { marginHorizontal: "10%", width: "80%", fontSize: 14, },
+  section: { marginHorizontal: "10%", width: "80%", fontSize: 16, },
   Field: {
     width: "50%",
-    fontSize: 14,
+    fontSize: 16,
     fontFamily: "Cairo_400Regular",
     // /color: colors.black
   },
   dateSection: {     width: "100%",
-  flexDirection: 'row', fontSize: 14 },
+  flexDirection: 'row', fontSize: 16 },
 
   name: {
+    marginTop:5,
     width: "51%",
-    fontSize: 14,
+    fontSize: 16,
     fontFamily: "Cairo_400Regular",
     color: colors.darkNew, textAlign: "right",
 
   },
   nameFull: {
+    marginTop:5,
     width: "100%",
-    fontSize: 14,
+    fontSize: 16,
     fontFamily: "Cairo_400Regular",
     color: colors.darkNew, textAlign: "right",
-     writingDirection:"rtl",
-    
-
+    writingDirection:"rtl",
   },
-
   warning: {
-    marginTop:10,
-    fontSize: 14,
+    marginTop:5,
+    fontSize: 16,
     marginHorizontal:10,
     fontFamily: "Cairo_400Regular",
     color: colors.danger, textAlign: "center",
-
   },
   total: {
     padding:10,
@@ -821,7 +1034,7 @@ const styles = StyleSheet.create({
   imagesection: { width: "100%" },
 
   container: {
-    fontSize: 10,
+    fontSize: 20,
     marginHorizontal: 10,
     paddingVertical: 10,
   },

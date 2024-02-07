@@ -6,7 +6,8 @@ import {
   Image,
   TouchableWithoutFeedback,
   TouchableOpacity,
-  Dimensions
+  Dimensions,
+  useAnimatedValue
 
 } from "react-native";
 import { StatusBar } from "expo-status-bar";
@@ -34,7 +35,7 @@ import Header from "../components/home/Header";
 import Footer from "../components/home/Footer";
 import Carousel from "../components/carousel/Carousel";
 import CardInfo from "../components/CardInfo";
-import Animated from "react-native-reanimated";
+import Animated,{interpolate,Extrapolation,useSharedValue,useAnimatedScrollHandler} from "react-native-reanimated";
 import Story from "../components/Story";
 import { ScrollView } from "react-native";
 import Icon from "../components/Icon";
@@ -66,10 +67,8 @@ import { Modalize } from "react-native-modalize";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { color } from "react-native/Libraries/Components/View/ReactNativeStyleAttributes";
 
-const { interpolateNode, Extrapolate } = Animated;
-
-const { Value } = Animated;
-const { width, height } = Dimensions.get("window");
+ 
+ const { width, height } = Dimensions.get("window");
 
 function HomeScreen({ navigation }) {
   const { user, logInWithEDevlet, logOut } = useAuth();
@@ -111,7 +110,7 @@ function HomeScreen({ navigation }) {
 
   const modalizeRef = useRef(null);
 
-  const [y, setY] = useState(new Value(0));
+  const  y=useSharedValue(0,false);
 
   const { setNotificationCount } = useNotificationsCount();
 
@@ -369,21 +368,21 @@ function HomeScreen({ navigation }) {
     handleServices();
   }, []);
 
-  const height = interpolateNode(y, {
-    inputRange: [-MAX_HEADER_HEIGHT, -BUTTON_HEIGHT / 2],
-    outputRange: [0, MAX_HEADER_HEIGHT + BUTTON_HEIGHT],
-    extrapolate: Extrapolate.CLAMP,
-  });
-  const opacity = interpolateNode(y, {
-    inputRange: [-MAX_HEADER_HEIGHT / 2, 0, MAX_HEADER_HEIGHT * 20],
-    outputRange: [0, 1, 0],
-    extrapolate: Extrapolate.CLAMP,
-  });
-  const storyOpacity = interpolateNode(y, {
-    inputRange: [-MAX_HEADER_HEIGHT / 8, 0, MAX_HEADER_HEIGHT / 8],
-    outputRange: [0, 1, 0],
-    extrapolate: Extrapolate.CLAMP,
-  });
+  const height = interpolate(y.value,
+    inputRange= [-MAX_HEADER_HEIGHT, -BUTTON_HEIGHT / 2],
+    outputRange= [0, MAX_HEADER_HEIGHT + BUTTON_HEIGHT],
+    extrapolate= Extrapolation.CLAMP,
+  );
+  const opacity = interpolate(y.value, 
+    inputRange= [-MAX_HEADER_HEIGHT / 2, 0, MAX_HEADER_HEIGHT * 20],
+    outputRange= [0, 1, 0],
+    extrapolate=  Extrapolation.CLAMP,
+  );
+  const storyOpacity = interpolate(y.value, 
+    inputRange= [-MAX_HEADER_HEIGHT / 8, 0, MAX_HEADER_HEIGHT / 8],
+    outputRange= [0, 1, 0],
+    extrapolate=  Extrapolation.CLAMP,
+  );
 
   const onStorySelect = (index) => {
     //console.log("ppp"+index);
@@ -441,21 +440,26 @@ function HomeScreen({ navigation }) {
     }
   };
 
+ 
+  const scrollHandler = useAnimatedScrollHandler({
+    useNativeDriver:true,
+    onScroll: (event) => {
+       
+      y.value = event.contentOffset.y;
+    },
+    onBeginDrag: (e) => {
+      //isScrolling.value = true;
+    },
+    onEndDrag: (e) => {
+      //isScrolling.value = false;
+    },
+  });
   return (
     <View style={styles.container}>
-      <Header y={y} sticky={false} navigation={navigation} />
-      <Cover y={y} />
-      <Animated.ScrollView
-       onScroll={Animated.event(
-        [
-          {
-            nativeEvent: {
-              contentOffset: {y: y},
-            },
-          },
-        ],
-        {useNativeDriver: true}, // <-- Set this to true
-      )}
+     {true&&<Header y={y} sticky={false} navigation={navigation} />}
+      {true&&<Cover y={y} />}
+      {true&&<Animated.ScrollView
+       onScroll={scrollHandler}
        style={styles.contentContainer}
        showsVerticalScrollIndicator={false}
         scrollEventThrottle={16}
@@ -467,7 +471,7 @@ function HomeScreen({ navigation }) {
         {true&&<View style={styles.coverShort}>
           <View style={styles.headerContainer}>
     
-   <Animated.View style={[styles.searchButton, { opacity }]}>
+   <Animated.View style={[styles.searchButton, { opacity:opacity }]}>
      <SearchButton
        onPress={() => {
          navigation.push(routes.SEARCH, { services });
@@ -477,7 +481,7 @@ function HomeScreen({ navigation }) {
  </View>
 </View>}
 
-        <View style={styles.content}>
+        {true&&<View style={styles.content}>
           <ErrorMessage
             error="حدث خطأ غير متوقع!"
             visible={loginFailed}
@@ -495,15 +499,15 @@ function HomeScreen({ navigation }) {
                  const result = await contentApi.getNewsContent(
                   item.contentId
                 );
-
-                ////console.log(result);
+                
+                 console.log(result);
                 if (!result.ok) {
                    setContent(null);
 
                   setError(true);
                   return;
                 }
-
+     
                 item.details = result.data.body;
                 item.news=true;
                 item.urlpre=constants.HMURL;
@@ -787,9 +791,9 @@ function HomeScreen({ navigation }) {
             </View>
           </TouchableWithoutFeedback>}
           <View style={[styles.sectionContainer, { marginBottom: 75 }]} />
-        </View>
-      </Animated.ScrollView>
-      {showIncompleteFeature&&<Modal
+        </View>}
+      </Animated.ScrollView>}
+      {true&&showIncompleteFeature&&<Modal
         animationType="slide"
         transparent={true}
         visible={isModelOpen}
@@ -881,7 +885,7 @@ function HomeScreen({ navigation }) {
           <AppWebView source={{ uri: "http://www.hebron-city.ps/ar_category.aspx?id=hxhK92a24745578ahxhK92" }} />
            </Modal>} 
       </Modal>}
-      <AppModalize
+      {true&&<AppModalize
         ref={webModalizeRef}
         adjustToContentHeight={true}
         title={content?.title}
@@ -905,9 +909,9 @@ function HomeScreen({ navigation }) {
               decodeEntities(content?.details).split("<br />").join(""),
           }}*/
         />}
-      </AppModalize>
+      </AppModalize>}
 
-      <AppModalize ref={webModalizeRef1} title={navItem.title}
+     { true&&<AppModalize ref={webModalizeRef1} title={navItem.title}
       
       >
         <AppWebView
@@ -927,8 +931,8 @@ function HomeScreen({ navigation }) {
               decodeEntities(content?.details).split("<br />").join(""),
           }}
         />
-      </AppModalize>
-      <AppModalize ref={modalizeRef} title="تسجيل الدخول">
+      </AppModalize>}
+     { true&&<AppModalize ref={modalizeRef} title="تسجيل الدخول">
         <AppWebView
           source={{
             uri:
@@ -954,9 +958,9 @@ function HomeScreen({ navigation }) {
             }
           }}
         />
-      </AppModalize>
-      <StatusBar style="light" />
-      <Footer y={y}  navigation={navigation} />
+      </AppModalize>}
+      {true&&<StatusBar style="light" />}
+     {true&&<Footer y={y}  navigation={navigation} />}
 
     </View>
   );

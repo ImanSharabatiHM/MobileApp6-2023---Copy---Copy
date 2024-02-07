@@ -1,6 +1,6 @@
 /* eslint-disable */
 import React from "react";
-import { Image, StyleSheet, Text, TouchableOpacity, View ,TouchableHighlight} from "react-native";
+import { Image, StyleSheet, Text, TouchableOpacity, View ,TouchableHighlight,Platform} from "react-native";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import Constants from "expo-constants";
 

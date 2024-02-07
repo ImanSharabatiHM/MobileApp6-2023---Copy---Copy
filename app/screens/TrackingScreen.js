@@ -178,8 +178,11 @@ TaskManager.defineTask(LOCATION_TASK_NAME, async ({ data, error }) => {
   }
 })
   const requestPermissions = async () => {
+    console.log("Will Request Persss");
+
       setToken(token)
       const foreground = await Location.requestForegroundPermissionsAsync();
+      console.log(foreground);
       if (foreground.granted){ 
         //console.log("OKKK");  
         let backgroundPermissionRequest =await Location.requestBackgroundPermissionsAsync();
@@ -481,6 +484,7 @@ TaskManager.defineTask(LOCATION_TASK_NAME, async ({ data, error }) => {
     setLoading(true);
     CheckOverTimeRequest()
     setLoading(false);
+    
     requestPermissions()
     hasStartedWork();
     dayjs.extend(updateLocale);

@@ -53,12 +53,15 @@ function BuildingUnitsScreen({ navigation,route }) {
             </Text>
           )}
           <ListItemSeparator v seperatorStyle={styles.seperatorStyleTable} />
+<<<<<<< Updated upstream
           {true && (
             <Text style={styles.headerItemSmall} numberOfLines={1}>
               { "المساحة"}
             </Text>
           )}
           <ListItemSeparator v seperatorStyle={styles.seperatorStyleTable} />
+=======
+>>>>>>> Stashed changes
            {true&& (
             <Text style={styles.headerItem} numberOfLines={1}>
               {"المستفيد"}
@@ -81,7 +84,11 @@ function BuildingUnitsScreen({ navigation,route }) {
       setUnits({ loading: false, data: null });
       return;
     }
+<<<<<<< Updated upstream
     let data = result.data;//.sort(function (a, b) { return b.U_ID - a.U_ID; }) ;;//.sort(function (a, b) { return b.hitCount - a.hitCount; }) .slice(0, 5);
+=======
+    let data = result.data.sort(function (a, b) { return b.U_ID - a.U_ID; }) ;;//.sort(function (a, b) { return b.hitCount - a.hitCount; }) .slice(0, 5);
+>>>>>>> Stashed changes
     setUnits({ loading: false, data });
   };
   useEffect(() => {
@@ -94,10 +101,13 @@ function BuildingUnitsScreen({ navigation,route }) {
      <ActivityIndicator visible={units.loading} />
      {!units.loading&&units.data&&   (
       <FlatList
+<<<<<<< Updated upstream
       initialNumToRender={20}
       windowSize={21}
       maxToRenderPerBatch={30}
       updateCellsBatchingPeriod={200}
+=======
+>>>>>>> Stashed changes
       data={units.data}  
       ListHeaderComponent={ListHeader}
       all
@@ -108,10 +118,15 @@ function BuildingUnitsScreen({ navigation,route }) {
             iconName={"close"}
             unit={item}
             DAMGE={item.DAMGE}
+<<<<<<< Updated upstream
             group={item.GROUP}
             navigation={navigation}
             title={item.STREET_DESC}
             unitArea={item.UNIT_AREA}
+=======
+            navigation={navigation}
+            title={item.STREET_DESC}
+>>>>>>> Stashed changes
             unitNo={item.UNIT_NO}
             all={item.U_ID==-1}
             other={item.U_ID==0}
@@ -159,7 +174,11 @@ const styles = StyleSheet.create({
     textAlignVertical:"center",
     color:colors.facebook,
     fontFamily:"Cairo_700Bold",
+<<<<<<< Updated upstream
     width:"10%",
+=======
+    width:"15%",
+>>>>>>> Stashed changes
     textAlign:"center",
     paddingTop:5,
     marginRight:0,

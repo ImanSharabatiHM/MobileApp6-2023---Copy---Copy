@@ -76,6 +76,23 @@ function UserInfoScreen({ navigation }) {
              onPress={() => navigation.navigate(routes.SALARY)}      
              />
           </View>}
+
+          {true&&(user?.role == "HMUser")&& <View style={[styles.buttonCloseRow]}>
+            <Button  
+             buttonStyle={{marginTop:0,height:"100%",width:'47%',margin:5}}
+             color={"primary"}
+             textStyle={styles.buttonTxt} title="الأقساط المتبقية" 
+             onPress={() => navigation.navigate(routes.REMPAYMENTS)}      
+             />
+              <Button  
+             buttonStyle={{marginTop:0,height:"100%",width:'47%',margin:5}}
+             color={"primary"}
+            textStyle={styles.buttonTxt} title="رصيد التكافل" 
+             onPress={() => navigation.navigate(routes.TAKAFULTOTAL)}      
+             />   
+          </View>}
+
+        
           </View>
      </Screen>  
     </> 
@@ -96,6 +113,13 @@ const styles = StyleSheet.create({
     width: "80%",
     height:"8%",
     alignSelf: "center",
+ 
+  },
+  buttonCloseRow: {
+    marginTop:10,
+    width: "100%",
+    height:"8%",
+     flexDirection:"row"
  
   },
   buttonTxt: {

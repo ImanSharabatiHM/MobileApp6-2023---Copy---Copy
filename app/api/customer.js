@@ -54,6 +54,14 @@ const getAppointmentsByUserID = (EmpNo) =>
 clientEs.get(mobileendpoint+"/MobileAppointments", { EmpNo });
 
 
+const GetRemainingPaymentsByEmpNo = (EmpNo,Token) =>
+clientEs.get(mobileendpoint+"/GetRemainingPayments", { EmpNo,Token });
+
+ 
+
+const GetTakafulTotal = (Token) =>
+clientEs.get(mobileendpoint+"/GetTakafulTotal", {Token });
+
 const getSalaryByEmpNo = (EmpNo,Token) =>
 clientEs.get(mobileendpoint+"/GetSalarySlip", { EmpNo,Token });
 
@@ -197,12 +205,6 @@ export const createCM = (complaint, onUploadProgress) => {
     });
   };
 export default {
-  VerifyCode,
-  SendVerificationCode,
-  GetEmpNameByID,
-  GetEmployeeTabletPermissions,
-  GetFeesByCustomerIDTest,
-  GenerateEPaymentToken,
   GetEmployeePermissions,
   GetCustomerNameByID2,
   GenerateCollectionToken,

@@ -39,7 +39,11 @@ function BuildingsModalize({B_ID,B_BLOCK,B_NO,B_STREET_NO,B_IMAGE,B_PARCEL,PERMI
           { TalabCode: 'TALABTS', TextAr: 'الطلبات', ImageName: "industryIcon" ,Visible:PERMISSIONS?.VIEW_BTALABAT},
           { TalabCode: 'BLACKLIST', TextAr: 'القائمة السوداء', ImageName: "streetsIcon",Visible:PERMISSIONS?.ADD_BLACKLIST }, 
           { TalabCode: 'UNITWARNING', TextAr: 'إخطاراات', ImageName: "warningIcon",Visible:PERMISSIONS?.ADD_UNIT_WARNING }, 
+<<<<<<< Updated upstream
           { TalabCode: 'ELECTRICSERVICES', TextAr: 'الكهرباء', ImageName: "electricityIcon",Visible:PERMISSIONS?.ADD_UNIT_WARNING }, 
+=======
+          { TalabCode: 'ELECTRICSERVICES', TextAr: 'الكهرباء', ImageName: "electricityIcon",Visible:PERMISSIONS?.VIEW_ELECTSERVICES }, 
+>>>>>>> Stashed changes
 
           { TalabCode: '6', TextAr: 'الرسوم', ImageName: "taxIcon" ,Visible:0},
           { TalabCode: '8', TextAr: 'كهرباء', ImageName: "electricityIcon" ,Visible:0},

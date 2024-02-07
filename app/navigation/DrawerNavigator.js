@@ -1,14 +1,15 @@
 import React from "react";
 
 import { createDrawerNavigator } from "@react-navigation/drawer";
-import DrawerContent from "./DrawerContent";
-import HomeNavigator from "./HomeNavigator";
+import DrawerContent from "./DrawerContentLight";
+import HomeNavigator from "./HomeNavigatorLight";
 import SearchScreen from "../screens/SearchScreen";
 import useNotifications from "../hooks/useNotifications";
 import navigation from "./rootNavigation";
 import routes from "./routes";
 import notification from "../api/notification";
 import UpdateCustScreen from "../screens/UpdateCustScreen";
+import HomeScreen from "../screens/HomeScreen";
 
 const Drawer = createDrawerNavigator();
 

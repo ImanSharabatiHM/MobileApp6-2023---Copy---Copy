@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 import { StyleSheet } from "react-native";
 import {WebView} from 'react-native-webview';
 import PDFReader from '@hashiprobr/expo-pdf-reader';
-
+import MyPDFReader from "../components/MyPDFReader";
 //import PDFReader from "rn-pdf-reader-js";
 import { ScrollView } from "react-native";
 import Constants from "expo-constants";
@@ -261,7 +261,7 @@ function SalaryScreen({ navigation, route }) {
           {belge && !loading && (
             <>
               <SaveButton file={belge} name={"Salary-" +month } />
-              {true&&<PDFReader            
+              {true&&<MyPDFReader            
                  source={{
                    base64: 'data:application/pdf;base64,'+belge,
                 }}               

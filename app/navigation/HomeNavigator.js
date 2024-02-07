@@ -38,8 +38,10 @@ import UserInfoScreen from "../screens/UserInfoScreen";
 import UserAppointmentsScreen from "../screens/UserAppointmentsScreen";
 import WaterAdminScreen from "../screens/WaterAdmin";
 import NotificationAdminScreen from "../screens/NotificationAdmin";
-
+import RemPaymentsScreen from "../screens/RemPaymentsScreen";
 import SalaryScreen from "../screens/SalaryScreen";
+import TakafulTotalScreen from "../screens/TakafulTotalScreen";
+
 import MailsScreen from "../screens/MailsScreen";
 import DocsScreen from "../screens/DocsScreen";
 import FollowTranspotPermissionsScreen from "../screens/FollowTranspotPermissionsScreen";
@@ -53,6 +55,7 @@ import TaxTotalScreen from "../screens/TaxTotalScreen";
 import TabletScreen from "../screens/TabletScreen";
 import TabletScreenOnline from "../screens/TabletScreenOnline";
 import SearchCustomerScreen from "../screens/SearchCustomerScreen";
+<<<<<<< Updated upstream
 import AddSignboardScreen from "../screens/TabletsScreens/AddSignboardScreen";
 import AddImageScreen from "../screens/TabletsScreens/AddImageScreen";
 
@@ -77,6 +80,32 @@ import NewTabletUser from "../screens/TabletsScreens/NewTabletUser";
 
 import LayersPermissions from "../screens/TabletsScreens/LayersPermissions";
 import EmployeePermissions from "../screens/TabletsScreens/EmployeePermissions";
+=======
+import AddSignboardScreen from "../screens/TabletScreens/AddSignboardScreen";
+import AddImageScreen from "../screens/TabletScreens/AddImageScreen";
+
+import AddUnitWarningScreen from "../screens/TabletScreens/AddUnitWarningScreen";
+import BuildingsProceduresScreen from "../screens/TabletScreens/BuildingsProceduresScreen";
+import BuildingUnitsScreen from "../screens/TabletScreens/BuildingUnitsScreen";
+import WaterServicesScreen from "../screens/TabletScreens/WaterServicesScreen";
+import WaterReaderServicesScreen from "../screens/TabletScreens/WaterReaderServicesScreen";
+
+import TalabatsScreen from "../screens/TabletScreens/TalabatsScreen";
+import AllTalabatsScreen from "../screens/TabletScreens/AllTalabatsScreen";
+import AddBlackListScreen from "../screens/TabletScreens/AddBlackListScreen";
+import AddLandMarkScreen from "../screens/TabletScreens/AddLandMarkScreen";
+import AddBumpScreen from "../screens/TabletScreens/AddBumpScreen";
+import AddContainerScreen from "../screens/TabletScreens/AddContainerScreen";
+import AddFarmScreen from "../screens/TabletScreens/AddFarmScreen";
+import AddStreetSignScreen from "../screens/TabletScreens/AddStreetSignScreen";
+import AddCarCounterScreen from "../screens/TabletScreens/AddCarCounterScreen";
+
+import NewTabletUser from "../screens/TabletScreens/NewTabletUser";
+
+
+import LayersPermissions from "../screens/TabletScreens/LayersPermissions";
+import EmployeePermissions from "../screens/TabletScreens/EmployeePermissions";
+>>>>>>> Stashed changes
 
 import TabletAdminScreen from "../screens/TabletAdminScreen";
 import TabletMainScreen from "../screens/TabletMainScreen";
@@ -93,9 +122,15 @@ import OverTimePermissionsScreen from "../screens/OverTimePermissionsScreen";
 import OverTimeRegistrationScreen from "../screens/OverTimeRegistrationScreen";
 import ProjectsMapScreen from "../screens/ProjectsMapScreen";
 import ProjectsPublicMapScreen from "../screens/ProjectsPublicMapScreen";
+<<<<<<< Updated upstream
 import NewTabletApp from "../screens/TabletsScreens/NewTabletApp";
 
 import ElectricityServicesScreen from "../screens/TabletsScreens/ElectricityServicesScreen";
+=======
+import NewTabletApp from "../screens/TabletScreens/NewTabletApp";
+
+import ElectricityServicesScreen from "../screens/TabletScreens/ElectricityServicesScreen";
+>>>>>>> Stashed changes
 
 import UpdateWaterServiceScreen from "../screens/UpdateWaterServiceScreen";
 import { UpdateSignBoard } from "../api/tablet";
@@ -750,6 +785,36 @@ const HomeNavigator = () => (
       headerTintColor:colors.white,
       headerTitleStyle:styles.headerText,
       headerTitle:  'قسيمة الراتب',
+      headerMode: 'float',
+      headerTitleAlign: "center",
+      headerBackTitleVisible: false,
+ 
+
+      }}
+    />
+     <Stack.Screen
+      name={routes.TAKAFULTOTAL}
+      component={TakafulTotalScreen}
+      options={{
+        headerStyle: { backgroundColor: colors.primary },
+      headerTintColor:colors.white,
+      headerTitleStyle:styles.headerText,
+      headerTitle:  'رصيد صندوق التكافل',
+      headerMode: 'float',
+      headerTitleAlign: "center",
+      headerBackTitleVisible: false,
+ 
+
+      }}
+    />
+      <Stack.Screen
+      name={routes.REMPAYMENTS}
+      component={RemPaymentsScreen}
+      options={{
+      headerStyle: { backgroundColor: colors.primary },
+      headerTintColor:colors.white,
+      headerTitleStyle:styles.headerText,
+      headerTitle:  'الأقساط المتبقية',
       headerMode: 'float',
       headerTitleAlign: "center",
       headerBackTitleVisible: false,

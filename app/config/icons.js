@@ -79,6 +79,9 @@ export default Object.freeze({
   whatsapp: require("../assets/icons/active/whatsapp.png"),
   youtube: require("../assets/icons/active/youtube.png"),
   edevlet: require("../assets/edevlet.png"),
+  takaful: require("../assets/takaful.jpg"),
+  naqaba: require("../assets/naqaba.jpeg"),
+
   bagc: require("../assets/bagc.png"),
 
   tumhizmetler: require("../assets/icons/active/tumhizmetler.png"),

@@ -23,6 +23,7 @@ import Info from "../components/Info";
 import { View } from "react-native";
 import routes from "../navigation/routes";
 import authStorage from "./../auth/storage";
+import MyPDFReader from "../components/MyPDFReader";
 import ActivityIndicator from "../components/ActivityIndicator";
 import { Form ,FormField as Field} from "../components/forms";
 const PdfReader = ({ url: uri }) => <WebView javaScriptEnabled={true} style={{ flex: 1 }} source={{ uri }} />
@@ -213,7 +214,7 @@ function DocsScreen({ navigation }) {
             <>
               <SaveButton file={belge} name={"salary111"  } />
               
-              <PDFReader            
+              <MyPDFReader            
                  source={{
                    base64: 'data:application/pdf;base64,'+belge,
                 }}               

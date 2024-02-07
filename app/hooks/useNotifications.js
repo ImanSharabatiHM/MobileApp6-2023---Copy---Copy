@@ -157,7 +157,7 @@ export default useNotifications = (navigation) => {
         finalStatus = status;
       }
       if (finalStatus !== 'granted' ||!isConnected) {
-        alert('Failed to get push token for push notification!');
+        alert('لن يت إرسال إشعارات لهذا الحساب، لتفعيل الخاصية برجى السماح للإشعارات');
         return;
       }
       const token = await Notifications.getExpoPushTokenAsync(

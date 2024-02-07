@@ -83,7 +83,7 @@ function CardUser({
 const styles = StyleSheet.create({
   card: {  
     top:10,
-    height:"70%",
+    height:"65%",
     padding:10,
     borderRadius: 8,
     marginBottom:10,

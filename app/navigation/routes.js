@@ -1,4 +1,6 @@
 export default Object.freeze({
+  TAKAFULTOTAL:"TakafulTotal",
+  REMPAYMENTS:"RemPayments",
   LAYERSPERMISSIONS:"LayersPermissions",
   EMPLOYEEPERMISSIONS:"EmployeePermissions",
   ALLTALABTS:"AllTalabats",
