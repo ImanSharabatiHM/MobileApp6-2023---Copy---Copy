@@ -904,7 +904,7 @@ const res2=await employeeApi.GetFindAndInsertTrack(trackID,request.EMP_NO,select
               />}
               {requiredNotesVisible&&<AppText style={[styles.warning,{textAlign:"left",marginTop:0,fontSize:12}]}>**سبب استخدام المركبة مطلوب.</AppText>}
 
-             {!startEnabled&&<Stopwatch
+             {false&&!startEnabled&&<Stopwatch
             laps
             //msecs
             startTime={initialTimer}
