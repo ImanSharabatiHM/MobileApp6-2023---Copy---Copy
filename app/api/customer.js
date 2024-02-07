@@ -205,6 +205,8 @@ export const createCM = (complaint, onUploadProgress) => {
     });
   };
 export default {
+  GetTakafulTotal,
+  GetRemainingPaymentsByEmpNo,
   GetEmployeePermissions,
   GetCustomerNameByID2,
   GenerateCollectionToken,

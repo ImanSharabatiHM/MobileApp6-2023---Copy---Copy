@@ -55,32 +55,6 @@ import TaxTotalScreen from "../screens/TaxTotalScreen";
 import TabletScreen from "../screens/TabletScreen";
 import TabletScreenOnline from "../screens/TabletScreenOnline";
 import SearchCustomerScreen from "../screens/SearchCustomerScreen";
-<<<<<<< Updated upstream
-import AddSignboardScreen from "../screens/TabletsScreens/AddSignboardScreen";
-import AddImageScreen from "../screens/TabletsScreens/AddImageScreen";
-
-import AddUnitWarningScreen from "../screens/TabletsScreens/AddUnitWarningScreen";
-import BuildingsProceduresScreen from "../screens/TabletsScreens/BuildingsProceduresScreen";
-import BuildingUnitsScreen from "../screens/TabletsScreens/BuildingUnitsScreen";
-import WaterServicesScreen from "../screens/TabletsScreens/WaterServicesScreen";
-import WaterReaderServicesScreen from "../screens/TabletsScreens/WaterReaderServicesScreen";
-
-import TalabatsScreen from "../screens/TabletsScreens/TalabatsScreen";
-import AllTalabatsScreen from "../screens/TabletsScreens/AllTalabatsScreen";
-import AddBlackListScreen from "../screens/TabletsScreens/AddBlackListScreen";
-import AddLandMarkScreen from "../screens/TabletsScreens/AddLandMarkScreen";
-import AddBumpScreen from "../screens/TabletsScreens/AddBumpScreen";
-import AddContainerScreen from "../screens/TabletsScreens/AddContainerScreen";
-import AddFarmScreen from "../screens/TabletsScreens/AddFarmScreen";
-import AddStreetSignScreen from "../screens/TabletsScreens/AddStreetSignScreen";
-import AddCarCounterScreen from "../screens/TabletsScreens/AddCarCounterScreen";
-
-import NewTabletUser from "../screens/TabletsScreens/NewTabletUser";
-
-
-import LayersPermissions from "../screens/TabletsScreens/LayersPermissions";
-import EmployeePermissions from "../screens/TabletsScreens/EmployeePermissions";
-=======
 import AddSignboardScreen from "../screens/TabletScreens/AddSignboardScreen";
 import AddImageScreen from "../screens/TabletScreens/AddImageScreen";
 
@@ -105,7 +79,6 @@ import NewTabletUser from "../screens/TabletScreens/NewTabletUser";
 
 import LayersPermissions from "../screens/TabletScreens/LayersPermissions";
 import EmployeePermissions from "../screens/TabletScreens/EmployeePermissions";
->>>>>>> Stashed changes
 
 import TabletAdminScreen from "../screens/TabletAdminScreen";
 import TabletMainScreen from "../screens/TabletMainScreen";
@@ -122,15 +95,9 @@ import OverTimePermissionsScreen from "../screens/OverTimePermissionsScreen";
 import OverTimeRegistrationScreen from "../screens/OverTimeRegistrationScreen";
 import ProjectsMapScreen from "../screens/ProjectsMapScreen";
 import ProjectsPublicMapScreen from "../screens/ProjectsPublicMapScreen";
-<<<<<<< Updated upstream
-import NewTabletApp from "../screens/TabletsScreens/NewTabletApp";
-
-import ElectricityServicesScreen from "../screens/TabletsScreens/ElectricityServicesScreen";
-=======
 import NewTabletApp from "../screens/TabletScreens/NewTabletApp";
 
 import ElectricityServicesScreen from "../screens/TabletScreens/ElectricityServicesScreen";
->>>>>>> Stashed changes
 
 import UpdateWaterServiceScreen from "../screens/UpdateWaterServiceScreen";
 import { UpdateSignBoard } from "../api/tablet";

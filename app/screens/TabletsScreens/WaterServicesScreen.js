@@ -37,75 +37,31 @@ import ActivityIndicator from "../../components/ActivityIndicator";
           <ListItemSeparator v seperatorStyle={styles.seperatorStyleTable} />
            {true && (
             <Text style={styles.headerItemSmall} numberOfLines={1}>
-<<<<<<< Updated upstream
-              {"الاشتراك"}
-=======
               {"التسلسلي"}
->>>>>>> Stashed changes
             </Text>
           )}
           <ListItemSeparator v seperatorStyle={styles.seperatorStyleTable} />
           {true && (
             <Text style={styles.headerItemSmall} numberOfLines={1}>
-<<<<<<< Updated upstream
-              { "الوحدة"}
-=======
               { "الرقم"}
->>>>>>> Stashed changes
             </Text>
           )}
           <ListItemSeparator v seperatorStyle={styles.seperatorStyleTable} />
            {true&& (
-<<<<<<< Updated upstream
-            <Text style={ styles.headerItem } numberOfLines={1}>
-=======
             <Text style={styles.headerItem} numberOfLines={1}>
->>>>>>> Stashed changes
               {"المستفيد"}
             </Text>
           )}
           <ListItemSeparator v seperatorStyle={styles.seperatorStyleTable} />
            {true && (
-<<<<<<< Updated upstream
-            <Text style={styles.headerItemSmall} numberOfLines={1}>
-              {"الاستخدام"}
-            </Text>
-          )}
-           <ListItemSeparator v seperatorStyle={styles.seperatorStyleTable} />
-           {true && (
-            <Text style={styles.headerItemSmall} numberOfLines={1}>
-              {"رقم الشصي"}
-            </Text>
-          )}
-=======
             <Text style={styles.headerItem} numberOfLines={1}>
               {"الاستخدام"}
             </Text>
           )}
->>>>>>> Stashed changes
            <ListItemSeparator seperatorStyle={styles.seperatorStyleTable} />     
       </View>
     );
   };
-<<<<<<< Updated upstream
-  const getWaterServices = async () => {
-    setUnits({ loading: true, data: null });
-     const token = await authStorage.getToken();
-
-    const result = await tabletApi.GetWaterServicesByBID(B_ID,token); 
-         console.log(result.data.Services)
-
-    if (!result.ok) {
-      setUnits({ loading: false, data: null });
-      return;
-    }  
-
-    let data = result.data.Services.sort(function (a, b) { return b.U_ID - a.U_ID; }) ;;//.sort(function (a, b) { return b.hitCount - a.hitCount; }) .slice(0, 5);
-    setUnits({ loading: false, data });
-  };
-  useEffect(() => {
-    getWaterServices();
-=======
   const getUnits = async () => {
     setUnits({ loading: true, data: null });
     const result = await tabletApi.GetUnitDescriptionByBID(B_ID);
@@ -118,7 +74,6 @@ import ActivityIndicator from "../../components/ActivityIndicator";
   };
   useEffect(() => {
     getUnits();
->>>>>>> Stashed changes
     //getCustomerUnitsApi.request(user.nameidentifier);//
   }, []);
 
@@ -131,25 +86,6 @@ import ActivityIndicator from "../../components/ActivityIndicator";
       ListHeaderComponent={ListHeader}
       all
       keyExtractor={(item) => item.U_ID+Math.random()}
-<<<<<<< Updated upstream
-        renderItem={({ item,index }) => (
-          <Card
-            //s={modalizeRef}
-            iconName={"close"}
-            index={index}
-            unit={item}
-            DAMGE={item.DAMGE}
-            navigation={navigation}
-            title={item.ServiceNo+""}
-            unitNo={item.U_ID}
-            all={item.U_ID==-1}
-            other={item.U_ID==0}
-            unitId={item.U_ID}
-            unitOwner={item.CUST_NAME+""}
-            unitUse={item.Use}
-            SHASI_NO={item.SHASI_NO}
-
-=======
         renderItem={({ item }) => (
           <Card
             //s={modalizeRef}
@@ -164,7 +100,6 @@ import ActivityIndicator from "../../components/ActivityIndicator";
             unitId={item.U_ID}
             unitOwner={item.USER_NAME+""}
             unitUse={item.MAIN_USE_DESC+" /"+item.SUB_USE_DESC}
->>>>>>> Stashed changes
              onPress={() => {
               if(item.DAMGE=="N")
               {
@@ -190,7 +125,6 @@ import ActivityIndicator from "../../components/ActivityIndicator";
      
     </>
   );
-}
 
 const styles = StyleSheet.create({
   scene: {
@@ -206,11 +140,7 @@ const styles = StyleSheet.create({
     textAlignVertical:"center",
     color:colors.facebook,
     fontFamily:"Cairo_700Bold",
-<<<<<<< Updated upstream
-    width:"12%",
-=======
     width:"15%",
->>>>>>> Stashed changes
     textAlign:"center",
     paddingTop:5,
     marginRight:0,
@@ -251,11 +181,7 @@ const styles = StyleSheet.create({
     textAlignVertical:"center",
     color:colors.facebook,
     fontFamily:"Cairo_700Bold",
-<<<<<<< Updated upstream
-    width:"32%",
-=======
     width:"27%",
->>>>>>> Stashed changes
     textAlign:"center",
     paddingTop:5,
     marginRight:0,

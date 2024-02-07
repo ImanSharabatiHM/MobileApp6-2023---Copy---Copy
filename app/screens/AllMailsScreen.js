@@ -373,7 +373,7 @@ function AllMailsScreen({ navigation }) {
                />}
               {false&&<PDFReader            
                  source={{base64: 'data:application/pdf;base64,'+ bb,}}/>}
-              {true&&<MyPDFReader source={{base64: 'data:application/pdf;base64,'+ belge}}/>}
+              {true&&<MyPDFReader withScroll={true} source={{base64: 'data:application/pdf;base64,'+ belge}}/>}
               <ListItemSeparator />
             </>
           )}

@@ -26,10 +26,6 @@ const initialLayout = { width: Dimensions.get("window").width };
 import ActivityIndicator from "../../components/ActivityIndicator";
 import Card from "../../components/CardTalabRow";
 import Info from "../../components/Info";
-<<<<<<< Updated upstream
-import tablet from "../../api/tablet";
-=======
->>>>>>> Stashed changes
 
 function AllTalabatsScreen({ navigation, route }) {
   const modalizeRef = useRef(null);
@@ -42,15 +38,8 @@ function AllTalabatsScreen({ navigation, route }) {
   const [talabats, setTalabats] = useState({ loading: false, data: null });
   const [units, setUnits] = useState({ loading: false, data: null });
   const [B_ID, setB_ID] = useState(route.params.B_ID);
-<<<<<<< Updated upstream
-  const [fromMap, setFromMap] = useState(route.params.FromMap);
-
-  const [fromDate, setFromDate] = useState(new Date(new Date().getFullYear(), 0, 1));
-  const [toDate, setToDate] = useState(new Date(new Date().getFullYear(), new Date().getMonth()-7, new Date().getDate()));
-=======
   const [fromDate, setFromDate] = useState(new Date(new Date().getFullYear(), new Date().getMonth(), 1));
   const [toDate, setToDate] = useState(new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate()));
->>>>>>> Stashed changes
 
   const [location, setLocation] = useState({ loading: false, data: { longtitude: "0", latitude: "0" } });
 
@@ -58,55 +47,6 @@ function AllTalabatsScreen({ navigation, route }) {
   const ListHeader = () => {
     //View to set in Header
     return (
-<<<<<<< Updated upstream
-      <Card
-      //s={modalizeRef}
-      iconName={"close"}
-      TALAB={null}
-      ODD={-1}
-      TALAB_DATE={"التاريخ"}
-      TALAB_NO={"الرقم"}
-      TALAB_NAME={"النوع"}
-      CUST_NAME={"مقدم الطلب"}
-      navigation={navigation}
-      onPress={async () => {
-        //console.log("MAPPP");
-        //GetBuildingCoordinates(item.BID);
-
-
-        //if(item.DAMGE=="N")
-        {
-          //setModalVisible(false);
-          // handleOpenChange(false);
-
-          // setFilteredTxt("");
-          // setFiltered(items);
-          // onSelectItem(item);
-          // selectedItemChanged(item);
-
-        }
-        //console.log(item);
-
-        // getUnit(item);
-        //modalizeRef.current.open();
-      }}
-      thumbnailUrl={"http://10.11.20.9/php/ImagesHeraf/1-197-0.jpg"}
-    />
-    );
-  };
-  const onChangeDateFrom = async (item) => {
-    //console.log("sssdfiffee"+item);
-
-    setFromDate(item);  // 
-    getTalabats();
-  }
-  const onChangeDateTo = async (item) => {
-     console.log("sssdfiffee"+item);
-
-    setToDate(item);  // 
-    getTalabats();
-  }
-=======
       <View style={styles.headerFooterStyle}>
         {true && (
           <Text style={styles.headerItemSmall} numberOfLines={1}>
@@ -141,7 +81,6 @@ function AllTalabatsScreen({ navigation, route }) {
       </View>
     );
   };
->>>>>>> Stashed changes
   const getUnits = async () => {
     setUnits({ loading: true, data: null });
     const result = await tabletApi.GetUnitDescriptionByBID(B_ID);
@@ -160,40 +99,6 @@ function AllTalabatsScreen({ navigation, route }) {
       setLocation({ loading: false, data: { longtitude: "0", latitude: "0" } });
       return;
     }
-<<<<<<< Updated upstream
-    console.log(result);
-     let data = result.data.ResponseObject;//.sort(function (a, b) { return b.U_ID - a.U_ID; }) ;;//.sort(function (a, b) { return b.hitCount - a.hitCount; }) .slice(0, 5);
-    setLocation({ loading: false, data: { longtitude: data.longtitud, latitude: data.latitud } });
-     
-console.log("dddd");
-   if(fromMap) 
-   {navigation.goBack();
-    route.params.onSelect({ Location: data.longtitud + "," + data.latitud, Proj: "P" }); 
-  }
-  }
-  const GetBuildingCoordinatesByUID = async (U_ID) => {
-    setLocation({ loading: true, data: { longtitude: "0", latitude: "0" } });
-    const result = await tablet.GetBuildingCoordinatesByUID(U_ID);
-    if (!result.ok) {
-
-      setLocation({ loading: false, data: { longtitude: "0", latitude: "0" } });
-      return;
-    }
-    console.log(result);
-     let data = result.data.ResponseObject;//.sort(function (a, b) { return b.U_ID - a.U_ID; }) ;;//.sort(function (a, b) { return b.hitCount - a.hitCount; }) .slice(0, 5);
-    setLocation({ loading: false, data: { longtitude: data.longtitud, latitude: data.latitud } });
-     
-console.log("dddd");
-   if(fromMap) 
-   {navigation.goBack();
-    route.params.onSelect({ Location: data.longtitud + "," + data.latitud, Proj: "P" }); 
-  }
-  }
-  const getTalabats = async () => {
-    console.log("ssss");
-    const token = await authStorage.getToken();
-   //const token="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjkxMjA2NzY5MSIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL25hbWUiOiLYsdmI2KfZhiDZhtiy2KfYsSDZhdit2YXZiNivINin2KjZiNi52YrYtNipIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9yb2xlIjoiSE1Vc2VyIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9zZXJpYWxudW1iZXIiOiIxMDk1IiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvc3RyZWV0YWRkcmVzcyI6Itiv2YjZitix2KjYp9mGICIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL3N0YXRlb3Jwcm92aW5jZSI6Itin2YTYrtmE2YrZhCAiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9jb3VudHJ5Ijoi2YHZhNiz2LfZitmG2YrZhyAiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9tb2JpbGVwaG9uZSI6IjA1OTc5MTkzMzYiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9ob21lcGhvbmUiOiIwIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvZW1haWxhZGRyZXNzIjoiIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9ncm91cHNpZCI6IjAiLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3ByaW1hcnlncm91cHNpZCI6IiIsImV4cCI6MTk1MjQwNDY1NiwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdCIsImF1ZCI6Imh0dHA6Ly9sb2NhbGhvc3QifQ.SIw1BdZyi1cgYmz1_xIYMV6DoRmN7IjsNbB472HEdc0";    
-=======
     //console.log(B_ID,result);
     let data = result.data.ResponseObject;//.sort(function (a, b) { return b.U_ID - a.U_ID; }) ;;//.sort(function (a, b) { return b.hitCount - a.hitCount; }) .slice(0, 5);
     setLocation({ loading: false, data: { longtitude: data.longtitud, latitude: data.latitud } });
@@ -207,19 +112,13 @@ console.log("dddd");
 
     const token = await authStorage.getToken();
    // const token="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjkxMjA2NzY5MSIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL25hbWUiOiLYsdmI2KfZhiDZhtiy2KfYsSDZhdit2YXZiNivINin2KjZiNi52YrYtNipIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9yb2xlIjoiSE1Vc2VyIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9zZXJpYWxudW1iZXIiOiIxMDk1IiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvc3RyZWV0YWRkcmVzcyI6Itiv2YjZitix2KjYp9mGICIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL3N0YXRlb3Jwcm92aW5jZSI6Itin2YTYrtmE2YrZhCAiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9jb3VudHJ5Ijoi2YHZhNiz2LfZitmG2YrZhyAiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9tb2JpbGVwaG9uZSI6IjA1OTc5MTkzMzYiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9ob21lcGhvbmUiOiIwIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvZW1haWxhZGRyZXNzIjoiIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9ncm91cHNpZCI6IjAiLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3ByaW1hcnlncm91cHNpZCI6IiIsImV4cCI6MTk1MjQwNDY1NiwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdCIsImF1ZCI6Imh0dHA6Ly9sb2NhbGhvc3QifQ.SIw1BdZyi1cgYmz1_xIYMV6DoRmN7IjsNbB472HEdc0";    
->>>>>>> Stashed changes
     setTalabats({ loading: true, data: null });
      const result = await employeesApi.GetTalabat(token,
       dayjs((fromDate)).locale("ar").format('YYYY/MM/DD')
      ,dayjs((toDate)).locale("ar").format('YYYY/MM/DD')
-<<<<<<< Updated upstream
-     ,-1,route.params.B_ID==undefined?-1:route.params.B_ID);
-    //console.log(result);
-=======
      ,-1,-1);
 
 
->>>>>>> Stashed changes
     if (!result.ok) {
       setTalabats({ loading: false, data: null });
       return;
@@ -229,13 +128,8 @@ console.log("dddd");
     setTalabats({ loading: false, data: data });
   };
   useEffect(() => { 
-<<<<<<< Updated upstream
-    setB_ID(route.params.B_ID);
-    setFromMap(route.params.FromMap);
-=======
        console.log("BBBBBBBBBBBBBB" + route.params.B_ID);
     setB_ID(route.params.B_ID);
->>>>>>> Stashed changes
     getTalabats(); 
 
     // getUnits();
@@ -267,15 +161,9 @@ console.log("dddd");
                 placeholder={"من تاريخ:"}
                 style={styles.name}
                 mode={"date"}
-<<<<<<< Updated upstream
-                handleConfirm={onChangeDateFrom}
-                selectedDate={fromDate}
-                // onChangeDateFrom={onChangeDateFrom}
-=======
                 //handleConfirm={onChangeDate}
                 selectedDate={fromDate}
                 //onChangeDate={onChangeDate}
->>>>>>> Stashed changes
                 contWidth={"50%"}
               />
               <FormDatePicker
@@ -284,15 +172,9 @@ console.log("dddd");
                 placeholder={"إلى تاريخ:"}
                 style={styles.name}
                 mode={"date"}
-<<<<<<< Updated upstream
-                handleConfirm={onChangeDateTo}
-                selectedDate={toDate}
-               // onChangeDateTo={onChangeDateTo}
-=======
                 //handleConfirm={onChangeDate}
                 selectedDate={toDate}
                 //onChangeDate={onChangeDate}
->>>>>>> Stashed changes
                 contWidth={"50%"}
               />
             </View>
@@ -321,10 +203,6 @@ console.log("dddd");
           onPress={() => getTalabats()}
         />
       )}
-<<<<<<< Updated upstream
-      <View style={[{top:10}]}>
-=======
->>>>>>> Stashed changes
       {!talabats.loading && talabats.data && (
         <FlatList
           data={talabats.data}
@@ -337,19 +215,6 @@ console.log("dddd");
               iconName={"close"}
               TALAB={item}
               ODD={index % 2 == 0}
-<<<<<<< Updated upstream
-              TALAB_DATE={dayjs((item?.TALAB_DATE)).locale("ar").format('YYYY/MM/DD')}
-              
-              TALAB_NO={item?.TALAB_NO}
-              TALAB_NAME={item?.TALAB_NAME}
-              CUST_NAME={item?.CUST_NAME}
-              navigation={navigation}
-              onPress={async () => {
-                //console.log("MAPPP");
-                console.log(item);
-                if(item.BID!=0 && fromMap) GetBuildingCoordinates(item.BID);
-                else if(item.UNIT_NO && item.UNIT_NO >0 && fromMap) {GetBuildingCoordinatesByUID(item.UNIT_NO);}
-=======
               TALAB_DATE={item?.TALAB_DATE}
               TALAB_NO={item?.TALAB_NO}
               TALAB_NAME={item?.TALAB_NAME}
@@ -362,7 +227,6 @@ console.log("dddd");
                 //console.log("MAPPP");
                 GetBuildingCoordinates(item.BID);
 
->>>>>>> Stashed changes
 
                 //if(item.DAMGE=="N")
                 {
@@ -385,11 +249,6 @@ console.log("dddd");
           )}
         />
       )}
-<<<<<<< Updated upstream
-    </View>
-=======
-
->>>>>>> Stashed changes
     </>
   );
 }
